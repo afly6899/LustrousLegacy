@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "Player.h"
+#include "player.h"
 #include "Enums.h"
 using namespace std;
 
