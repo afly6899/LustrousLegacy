@@ -1,4 +1,4 @@
-#include "Player.h"
+#include "player.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Rect.hpp>
