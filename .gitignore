@@ -257,3 +257,4 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+RPGTown/RPGTown.vcxproj
