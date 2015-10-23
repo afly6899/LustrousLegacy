@@ -11,6 +11,7 @@ namespace actor {
     mSource(1, AnimatedPlayer::South) {
         mSprite.setScale(2.0f, 2.0f);
         mSprite.setTextureRect(sf::IntRect(mSource.x * 23, mSource.y * 22, 23, 22));
+        endFramePlace = (int)mSprite.getTexture()->getSize().x; // initialize when you have texture
     }
     
     
@@ -22,16 +23,12 @@ namespace actor {
         target.draw(mSprite, states);
     }
     
-    void AnimatedPlayer::update(bool& animated) {
-        mSource.x++;
-        animated = true;
-        if (mSource.x*23 >= (int)mSprite.getTexture()->getSize().x) {
-            mSource.x = 0;
+    void AnimatedPlayer::updateIdle() {
+        if (idleCounter == aniFrameDuration - 1) {
+            mSource.x = (mSource.x + 1) % endFramePlace;
+            mSprite.setTextureRect(sf::IntRect(mSource.x * 23, mSource.y * 22, 23, 22));
         }
-        else if (mSource.x == 1 && animated) {
-            animated = false;
-        }
-        mSprite.setTextureRect(sf::IntRect(mSource.x * 23, mSource.y * 22, 23, 22));
+        idleCounter = (idleCounter + 1) % aniFrameDuration;
     }
     
     
