@@ -42,8 +42,10 @@ int main() {
 }
 
 void updateAll(actor::AnimatedPlayer& player, sf::Clock& clock, bool& animated) {
-    if (clock.getElapsedTime().asMilliseconds() >= 200) {
-        player.update(animated);
+    if (clock.getElapsedTime().asMilliseconds() >= 2000) {
         clock.restart();
+    }
+    else if (clock.getElapsedTime().asMilliseconds() >= 1000) {
+        player.updateIdle();
     }
 }
