@@ -10,8 +10,8 @@ namespace actor {
     mSprite(playerTexture),
     mSource(1, AnimatedPlayer::South) {
         mSprite.setScale(2.0f, 2.0f);
-        mSprite.setTextureRect(sf::IntRect(mSource.x * 23, mSource.y * 22, 23, 22));
-        endFramePlace = (int)mSprite.getTexture()->getSize().x; // initialize when you have texture
+        mSprite.setTextureRect(sf::IntRect(mSource.x * 32, mSource.y * 32, 32, 32));
+        endFramePlace = (int)mSprite.getTexture()->getSize().x/32; // initialize when you have texture - want to get the size and divide it by the size of a sprite image!
     }
     
     
@@ -26,7 +26,7 @@ namespace actor {
     void AnimatedPlayer::updateIdle() {
         if (idleCounter == aniFrameDuration - 1) {
             mSource.x = (mSource.x + 1) % endFramePlace;
-            mSprite.setTextureRect(sf::IntRect(mSource.x * 23, mSource.y * 22, 23, 22));
+            mSprite.setTextureRect(sf::IntRect(mSource.x * 32, mSource.y * 32, 32, 32));
         }
         idleCounter = (idleCounter + 1) % aniFrameDuration;
     }
@@ -35,6 +35,6 @@ namespace actor {
     
     void AnimatedPlayer::idle() {
         mSource.x = 1;
-        mSprite.setTextureRect(sf::IntRect(mSource.x * 23, mSource.y * 22, 23, 22));
+        mSprite.setTextureRect(sf::IntRect(mSource.x * 32, mSource.y * 32, 32, 32));
     }
 }
