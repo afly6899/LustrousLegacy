@@ -27,7 +27,7 @@ namespace actor {
         // default destructor
         ~AnimatedPlayer();
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-        virtual void update(bool& animated);
+        virtual void updateIdle(); // this update function uses the idleCounter to determine when to change animation frame
         void idle();
         
         
@@ -35,8 +35,10 @@ namespace actor {
         
         sf::Sprite mSprite;
         sf::Vector2i mSource;
-        int aniCounter = 0;
-        int aniFrameDuration = 200;
+        int endFramePlace = 0;
+        int idleCounter = 0; // counter for when player is idle
+        int walkCounter = 0; // for when player is walking
+        int aniFrameDuration = 10; // number of times counter needs to increment to before the frame changes
     };
 }
 
