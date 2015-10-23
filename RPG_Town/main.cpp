@@ -1,91 +1,67 @@
-
-//
-// Disclamer:
-// ----------
-//
-// This code will work only if you selected window, graphics and audio.
-//
-// Note that the "Run Script" build phase will copy the required frameworks
-// or dylibs to your application bundle so you can execute it on any OS X
-// computer.
-//
-// Your resource files (images, sounds, fonts, ...) are also copied to your
-// application bundle. To get the path to these resource, use the helper
-// method resourcePath() from ResourcePath.hpp
-//
-
-#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
+#include <iostream>
+#include "player.h"
+#include "Enums.h"
+using namespace std;
 
-// Here is a small helper for you ! Have a look.
-#include "ResourcePath.hpp"
+void sysMovement(actor::Player&, sf::Clock&, double player_speed);
 
-int main(int, char const**)
+int main(int argc, char** argv) {
+
+	// Define parameters for player functions
+	double player_speed = speed::Fast;
+
+	// window
+	sf::RenderWindow window(sf::VideoMode(800, 600), "RPGTown 0.1");
+	window.setVerticalSyncEnabled(true);
+
+	// clock
+	sf::Clock gameClock;
+
+	// player texture
+	sf::Texture pTexture;
+	if (!pTexture.loadFromFile("playerSprite.png")) {
+		cerr << "Texture Error" << endl;
+	}
+
+	actor::Player actorPlayer(pTexture);
+
+	// game loop
+	while (window.isOpen()) {
+		sf::Event event;
+		while (window.pollEvent(event)) {
+			if (event.type == sf::Event::Closed) {
+				window.close();
+			}
+		}
+
+		window.clear();
+		sysMovement(actorPlayer, gameClock, player_speed);
+		window.draw(actorPlayer);
+		window.display();
+	}
+	return 0;
+}
+
+void sysMovement(actor::Player& player, sf::Clock& Clock, double player_speed)
 {
-    // Create the main window
-    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window");
+	// currently, game clock is passed to player object (probably don't want to do this)
 
-    // Set the Icon
-    sf::Image icon;
-    if (!icon.loadFromFile(resourcePath() + "icon.png")) {
-        return EXIT_FAILURE;
-    }
-    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		player.move(actor::Player::North, Clock, player_speed);
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+		player.move(actor::Player::South, Clock, player_speed);
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		player.move(actor::Player::East, Clock, player_speed);
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+		player.move(actor::Player::West, Clock, player_speed);
+	}
+	else
+	{
+		player.idle(Clock);
+	}
 
-    // Load a sprite to display
-    sf::Texture texture;
-    if (!texture.loadFromFile(resourcePath() + "cute_image.jpg")) {
-        return EXIT_FAILURE;
-    }
-    sf::Sprite sprite(texture);
-
-    // Create a graphical text to display
-    sf::Font font;
-    if (!font.loadFromFile(resourcePath() + "sansation.ttf")) {
-        return EXIT_FAILURE;
-    }
-    sf::Text text("Hello SFML", font, 50);
-    text.setColor(sf::Color::Black);
-
-    // Load a music to play
-    sf::Music music;
-    if (!music.openFromFile(resourcePath() + "nice_music.ogg")) {
-        return EXIT_FAILURE;
-    }
-
-    // Play the music
-    music.play();
-
-    // Start the game loop
-    while (window.isOpen())
-    {
-        // Process events
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            // Close window: exit
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
-
-            // Escape pressed: exit
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
-                window.close();
-            }
-        }
-
-        // Clear screen
-        window.clear();
-
-        // Draw the sprite
-        window.draw(sprite);
-
-        // Draw the string
-        window.draw(text);
-
-        // Update the window
-        window.display();
-    }
-
-    return EXIT_SUCCESS;
 }
