@@ -9,8 +9,8 @@ namespace actor {
 	Player::Player(const sf::Texture& imagePath) :
 		mSprite(imagePath),
 		mSource(1, Player::South) {
-
-		mSprite.setScale(2.0f, 2.0f);
+		mSprite.setOrigin(32, 32);
+		mSprite.setScale(1.0f, 1.0f);
 		
 	}
 
@@ -47,19 +47,32 @@ namespace actor {
 			aniCounter -= aniFrameDuration;
 			mSource.x++;
 
-			if (mSource.x * 32 >= (int)mSprite.getTexture()->getSize().x) {
+			if (mSource.x * 64 >= (int)mSprite.getTexture()->getSize().x) {
 				mSource.x = 0;
 			}
 		}
 
-		mSprite.setTextureRect(sf::IntRect(mSource.x * 32, mSource.y * 32, 32, 32));
+		mSprite.setTextureRect(sf::IntRect(mSource.x * 64, mSource.y * 64, 64, 64));
 	}
 
 	// Player idle sprite is loaded
 	void Player::idle(sf::Clock& clock) {
 		mSource.x = 1;
-		mSprite.setTextureRect(sf::IntRect(mSource.x * 32, mSource.y * 32, 32, 32));
+		mSprite.setTextureRect(sf::IntRect(mSource.x *64, mSource.y * 64, 64, 64));
 		clock.restart().asMilliseconds();
+	}
+
+	void Player::setPosition(int x, int y) {
+		mSprite.setPosition(x, y);
+	}
+
+	sf::Vector2f Player::getPosition() {
+		return mSprite.getPosition();
+	}
+
+
+	sf::FloatRect Player::getGlobalBounds() {
+		return mSprite.getGlobalBounds();
 	}
 
 }

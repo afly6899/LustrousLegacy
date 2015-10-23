@@ -32,10 +32,15 @@ namespace actor {
 		void move(int direction, sf::Clock& clock, double speed = 0.2);
 		void idle(sf::Clock& clock);
 
+		// player positioning functions
+		void setPosition(int x, int y);
+		sf::Vector2f getPosition();
+		sf::FloatRect getGlobalBounds();
+
 	private:
 
 		sf::Sprite mSprite;
-		sf::Vector2i mSource;
+		sf::Vector2f mSource;
 		int aniCounter = 0;
 		int aniFrameDuration = 200;
 	};
