@@ -6,12 +6,15 @@
 #include "tmx\MapLoader.h"
 using namespace std;
 
-void sysMovement(actor::Player&, sf::Clock&, double player_speed);
+void sysMovement(actor::Player&, sf::Clock&, double player_speed, bool collision);
+
+// collision variable 
 
 int main(int argc, char** argv) {
 
 	// Define parameters for player functions
 	double player_speed = speed::Fast;
+	bool collision = false;
 
 	// window
 	sf::RenderWindow window(sf::VideoMode(800, 600), "RPGTown 0.2");
@@ -23,9 +26,6 @@ int main(int argc, char** argv) {
 	// TMX map loader
 	tmx::MapLoader ml("\maps");
 	ml.Load("test.tmx");
-
-	// collision variable 
-	bool collision = false;
 
 	// clock
 	sf::Clock gameClock;
@@ -48,7 +48,6 @@ int main(int argc, char** argv) {
 	return -1; // error
 	music.play();
 	
-
 	// game loop
 	while (window.isOpen()) {
 		sf::Event event;
@@ -59,36 +58,37 @@ int main(int argc, char** argv) {
 		}
 
 		window.clear();
+	
+		// player movement system and control parameters
+		sysMovement(actorPlayer, gameClock, player_speed, collision);
 
-		/** map quad tree (still working on this)
-		ml.UpdateQuadTree(actorPlayer.getGlobalBounds());
-		std::vector<tmx::MapObject*> objects = ml.QueryQuadTree(actorPlayer.getGlobalBounds());
-		**/
-
-		// Draw map
-		window.draw(ml);
-
-		/* WORKING ON COLLISION STILL
+		// currently there is an error and only the latest collision object is checked...
 		for (auto layer = ml.GetLayers().begin(); layer != ml.GetLayers().end(); ++layer)
 		{
 			if (layer->name == "Collision")
 			{
 				for (auto object = layer->objects.begin(); object != layer->objects.end(); ++object)
 				{
-					collision = object->Contains(actorPlayer.getPosition());
+					collision = object->Contains(sf::Vector2f(actorPlayer.getPosition()));
 				}
 			}
 		}
-		*/
-
-		// player movement system and control parameters
-		sysMovement(actorPlayer, gameClock, player_speed);
 
 		// adjust view to keep it on player
 		playerView.setCenter(actorPlayer.getPosition());
-		window.setView(playerView);
+
+		if (collision == false)
+		{
+			window.setView(playerView);
+		}
+		else
+		{
+			// set player position back to before they collided with object
+			actorPlayer.setPosition(actorPlayer.getPastPosition().x, actorPlayer.getPastPosition().y);
+		}
 
 		// draw chracter
+		window.draw(ml);
 		window.draw(actorPlayer);
 
 		window.display();
@@ -97,21 +97,21 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
-void sysMovement(actor::Player& player, sf::Clock& Clock, double player_speed)
+void sysMovement(actor::Player& player, sf::Clock& Clock, double player_speed, bool collision)
 {
 	// currently, game clock is passed to player object (probably don't want to do this)
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-		player.move(actor::Player::North, Clock, player_speed);
+		player.move(actor::Player::North, Clock, player_speed, collision);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-		player.move(actor::Player::South, Clock, player_speed);
+		player.move(actor::Player::South, Clock, player_speed, collision);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-		player.move(actor::Player::East, Clock, player_speed);
+		player.move(actor::Player::East, Clock, player_speed, collision);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-		player.move(actor::Player::West, Clock, player_speed);
+		player.move(actor::Player::West, Clock, player_speed, collision);
 	}
 	else
 	{

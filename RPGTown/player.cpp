@@ -3,6 +3,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <iostream>
 
 namespace actor {
 	// Player default constructor; Loads: character sprite from texture and sets position to frame 1 and south
@@ -25,11 +26,14 @@ namespace actor {
 	}
 
 	// Player move function moves sprite and animates based on clock and speed
-	void Player::move(int direction, sf::Clock& clock, double speed) {
+	void Player::move(int direction, sf::Clock& clock, double speed, bool collision) {
 
 		mSource.y = direction;
 
-		switch (direction) {
+		if (collision == false)
+		{ 
+			pastPosition = mSprite.getPosition();
+			switch (direction) {
 			case Player::South: mSprite.move(0, speed);
 				break;
 			case Player::East: mSprite.move(speed, 0);
@@ -38,6 +42,7 @@ namespace actor {
 				break;
 			case Player::North: mSprite.move(0, -speed);
 				break;
+			}
 		}
 
 		aniCounter += clock.restart().asMilliseconds();
@@ -70,10 +75,14 @@ namespace actor {
 		return mSprite.getPosition();
 	}
 
+	sf::Vector2f Player::getPastPosition() {
+		return pastPosition;
+	}
 
 	sf::FloatRect Player::getGlobalBounds() {
 		return mSprite.getGlobalBounds();
 	}
+
 
 }
 
