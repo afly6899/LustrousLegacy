@@ -26,7 +26,7 @@ namespace actor {
 	}
 
 	// Player move function moves sprite and animates based on clock and speed
-	void Player::move(int direction, sf::Clock& clock, double speed, bool collision) {
+	void Player::move(int direction, float elapsedTime, double speed, bool collision) {
 
 		mSource.y = direction;
 
@@ -45,7 +45,7 @@ namespace actor {
 			}
 		}
 
-		aniCounter += clock.restart().asMilliseconds();
+		aniCounter += elapsedTime;
 
 		if (aniCounter >= aniFrameDuration)
 		{
@@ -61,10 +61,9 @@ namespace actor {
 	}
 
 	// Player idle sprite is loaded
-	void Player::idle(sf::Clock& clock) {
+	void Player::idle() {
 		mSource.x = 1;
 		mSprite.setTextureRect(sf::IntRect(mSource.x *64, mSource.y * 64, 64, 64));
-		clock.restart().asMilliseconds();
 	}
 
 	void Player::setPosition(int x, int y) {

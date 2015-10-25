@@ -6,7 +6,7 @@
 #include "tmx\MapLoader.h"
 using namespace std;
 
-void sysMovement(actor::Player&, sf::Clock&, double player_speed, bool collision);
+void sysMovement(actor::Player&, float elapsedTime, double player_speed, bool collision);
 
 // collision variable 
 
@@ -15,6 +15,7 @@ int main(int argc, char** argv) {
 	// Define parameters for player functions
 	double player_speed = speed::Fast;
 	bool collision = false;
+	float elapsedTime = 0;
 
 	// window
 	sf::RenderWindow window(sf::VideoMode(800, 600), "RPGTown 0.2");
@@ -57,10 +58,12 @@ int main(int argc, char** argv) {
 			}
 		}
 
+		elapsedTime = gameClock.restart().asMilliseconds();
+
 		window.clear();
 	
 		// player movement system and control parameters
-		sysMovement(actorPlayer, gameClock, player_speed, collision);
+		sysMovement(actorPlayer, elapsedTime, player_speed, collision);
 
 		// currently there is an error and only the latest collision object is checked...
 		for (auto layer = ml.GetLayers().begin(); layer != ml.GetLayers().end(); ++layer)
@@ -90,32 +93,31 @@ int main(int argc, char** argv) {
 		// draw chracter
 		window.draw(ml);
 		window.draw(actorPlayer);
-
 		window.display();
 
 	}
 	return 0;
 }
 
-void sysMovement(actor::Player& player, sf::Clock& Clock, double player_speed, bool collision)
+void sysMovement(actor::Player& player, float elapsedTime, double player_speed, bool collision)
 {
 	// currently, game clock is passed to player object (probably don't want to do this)
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-		player.move(actor::Player::North, Clock, player_speed, collision);
+		player.move(actor::Player::North, elapsedTime, player_speed, collision);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-		player.move(actor::Player::South, Clock, player_speed, collision);
+		player.move(actor::Player::South, elapsedTime, player_speed, collision);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-		player.move(actor::Player::East, Clock, player_speed, collision);
+		player.move(actor::Player::East, elapsedTime, player_speed, collision);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-		player.move(actor::Player::West, Clock, player_speed, collision);
+		player.move(actor::Player::West, elapsedTime, player_speed, collision);
 	}
 	else
 	{
-		player.idle(Clock);
+		player.idle();
 	}
 
 }
