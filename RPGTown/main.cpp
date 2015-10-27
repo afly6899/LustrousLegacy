@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
 	actor::Player actorPlayer(pTexture);
 
 	// set player position on screen
-	actorPlayer.setPosition(32, 32);
+	actorPlayer.setPosition(64*10 + 32, 64*10 + 32);
 
 	// Music!
 	sf::Music music;
@@ -69,13 +69,26 @@ int main(int argc, char** argv) {
 		// currently there is an error and only the latest collision object is checked...
 		for (auto layer = ml.GetLayers().begin(); layer != ml.GetLayers().end(); ++layer)
 		{
-			
 			if (layer->name == "Collision")
 			{
 				
 				for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
 				{
-					collision = object->Contains(sf::Vector2f(actorPlayer.getPosition()));
+					switch (actorPlayer.getDirection()) {
+					case Direction::North:
+						collision = object->Contains(sf::Vector2f(actorPlayer.getPosition().x + 16, actorPlayer.getPosition().y)) || object->Contains(sf::Vector2f(actorPlayer.getPosition().x - 16, actorPlayer.getPosition().y));
+						break;
+					case Direction::East:
+						collision = object->Contains(sf::Vector2f(actorPlayer.getPosition().x + 32, actorPlayer.getPosition().y + 32));
+						break;
+					case Direction::South:
+						collision = object->Contains(sf::Vector2f(actorPlayer.getPosition().x + 16, actorPlayer.getPosition().y + 32)) || object->Contains(sf::Vector2f(actorPlayer.getPosition().x - 16, actorPlayer.getPosition().y + 32));
+						break;
+					case Direction::West:
+						collision = object->Contains(sf::Vector2f(actorPlayer.getPosition().x - 32, actorPlayer.getPosition().y + 32));
+						break;
+					}
+
 					if (collision == true)
 					{
 						actorPlayer.setPosition(actorPlayer.getPastPosition().x, actorPlayer.getPastPosition().y);

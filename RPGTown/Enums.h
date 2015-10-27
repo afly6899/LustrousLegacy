@@ -21,3 +21,7 @@ namespace states {
 }
 
 // include other defined enums here (player enums)
+
+enum Direction {
+	South, West, East, North
+};

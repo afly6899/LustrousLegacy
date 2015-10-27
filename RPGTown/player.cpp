@@ -29,6 +29,7 @@ namespace actor {
 	void Player::move(int direction, float elapsedTime, double speed, bool collision) {
 
 		mSource.y = direction;
+		playerDirection = direction;
 
 		if (collision == false)
 		{ 
@@ -82,6 +83,8 @@ namespace actor {
 		return mSprite.getGlobalBounds();
 	}
 
-
+	int Player::getDirection() {
+		return playerDirection;
+	}
 }
 

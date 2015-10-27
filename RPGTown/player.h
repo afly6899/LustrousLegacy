@@ -37,12 +37,14 @@ namespace actor {
 		sf::Vector2f getPosition();
 		sf::Vector2f getPastPosition();
 		sf::FloatRect getGlobalBounds();
+		int getDirection();
 
 	private:
 
 		sf::Sprite mSprite;
 		sf::Vector2f mSource;
 		sf::Vector2f pastPosition;
+		int playerDirection;
 		int aniCounter = 0;
 		int aniFrameDuration = 200;
 	};
