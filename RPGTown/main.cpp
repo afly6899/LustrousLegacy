@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
 
 	// TMX map loader
 	tmx::MapLoader ml("\maps");
-	ml.Load("test.tmx");
+	ml.Load("test_new.tmx");
 
 	// clock
 	sf::Clock gameClock;
@@ -58,6 +58,7 @@ int main(int argc, char** argv) {
 			}
 		}
 
+		// store how much time has elapsed
 		elapsedTime = gameClock.restart().asMilliseconds();
 
 		window.clear();
@@ -68,11 +69,17 @@ int main(int argc, char** argv) {
 		// currently there is an error and only the latest collision object is checked...
 		for (auto layer = ml.GetLayers().begin(); layer != ml.GetLayers().end(); ++layer)
 		{
+			
 			if (layer->name == "Collision")
 			{
-				for (auto object = layer->objects.begin(); object != layer->objects.end(); ++object)
+				
+				for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
 				{
 					collision = object->Contains(sf::Vector2f(actorPlayer.getPosition()));
+					if (collision == true)
+					{
+						actorPlayer.setPosition(actorPlayer.getPastPosition().x, actorPlayer.getPastPosition().y);
+					}
 				}
 			}
 		}
@@ -80,21 +87,15 @@ int main(int argc, char** argv) {
 		// adjust view to keep it on player
 		playerView.setCenter(actorPlayer.getPosition());
 
-		if (collision == false)
+		if (collision != true)
 		{
 			window.setView(playerView);
 		}
-		else
-		{
-			// set player position back to before they collided with object
-			actorPlayer.setPosition(actorPlayer.getPastPosition().x, actorPlayer.getPastPosition().y);
-		}
 
-		// draw chracter
+		// draw map, then draw player
 		window.draw(ml);
 		window.draw(actorPlayer);
 		window.display();
-
 	}
 	return 0;
 }
