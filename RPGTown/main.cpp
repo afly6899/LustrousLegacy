@@ -7,14 +7,14 @@
 using namespace std;
 
 void sysMovement(actor::Player&, float elapsedTime, double player_speed, bool collision);
-
-// collision variable 
+void sysPause(bool& pause, sf::Music& music); 
 
 int main(int argc, char** argv) {
 
 	// Define parameters for player functions
 	double player_speed = speed::Fast;
 	bool collision = false;
+	bool pause = false;
 	float elapsedTime = 0;
 
 	// window
@@ -27,9 +27,17 @@ int main(int argc, char** argv) {
 	// TMX map loader
 	tmx::MapLoader ml("\maps");
 	ml.Load("test_new.tmx");
-
 	// clock
 	sf::Clock gameClock;
+
+	// pause texture
+	sf::Texture syspTexture;
+	if (!syspTexture.loadFromFile("pause.png")) {
+		cerr << "Texture Error" << endl;
+	}
+	// setting up pause 'screen'
+	sf::Sprite pauseSprite(syspTexture);
+	pauseSprite.setOrigin(400, 300);
 
 	// player texture
 	sf::Texture pTexture;
@@ -48,7 +56,7 @@ int main(int argc, char** argv) {
 	if (!music.openFromFile("test.ogg"))
 	return -1; // error
 	music.play();
-	
+
 	// game loop
 	while (window.isOpen()) {
 		sf::Event event;
@@ -56,49 +64,58 @@ int main(int argc, char** argv) {
 			if (event.type == sf::Event::Closed) {
 				window.close();
 			}
+			else if (event.type == sf::Event::KeyPressed) {
+				sysPause(pause, music);
+			}
 		}
+
 
 		// store how much time has elapsed
 		elapsedTime = gameClock.restart().asMilliseconds();
 
-		window.clear();
-	
-		// player movement system and control parameters
-		sysMovement(actorPlayer, elapsedTime, player_speed, collision);
-
-		// currently there is an error and only the latest collision object is checked...
-		for (auto layer = ml.GetLayers().begin(); layer != ml.GetLayers().end(); ++layer)
+		cout << pause << endl;
+		if (!pause)
 		{
-			if (layer->name == "Collision")
-			{
-				
-				for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
-				{
-					switch (actorPlayer.getDirection()) {
-					case Direction::North:
-						collision = object->Contains(sf::Vector2f(actorPlayer.getPosition().x + 16, actorPlayer.getPosition().y)) || object->Contains(sf::Vector2f(actorPlayer.getPosition().x - 16, actorPlayer.getPosition().y));
-						break;
-					case Direction::East:
-						collision = object->Contains(sf::Vector2f(actorPlayer.getPosition().x + 32, actorPlayer.getPosition().y + 32));
-						break;
-					case Direction::South:
-						collision = object->Contains(sf::Vector2f(actorPlayer.getPosition().x + 16, actorPlayer.getPosition().y + 32)) || object->Contains(sf::Vector2f(actorPlayer.getPosition().x - 16, actorPlayer.getPosition().y + 32));
-						break;
-					case Direction::West:
-						collision = object->Contains(sf::Vector2f(actorPlayer.getPosition().x - 32, actorPlayer.getPosition().y + 32));
-						break;
-					}
+			// player movement system and control parameters
+			sysMovement(actorPlayer, elapsedTime, player_speed, collision);
 
-					if (collision == true)
+			// currently there is an error and only the latest collision object is checked...
+			for (auto layer = ml.GetLayers().begin(); layer != ml.GetLayers().end(); ++layer)
+			{
+				if (layer->name == "Collision")
+				{
+
+					for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
 					{
-						actorPlayer.setPosition(actorPlayer.getPastPosition().x, actorPlayer.getPastPosition().y);
+						switch (actorPlayer.getDirection()) {
+						case Direction::North:
+							collision = object->Contains(sf::Vector2f(actorPlayer.getPosition().x + 16, actorPlayer.getPosition().y)) || object->Contains(sf::Vector2f(actorPlayer.getPosition().x - 16, actorPlayer.getPosition().y));
+							break;
+						case Direction::East:
+							collision = object->Contains(sf::Vector2f(actorPlayer.getPosition().x + 32, actorPlayer.getPosition().y + 32));
+							break;
+						case Direction::South:
+							collision = object->Contains(sf::Vector2f(actorPlayer.getPosition().x + 16, actorPlayer.getPosition().y + 32)) || object->Contains(sf::Vector2f(actorPlayer.getPosition().x - 16, actorPlayer.getPosition().y + 32));
+							break;
+						case Direction::West:
+							collision = object->Contains(sf::Vector2f(actorPlayer.getPosition().x - 32, actorPlayer.getPosition().y + 32));
+							break;
+						}
+
+						if (collision == true)
+						{
+							actorPlayer.setPosition(actorPlayer.getPastPosition().x, actorPlayer.getPastPosition().y);
+						}
 					}
 				}
 			}
-		}
 
-		// adjust view to keep it on player
-		playerView.setCenter(actorPlayer.getPosition());
+			// adjust view to keep it on player
+			playerView.setCenter(actorPlayer.getPosition());
+		}
+		
+
+		window.clear();
 
 		if (collision != true)
 		{
@@ -106,10 +123,19 @@ int main(int argc, char** argv) {
 		}
 
 		// draw map, then draw player
+
 		window.draw(ml);
 		window.draw(actorPlayer);
+		ml.Draw(window, 4, 0);
+
+		if (pause == true)
+		{
+			pauseSprite.setPosition(actorPlayer.getPosition());
+			window.draw(pauseSprite);
+		}
 		window.display();
 	}
+	
 	return 0;
 }
 
@@ -117,16 +143,16 @@ void sysMovement(actor::Player& player, float elapsedTime, double player_speed, 
 {
 	// currently, game clock is passed to player object (probably don't want to do this)
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 		player.move(actor::Player::North, elapsedTime, player_speed, collision);
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 		player.move(actor::Player::South, elapsedTime, player_speed, collision);
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		player.move(actor::Player::East, elapsedTime, player_speed, collision);
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 		player.move(actor::Player::West, elapsedTime, player_speed, collision);
 	}
 	else
@@ -134,4 +160,19 @@ void sysMovement(actor::Player& player, float elapsedTime, double player_speed, 
 		player.idle();
 	}
 
+}
+
+void sysPause(bool& pause, sf::Music& music)
+{
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+		pause = !pause;
+		if (pause == true)
+		{
+			music.pause();
+		}
+		else if (pause == false)
+		{
+			music.play();
+		}
+	}
 }
