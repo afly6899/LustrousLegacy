@@ -26,7 +26,7 @@ namespace actor {
 	}
 
 	// Player move function moves sprite and animates based on clock and speed
-	void Player::move(int direction, float elapsedTime, double speed, bool collision) {
+	void Player::move(int direction, float elapsedTime, float speed, bool collision) {
 
 		mSource.y = direction;
 		playerDirection = direction;
