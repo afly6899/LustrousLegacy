@@ -21,9 +21,13 @@ int main(int argc, char** argv) {
 
 	// Define parameters for player functions
 	float player_speed = speed::Fast;
+	float aniCounter = 0;
+	float aniFrameDuration = 800;
+	int layer = 0;
+	float elapsedTime = 0;
 	bool collision = false;
 	bool pause = false;
-	float elapsedTime = 0;
+
 
 	// window
 	sf::RenderWindow window(sf::VideoMode(window_width, window_height), window_name);
@@ -83,6 +87,8 @@ int main(int argc, char** argv) {
 
 		if (!pause)
 		{
+			aniCounter += elapsedTime;
+
 			// player movement system and control parameters
 			sysMovement(actorPlayer, elapsedTime, player_speed, collision);
 
@@ -102,12 +108,30 @@ int main(int argc, char** argv) {
 			window.setView(playerView);
 		}
 
-		// draw map
-		window.draw(ml);
+		// draw animated background (layers 0 and 1 are alternated)
+		if (aniCounter >= aniFrameDuration)
+		{
+			aniCounter -= aniFrameDuration;
+			ml.Draw(window, layer);
+			layer = layer + 1;
+			if (layer > Layer::Background_2)
+			{
+				layer = Layer::Background_1;
+			}
+		}
+		else
+		{
+			ml.Draw(window, layer, 0);
+		}
+
+		// draw walkable and collidable tiles
+		ml.Draw(window, Layer::Field);
+		ml.Draw(window, Layer::Collision_Objects);
+
 		// draw player
 		window.draw(actorPlayer);
 		// draw top layer of map
-		ml.Draw(window, 4, 0);
+		ml.Draw(window, Layer::Overlay);
 
 		// if game is paused, draw pause screen
 		if (pause == true)
@@ -115,7 +139,7 @@ int main(int argc, char** argv) {
 			pauseSprite.setPosition(actorPlayer.getPosition());
 			window.draw(pauseSprite);
 		}
-		
+
 		// update screen with changes
 		window.display();
 	}

@@ -25,3 +25,14 @@ namespace states {
 enum Direction {
 	South, West, East, North
 };
+
+namespace Layer {
+	enum {
+		Background_1,
+		Background_2,
+		Field,
+		Collision_Objects,
+		Collision_Boxes,
+		Overlay
+	};
+}
