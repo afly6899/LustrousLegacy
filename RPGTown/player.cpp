@@ -35,13 +35,13 @@ namespace actor {
 		{ 
 			pastPosition = mSprite.getPosition();
 			switch (direction) {
-			case Player::South: mSprite.move(0, speed);
+			case Player::South: mSprite.move(0, speed * 1/elapsedTime);
 				break;
-			case Player::East: mSprite.move(speed, 0);
+			case Player::East: mSprite.move(speed * 1/elapsedTime, 0);
 				break;
-			case Player::West: mSprite.move(-speed, 0);
+			case Player::West: mSprite.move(-speed * 1/elapsedTime, 0);
 				break;
-			case Player::North: mSprite.move(0, -speed);
+			case Player::North: mSprite.move(0, -speed * 1/elapsedTime);
 				break;
 			}
 		}

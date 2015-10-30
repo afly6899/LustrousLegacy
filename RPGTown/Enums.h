@@ -1,10 +1,10 @@
 namespace speed {
 
 	enum {
-		Slow = 2,
-		Normal = 3,
-		Fast = 4,
-		Fastest = 5
+		Slow = 40,
+		Normal = 60,
+		Fast = 80,
+		Fastest = 100
 	};
 
 }
@@ -33,6 +33,7 @@ namespace Layer {
 		Field,
 		Collision_Objects,
 		Collision_Boxes,
+		Event_Layer,
 		Overlay
 	};
 }
