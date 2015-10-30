@@ -238,16 +238,16 @@ void sysCollision(actor::Player& player, tmx::MapLoader& map, bool& collision, b
 			{
 				switch (player.getDirection()) {
 				case Direction::North:
-					collision = object->Contains(sf::Vector2f(player.getPosition().x + 8, player.getPosition().y)) || object->Contains(sf::Vector2f(player.getPosition().x - 8, player.getPosition().y));
+					collision = object->Contains(sf::Vector2f(player.getPosition().x + 16, player.getPosition().y)) || object->Contains(sf::Vector2f(player.getPosition().x - 16, player.getPosition().y));
 					break;
 				case Direction::East:
-					collision = object->Contains(sf::Vector2f(player.getPosition().x + 32, player.getPosition().y + 32));
+					collision = object->Contains(sf::Vector2f(player.getPosition().x + 16, player.getPosition().y + 32)) || object->Contains(sf::Vector2f(player.getPosition().x + 16, player.getPosition().y + 32));
 					break;
 				case Direction::South:
-					collision = object->Contains(sf::Vector2f(player.getPosition().x + 8, player.getPosition().y + 32)) || object->Contains(sf::Vector2f(player.getPosition().x - 8, player.getPosition().y + 32));
+					collision = object->Contains(sf::Vector2f(player.getPosition().x + 16, player.getPosition().y + 32)) || object->Contains(sf::Vector2f(player.getPosition().x - 16, player.getPosition().y + 32));
 					break;
 				case Direction::West:
-					collision = object->Contains(sf::Vector2f(player.getPosition().x - 32, player.getPosition().y + 32));
+					collision = object->Contains(sf::Vector2f(player.getPosition().x - 16, player.getPosition().y + 32)) || object->Contains(sf::Vector2f(player.getPosition().x - 16, player.getPosition().y + 32));
 					break;
 				}
 
