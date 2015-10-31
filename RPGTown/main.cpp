@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
 
 	sf::Text FPS;
 	FPS.setFont(Vera);
-	FPS.setCharacterSize(24);
+	FPS.setCharacterSize(18);
 
 	sf::RectangleShape rectText;
 	rectText.setSize(sf::Vector2f(window_width - 25, window_height*.3));
@@ -118,7 +118,7 @@ int main(int argc, char** argv) {
 		}
 
 		// get FPS
-		FPS.setString(to_string(1/(float)gameClock.getElapsedTime().asSeconds()));
+		FPS.setString("FPS: " + to_string(1/(float)gameClock.getElapsedTime().asSeconds()) + "\nCoordinates: (" + to_string(actorPlayer.getPosition().x) + ", " + to_string(actorPlayer.getPosition().y) + "\nTile Map: (" + to_string(actorPlayer.getPosition().x / tilesize) + ", " + to_string(actorPlayer.getPosition().y / tilesize));
 		// store how much time has elapsed
 		elapsedTime = (float)gameClock.restart().asMilliseconds();
 
@@ -184,12 +184,12 @@ int main(int argc, char** argv) {
 			rectText.setPosition(actorPlayer.getPosition().x, actorPlayer.getPosition().y + 410);
 			window.draw(rectText);
 		}
-
+		
 		if (debug) {
-			FPS.setPosition(actorPlayer.getPastPosition().x - 100, actorPlayer.getPosition().y - 100);
+			FPS.setPosition(actorPlayer.getPosition().x - 400, actorPlayer.getPosition().y - 300);
 			window.draw(FPS);
 		}
-		
+
 		// update screen with changes
 		window.display();
 	}
