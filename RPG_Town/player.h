@@ -29,13 +29,22 @@ namespace actor {
 		// Player destructor (virtual -> destroy derived, then destroy base class)
 		virtual ~Player();
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-		void move(int direction, sf::Clock& clock, double speed = 0.2);
-		void idle(sf::Clock& clock);
+		void move(int direction, float elapsedTime, float speed = 0.2, bool collision = false);
+		void idle();
+
+		// player positioning functions
+		void setPosition(int x, int y);
+		sf::Vector2f getPosition();
+		sf::Vector2f getPastPosition();
+		sf::FloatRect getGlobalBounds();
+		int getDirection();
 
 	private:
 
 		sf::Sprite mSprite;
-		sf::Vector2i mSource; // x is the animation step, y is the direction character is going
+		sf::Vector2f mSource;
+		sf::Vector2f pastPosition;
+		int playerDirection;
 		int aniCounter = 0;
 		int aniFrameDuration = 200;
 	};

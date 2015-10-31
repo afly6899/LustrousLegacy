@@ -7,24 +7,76 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BC9D61A11BD6140500B8DE1D /* ResourcePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = BC9D61A01BD6140500B8DE1D /* ResourcePath.mm */; };
-		BC9D61A41BD6140500B8DE1D /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC9D61A31BD6140500B8DE1D /* main.cpp */; };
-		BC9D61A71BD6140500B8DE1D /* cute_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BC9D61A61BD6140500B8DE1D /* cute_image.jpg */; };
-		BC9D61A91BD6140500B8DE1D /* nice_music.ogg in Resources */ = {isa = PBXBuildFile; fileRef = BC9D61A81BD6140500B8DE1D /* nice_music.ogg */; };
-		BC9D61AB1BD6140500B8DE1D /* sansation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC9D61AA1BD6140500B8DE1D /* sansation.ttf */; };
-		BC9D61AD1BD6140500B8DE1D /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = BC9D61AC1BD6140500B8DE1D /* icon.png */; };
+		BC0279761BE4FD3B00719D03 /* Enums.h in Headers */ = {isa = PBXBuildFile; fileRef = BC0279711BE4FD3B00719D03 /* Enums.h */; };
+		BC027A241BE55C8C00719D03 /* DebugShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC027A0F1BE55C8C00719D03 /* DebugShape.cpp */; };
+		BC027A251BE55C8C00719D03 /* MapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC027A101BE55C8C00719D03 /* MapLayer.cpp */; };
+		BC027A261BE55C8C00719D03 /* MapLoaderPrivate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC027A111BE55C8C00719D03 /* MapLoaderPrivate.cpp */; };
+		BC027A271BE55C8C00719D03 /* MapLoaderPublic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC027A121BE55C8C00719D03 /* MapLoaderPublic.cpp */; };
+		BC027A281BE55C8C00719D03 /* MapObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC027A131BE55C8C00719D03 /* MapObject.cpp */; };
+		BC027A291BE55C8C00719D03 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC027A151BE55C8C00719D03 /* pugixml.cpp */; };
+		BC027A2A1BE55C8C00719D03 /* QuadTreeNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC027A161BE55C8C00719D03 /* QuadTreeNode.cpp */; };
+		BC027A2C1BE55C8C00719D03 /* DebugShape.h in Headers */ = {isa = PBXBuildFile; fileRef = BC027A191BE55C8C00719D03 /* DebugShape.h */; };
+		BC027A2D1BE55C8C00719D03 /* Helpers.h in Headers */ = {isa = PBXBuildFile; fileRef = BC027A1A1BE55C8C00719D03 /* Helpers.h */; };
+		BC027A2E1BE55C8C00719D03 /* Log.h in Headers */ = {isa = PBXBuildFile; fileRef = BC027A1B1BE55C8C00719D03 /* Log.h */; };
+		BC027A2F1BE55C8C00719D03 /* MapLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = BC027A1C1BE55C8C00719D03 /* MapLayer.h */; };
+		BC027A301BE55C8C00719D03 /* MapLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = BC027A1D1BE55C8C00719D03 /* MapLoader.h */; };
+		BC027A311BE55C8C00719D03 /* MapObject.h in Headers */ = {isa = PBXBuildFile; fileRef = BC027A1E1BE55C8C00719D03 /* MapObject.h */; };
+		BC027A321BE55C8C00719D03 /* QuadTreeNode.h in Headers */ = {isa = PBXBuildFile; fileRef = BC027A1F1BE55C8C00719D03 /* QuadTreeNode.h */; };
+		BC027A341BE55C8C00719D03 /* pugiconfig.hpp in Headers */ = {isa = PBXBuildFile; fileRef = BC027A221BE55C8C00719D03 /* pugiconfig.hpp */; };
+		BC027A351BE55C8C00719D03 /* pugixml.hpp in Headers */ = {isa = PBXBuildFile; fileRef = BC027A231BE55C8C00719D03 /* pugixml.hpp */; };
+		BC027A3C1BE55F3100719D03 /* 64x64_sampletile.png in Resources */ = {isa = PBXBuildFile; fileRef = BC027A361BE55F3100719D03 /* 64x64_sampletile.png */; };
+		BC027A3D1BE55F3100719D03 /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = BC027A371BE55F3100719D03 /* pause.png */; };
+		BC027A3E1BE55F3100719D03 /* test.ogg in Resources */ = {isa = PBXBuildFile; fileRef = BC027A381BE55F3100719D03 /* test.ogg */; };
+		BC027A3F1BE55F3100719D03 /* Vera.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC027A391BE55F3100719D03 /* Vera.ttf */; };
+		BC027A401BE55F3100719D03 /* Eevee.png in Resources */ = {isa = PBXBuildFile; fileRef = BC027A3A1BE55F3100719D03 /* Eevee.png */; };
+		BC027A411BE55F3100719D03 /* playerSprite.png in Resources */ = {isa = PBXBuildFile; fileRef = BC027A3B1BE55F3100719D03 /* playerSprite.png */; };
+		BC7D9CB11BDF20880065F7C5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BC7D9CB01BDF20880065F7C5 /* libz.dylib */; };
+		BC9D61BD1BD61D0D00B8DE1D /* animated_player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC9D61BB1BD61D0D00B8DE1D /* animated_player.cpp */; };
+		BC9D61BF1BD7495A00B8DE1D /* main_animated.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC9D61BE1BD7495A00B8DE1D /* main_animated.cpp */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		BC0279DD1BE556B600719D03 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = tmx;
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		BC0279711BE4FD3B00719D03 /* Enums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Enums.h; path = RPG_Town/Enums.h; sourceTree = SOURCE_ROOT; };
+		BC027A0F1BE55C8C00719D03 /* DebugShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugShape.cpp; sourceTree = "<group>"; };
+		BC027A101BE55C8C00719D03 /* MapLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapLayer.cpp; sourceTree = "<group>"; };
+		BC027A111BE55C8C00719D03 /* MapLoaderPrivate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapLoaderPrivate.cpp; sourceTree = "<group>"; };
+		BC027A121BE55C8C00719D03 /* MapLoaderPublic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapLoaderPublic.cpp; sourceTree = "<group>"; };
+		BC027A131BE55C8C00719D03 /* MapObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapObject.cpp; sourceTree = "<group>"; };
+		BC027A151BE55C8C00719D03 /* pugixml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pugixml.cpp; sourceTree = "<group>"; };
+		BC027A161BE55C8C00719D03 /* QuadTreeNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QuadTreeNode.cpp; sourceTree = "<group>"; };
+		BC027A191BE55C8C00719D03 /* DebugShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugShape.h; sourceTree = "<group>"; };
+		BC027A1A1BE55C8C00719D03 /* Helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Helpers.h; sourceTree = "<group>"; };
+		BC027A1B1BE55C8C00719D03 /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
+		BC027A1C1BE55C8C00719D03 /* MapLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapLayer.h; sourceTree = "<group>"; };
+		BC027A1D1BE55C8C00719D03 /* MapLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapLoader.h; sourceTree = "<group>"; };
+		BC027A1E1BE55C8C00719D03 /* MapObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapObject.h; sourceTree = "<group>"; };
+		BC027A1F1BE55C8C00719D03 /* QuadTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuadTreeNode.h; sourceTree = "<group>"; };
+		BC027A221BE55C8C00719D03 /* pugiconfig.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pugiconfig.hpp; sourceTree = "<group>"; };
+		BC027A231BE55C8C00719D03 /* pugixml.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pugixml.hpp; sourceTree = "<group>"; };
+		BC027A361BE55F3100719D03 /* 64x64_sampletile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 64x64_sampletile.png; sourceTree = "<group>"; };
+		BC027A371BE55F3100719D03 /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause.png; sourceTree = "<group>"; };
+		BC027A381BE55F3100719D03 /* test.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.ogg; sourceTree = "<group>"; };
+		BC027A391BE55F3100719D03 /* Vera.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Vera.ttf; sourceTree = "<group>"; };
+		BC027A3A1BE55F3100719D03 /* Eevee.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Eevee.png; sourceTree = "<group>"; };
+		BC027A3B1BE55F3100719D03 /* playerSprite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerSprite.png; sourceTree = "<group>"; };
+		BC7D9CB01BDF20880065F7C5 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		BC9D619B1BD6140500B8DE1D /* RPG_Town.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RPG_Town.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		BC9D619F1BD6140500B8DE1D /* RPG_Town-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RPG_Town-Info.plist"; sourceTree = "<group>"; };
-		BC9D61A01BD6140500B8DE1D /* ResourcePath.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ResourcePath.mm; sourceTree = "<group>"; };
-		BC9D61A21BD6140500B8DE1D /* ResourcePath.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ResourcePath.hpp; sourceTree = "<group>"; };
-		BC9D61A31BD6140500B8DE1D /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		BC9D61A61BD6140500B8DE1D /* cute_image.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cute_image.jpg; sourceTree = "<group>"; };
-		BC9D61A81BD6140500B8DE1D /* nice_music.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = nice_music.ogg; sourceTree = "<group>"; };
-		BC9D61AA1BD6140500B8DE1D /* sansation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sansation.ttf; sourceTree = "<group>"; };
-		BC9D61AC1BD6140500B8DE1D /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		BC9D619F1BD6140500B8DE1D /* RPG_Town-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "RPG_Town-Info.plist"; path = "RPG_Town/RPG_Town-Info.plist"; sourceTree = SOURCE_ROOT; };
+		BC9D61BB1BD61D0D00B8DE1D /* animated_player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = animated_player.cpp; path = RPG_Town/animated_player.cpp; sourceTree = SOURCE_ROOT; };
+		BC9D61BC1BD61D0D00B8DE1D /* animated_player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = animated_player.h; path = RPG_Town/animated_player.h; sourceTree = SOURCE_ROOT; };
+		BC9D61BE1BD7495A00B8DE1D /* main_animated.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main_animated.cpp; path = RPG_Town/main_animated.cpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,15 +84,76 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC7D9CB11BDF20880065F7C5 /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BC02797A1BE4FD4F00719D03 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				BC027A361BE55F3100719D03 /* 64x64_sampletile.png */,
+				BC027A371BE55F3100719D03 /* pause.png */,
+				BC027A381BE55F3100719D03 /* test.ogg */,
+				BC027A391BE55F3100719D03 /* Vera.ttf */,
+				BC027A3A1BE55F3100719D03 /* Eevee.png */,
+				BC027A3B1BE55F3100719D03 /* playerSprite.png */,
+			);
+			name = Resources;
+			path = RPG_Town;
+			sourceTree = SOURCE_ROOT;
+		};
+		BC027A0E1BE55C8C00719D03 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				BC027A0F1BE55C8C00719D03 /* DebugShape.cpp */,
+				BC027A101BE55C8C00719D03 /* MapLayer.cpp */,
+				BC027A111BE55C8C00719D03 /* MapLoaderPrivate.cpp */,
+				BC027A121BE55C8C00719D03 /* MapLoaderPublic.cpp */,
+				BC027A131BE55C8C00719D03 /* MapObject.cpp */,
+				BC027A141BE55C8C00719D03 /* pugixml */,
+				BC027A161BE55C8C00719D03 /* QuadTreeNode.cpp */,
+			);
+			path = src;
+			sourceTree = SOURCE_ROOT;
+		};
+		BC027A141BE55C8C00719D03 /* pugixml */ = {
+			isa = PBXGroup;
+			children = (
+				BC027A151BE55C8C00719D03 /* pugixml.cpp */,
+			);
+			path = pugixml;
+			sourceTree = "<group>";
+		};
+		BC027A181BE55C8C00719D03 /* tmx */ = {
+			isa = PBXGroup;
+			children = (
+				BC027A191BE55C8C00719D03 /* DebugShape.h */,
+				BC027A1A1BE55C8C00719D03 /* Helpers.h */,
+				BC027A1B1BE55C8C00719D03 /* Log.h */,
+				BC027A1C1BE55C8C00719D03 /* MapLayer.h */,
+				BC027A1D1BE55C8C00719D03 /* MapLoader.h */,
+				BC027A1E1BE55C8C00719D03 /* MapObject.h */,
+				BC027A1F1BE55C8C00719D03 /* QuadTreeNode.h */,
+			);
+			path = tmx;
+			sourceTree = SOURCE_ROOT;
+		};
+		BC027A211BE55C8C00719D03 /* pugixml */ = {
+			isa = PBXGroup;
+			children = (
+				BC027A221BE55C8C00719D03 /* pugiconfig.hpp */,
+				BC027A231BE55C8C00719D03 /* pugixml.hpp */,
+			);
+			path = pugixml;
+			sourceTree = SOURCE_ROOT;
+		};
 		BC9D61911BD6140500B8DE1D = {
 			isa = PBXGroup;
 			children = (
+				BC7D9CB01BDF20880065F7C5 /* libz.dylib */,
 				BC9D619D1BD6140500B8DE1D /* RPG_Town */,
 				BC9D619C1BD6140500B8DE1D /* Products */,
 			);
@@ -52,19 +165,23 @@
 				BC9D619B1BD6140500B8DE1D /* RPG_Town.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		BC9D619D1BD6140500B8DE1D /* RPG_Town */ = {
 			isa = PBXGroup;
 			children = (
-				BC9D61A01BD6140500B8DE1D /* ResourcePath.mm */,
-				BC9D61A21BD6140500B8DE1D /* ResourcePath.hpp */,
-				BC9D61A31BD6140500B8DE1D /* main.cpp */,
-				BC9D61A51BD6140500B8DE1D /* Resources */,
+				BC027A0E1BE55C8C00719D03 /* src */,
+				BC027A181BE55C8C00719D03 /* tmx */,
+				BC027A211BE55C8C00719D03 /* pugixml */,
+				BC0279711BE4FD3B00719D03 /* Enums.h */,
+				BC02797A1BE4FD4F00719D03 /* Resources */,
+				BC9D61BC1BD61D0D00B8DE1D /* animated_player.h */,
+				BC9D61BB1BD61D0D00B8DE1D /* animated_player.cpp */,
+				BC9D61BE1BD7495A00B8DE1D /* main_animated.cpp */,
 				BC9D619E1BD6140500B8DE1D /* Supporting Files */,
 			);
 			path = RPG_Town;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		BC9D619E1BD6140500B8DE1D /* Supporting Files */ = {
 			isa = PBXGroup;
@@ -72,20 +189,30 @@
 				BC9D619F1BD6140500B8DE1D /* RPG_Town-Info.plist */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		BC9D61A51BD6140500B8DE1D /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				BC9D61A61BD6140500B8DE1D /* cute_image.jpg */,
-				BC9D61A81BD6140500B8DE1D /* nice_music.ogg */,
-				BC9D61AA1BD6140500B8DE1D /* sansation.ttf */,
-				BC9D61AC1BD6140500B8DE1D /* icon.png */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
+			path = RPG_Town;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		BC395EA61BDF1537007EC434 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BC027A2C1BE55C8C00719D03 /* DebugShape.h in Headers */,
+				BC027A2E1BE55C8C00719D03 /* Log.h in Headers */,
+				BC0279761BE4FD3B00719D03 /* Enums.h in Headers */,
+				BC027A351BE55C8C00719D03 /* pugixml.hpp in Headers */,
+				BC027A2F1BE55C8C00719D03 /* MapLayer.h in Headers */,
+				BC027A341BE55C8C00719D03 /* pugiconfig.hpp in Headers */,
+				BC027A321BE55C8C00719D03 /* QuadTreeNode.h in Headers */,
+				BC027A301BE55C8C00719D03 /* MapLoader.h in Headers */,
+				BC027A2D1BE55C8C00719D03 /* Helpers.h in Headers */,
+				BC027A311BE55C8C00719D03 /* MapObject.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		BC9D619A1BD6140500B8DE1D /* RPG_Town */ = {
@@ -96,6 +223,8 @@
 				BC9D61971BD6140500B8DE1D /* Frameworks */,
 				BC9D61981BD6140500B8DE1D /* Resources */,
 				BC9D61991BD6140500B8DE1D /* ShellScript */,
+				BC395EA61BDF1537007EC434 /* Headers */,
+				BC0279DD1BE556B600719D03 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -142,10 +271,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BC9D61AD1BD6140500B8DE1D /* icon.png in Resources */,
-				BC9D61AB1BD6140500B8DE1D /* sansation.ttf in Resources */,
-				BC9D61A91BD6140500B8DE1D /* nice_music.ogg in Resources */,
-				BC9D61A71BD6140500B8DE1D /* cute_image.jpg in Resources */,
+				BC027A3D1BE55F3100719D03 /* pause.png in Resources */,
+				BC027A3C1BE55F3100719D03 /* 64x64_sampletile.png in Resources */,
+				BC027A3F1BE55F3100719D03 /* Vera.ttf in Resources */,
+				BC027A411BE55F3100719D03 /* playerSprite.png in Resources */,
+				BC027A3E1BE55F3100719D03 /* test.ogg in Resources */,
+				BC027A401BE55F3100719D03 /* Eevee.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,8 +303,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BC9D61A41BD6140500B8DE1D /* main.cpp in Sources */,
-				BC9D61A11BD6140500B8DE1D /* ResourcePath.mm in Sources */,
+				BC027A291BE55C8C00719D03 /* pugixml.cpp in Sources */,
+				BC027A2A1BE55C8C00719D03 /* QuadTreeNode.cpp in Sources */,
+				BC027A271BE55C8C00719D03 /* MapLoaderPublic.cpp in Sources */,
+				BC9D61BF1BD7495A00B8DE1D /* main_animated.cpp in Sources */,
+				BC027A241BE55C8C00719D03 /* DebugShape.cpp in Sources */,
+				BC9D61BD1BD61D0D00B8DE1D /* animated_player.cpp in Sources */,
+				BC027A251BE55C8C00719D03 /* MapLayer.cpp in Sources */,
+				BC027A261BE55C8C00719D03 /* MapLoaderPrivate.cpp in Sources */,
+				BC027A281BE55C8C00719D03 /* MapObject.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,12 +335,15 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include/,
 					"$(inherited)",
+					"/Users/audreylai/Desktop/sfml-tmxloader-master/include/",
 				);
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib/,
 					"$(inherited)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"$(SFML_SYSTEM)",
@@ -224,6 +365,7 @@
 				SFML_SYSTEM = "$(SFML_LINK_PREFIX) sfml-system$(SFML_LINK_SUFFIX)";
 				SFML_WINDOW = "$(SFML_LINK_PREFIX) sfml-window$(SFML_LINK_SUFFIX)";
 				SUPPORTED_PLATFORMS = macosx;
+				USER_HEADER_SEARCH_PATHS = "/Users/audreylai/Desktop/sfml-tmxloader-master/include/";
 			};
 			name = Debug;
 		};
@@ -244,12 +386,15 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include/,
 					"$(inherited)",
+					"/Users/audreylai/Desktop/sfml-tmxloader-master/include/",
 				);
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib/,
 					"$(inherited)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"$(SFML_SYSTEM)",
@@ -271,24 +416,35 @@
 				SFML_SYSTEM = "$(SFML_LINK_PREFIX) sfml-system$(SFML_LINK_SUFFIX)";
 				SFML_WINDOW = "$(SFML_LINK_PREFIX) sfml-window$(SFML_LINK_SUFFIX)";
 				SUPPORTED_PLATFORMS = macosx;
+				USER_HEADER_SEARCH_PATHS = "/Users/audreylai/Desktop/sfml-tmxloader-master/include/";
 			};
 			name = Release;
 		};
 		BC9D61B11BD6140500B8DE1D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				INFOPLIST_FILE = "RPG_Town/RPG_Town-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				MACH_O_TYPE = mh_execute;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TMX = "-frameworks";
+				USER_HEADER_SEARCH_PATHS = "/Users/audreyflai/Desktop/sfml-tmxloader-master/include/";
 			};
 			name = Debug;
 		};
 		BC9D61B21BD6140500B8DE1D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				INFOPLIST_FILE = "RPG_Town/RPG_Town-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				MACH_O_TYPE = mh_execute;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TMX = "-frameworks";
+				USER_HEADER_SEARCH_PATHS = "/Users/audreyflai/Desktop/sfml-tmxloader-master/include/";
 			};
 			name = Release;
 		};
@@ -311,6 +467,7 @@
 				BC9D61B21BD6140500B8DE1D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
