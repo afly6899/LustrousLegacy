@@ -1,10 +1,8 @@
 #ifndef SCENE_READER_H
 #define SCENE_READER_H
 
-#include <string>
 #include <queue>
-#include <utility>
-#include <SceneUtility.h>
+#include "SceneUtility.h"
 
 // Allows messages in a scene to be accessed in order.
 typedef std::queue<SpeechBubble> SceneQueue;
@@ -33,6 +31,9 @@ public:
     
     // Returns the size of the scene.
     int size();
+
+    // Returns if the SceneReader is empty.
+    bool isEmpty();
 
     // Returns current SpeechBubble.
     SpeechBubble currentMessage();
