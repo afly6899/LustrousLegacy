@@ -1,10 +1,10 @@
 namespace speed {
 
 	enum {
-		Slow = 40,
-		Normal = 60,
-		Fast = 80,
-		Fastest = 100
+		Slow = 4, // 64/speed = num iterations before you stop walking?
+		Normal = 8,
+		Fast = 16,
+		Fastest = 32
 	};
 
 }
