@@ -26,8 +26,8 @@ namespace actor {
 	}
 
 	// Player move function moves sprite and animates based on clock and speed
-	void Player::move(int direction, float elapsedTime, float speed, bool collision) {
-
+	void Player::move(int direction, float elapsedTime, int speed, bool collision) {
+        std::cout << "Will move " << speed << " pixels" << std::endl;
 		mSource.y = direction;
 		playerDirection = direction;
 
@@ -50,7 +50,7 @@ namespace actor {
         {
             pastPosition = mSprite.getPosition();
             switch (direction) {
-                case Player::South: mSprite.move(0, speed/4);
+                case Player::South: mSprite.move(0, int(speed/4));
                     break;
                 case Player::East: mSprite.move(speed/4, 0);
                     break;
@@ -60,9 +60,11 @@ namespace actor {
                     break;
             }
         }
-        mSource.x++;
+        if (int(aniCounter)%3 == 0) {
+            mSource.x++;
         if (mSource.x * 64 >= (int)mSprite.getTexture()->getSize().x) {
             mSource.x = 0;
+        }
         }
 //		aniCounter += elapsedTime;
 //

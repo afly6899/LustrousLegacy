@@ -6,7 +6,7 @@
 //#include "tmx\MapLoader.h"
 using namespace std;
 
-bool sysMovement(actor::Player&, float elapsedTime, float player_speed, bool collision);
+bool sysMovement(actor::Player&, float elapsedTime, int &player_speed, bool collision);
 //void sysCollision(actor::Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event);
 void sysPause(bool& pause, sf::Music& music);
 void console_message(string x);
@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
 	//------------- EMD DEBUG TOOLS AND TEST --------------//
 
 	// Define parameters for player functions
-	float player_speed = speed::Normal;
+	int player_speed = speed::Normal;
 	float aniCounter = 0;
 	float aniFrameDuration = 800;
 	float elapsedTime = 0;
@@ -139,7 +139,9 @@ int main(int argc, char** argv) {
                 distance_moved = 0;
             }
             else {
-                actorPlayer.move(actorPlayer.getDirection(), player_speed, elapsedTime, collision);
+                std::cout << "About to move " << player_speed << " pixels" << std::endl;
+                actorPlayer.move(actorPlayer.getDirection(), elapsedTime, player_speed, collision);
+                std::cout << "Moved " << player_speed << " pixels" << std::endl;
                 distance_moved += player_speed/4;
             }
 
@@ -212,14 +214,17 @@ int main(int argc, char** argv) {
 }
 
 // Player movement system
-bool sysMovement(actor::Player& player, float elapsedTime, float player_speed, bool collision)
+bool sysMovement(actor::Player& player, float elapsedTime, int &player_speed, bool collision)
 {
 	// currently, game clock is passed to player object (probably don't want to do this)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-		player_speed = speed::Fastest;
+        player_speed *= 0;
+		player_speed += speed::Fastest;
 	}
-	else
-		player_speed = speed::Normal;
+    else {
+        player_speed *= 0;
+		player_speed += speed::Normal;
+    }
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 		player.move(actor::Player::North, elapsedTime, player_speed, collision);

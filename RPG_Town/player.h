@@ -29,7 +29,7 @@ namespace actor {
 		// Player destructor (virtual -> destroy derived, then destroy base class)
 		virtual ~Player();
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-		void move(int direction, float elapsedTime, float speed = 40, bool collision = false);
+		void move(int direction, float elapsedTime, int speed, bool collision = false);
         void while_moving(int direction, float speed = 40, bool collision = false);
 		void idle();
 
