@@ -26,57 +26,31 @@ namespace actor {
 	}
 
 	// Player move function moves sprite and animates based on clock and speed
-	void Player::move(int direction, float elapsedTime, int speed, bool collision) {
-        std::cout << "Will move " << speed << " pixels" << std::endl;
+	void Player::move(int direction, int speed, bool collision) {
 		mSource.y = direction;
 		playerDirection = direction;
-
-//		if (collision == false)
-//		{ 
-//			pastPosition = mSprite.getPosition();
-//			switch (direction) {
-//			case Player::South: mSprite.move(0, speed * 1/elapsedTime);
-//				break;
-//			case Player::East: mSprite.move(speed * 1/elapsedTime, 0);
-//				break;
-//			case Player::West: mSprite.move(-speed * 1/elapsedTime, 0);
-//				break;
-//			case Player::North: mSprite.move(0, -speed * 1/elapsedTime);
-//				break;
-//			}
-//		}
         
         if (collision == false)
         {
             pastPosition = mSprite.getPosition();
             switch (direction) {
-                case Player::South: mSprite.move(0, int(speed/4));
+                case Player::South: mSprite.move(0, int(speed));
                     break;
-                case Player::East: mSprite.move(speed/4, 0);
+                case Player::East: mSprite.move(speed, 0);
                     break;
-                case Player::West: mSprite.move(-speed/4, 0);
+                case Player::West: mSprite.move(-speed, 0);
                     break;
-                case Player::North: mSprite.move(0, -speed/4);
+                case Player::North: mSprite.move(0, -speed);
                     break;
             }
         }
-        if (int(aniCounter)%3 == 0) {
-            mSource.x++;
-        if (mSource.x * 64 >= (int)mSprite.getTexture()->getSize().x) {
-            mSource.x = 0;
+        if (speed == 1 && (aniCounter % (aniFrameDuration*2) == 0)) {
+            mSource.x = int(mSource.x + 1) % int(mSprite.getTexture()->getSize().x / 64);
         }
+        else if (speed != 1 && aniCounter % aniFrameDuration == 0) {
+            mSource.x = int(mSource.x + 1) % int(mSprite.getTexture()->getSize().x / 64);
         }
-//		aniCounter += elapsedTime;
-//
-//		if (aniCounter >= aniFrameDuration)
-//		{
-//			aniCounter -= aniFrameDuration;
-//			mSource.x++;
-//
-//			if (mSource.x * 64 >= (int)mSprite.getTexture()->getSize().x) {
-//				mSource.x = 0;
-//			}
-//		}
+        aniCounter++;
 
 		mSprite.setTextureRect(sf::IntRect(mSource.x * 64, mSource.y * 64, 64, 64));
 	}
@@ -106,5 +80,9 @@ namespace actor {
 	int Player::getDirection() {
 		return playerDirection;
 	}
+    
+    void Player::resetAniCounter() {
+        aniCounter = 0;
+    }
 }
 

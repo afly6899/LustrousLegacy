@@ -29,8 +29,7 @@ namespace actor {
 		// Player destructor (virtual -> destroy derived, then destroy base class)
 		virtual ~Player();
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-		void move(int direction, float elapsedTime, int speed, bool collision = false);
-        void while_moving(int direction, float speed = 40, bool collision = false);
+		void move(int direction, int speed, bool collision = false);
 		void idle();
 
 		// player positioning functions
@@ -39,6 +38,7 @@ namespace actor {
 		sf::Vector2f getPastPosition();
 		sf::FloatRect getGlobalBounds();
 		int getDirection();
+        void resetAniCounter();
 
 	private:
 
@@ -47,7 +47,7 @@ namespace actor {
 		sf::Vector2f pastPosition;
 		int playerDirection;
 		int aniCounter = 0;
-		int aniFrameDuration = 200;
+		int aniFrameDuration = 12;
 	};
 }
 
