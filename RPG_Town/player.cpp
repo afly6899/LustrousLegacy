@@ -31,32 +31,50 @@ namespace actor {
 		mSource.y = direction;
 		playerDirection = direction;
 
-		if (collision == false)
-		{ 
-			pastPosition = mSprite.getPosition();
-			switch (direction) {
-			case Player::South: mSprite.move(0, speed * 1/elapsedTime);
-				break;
-			case Player::East: mSprite.move(speed * 1/elapsedTime, 0);
-				break;
-			case Player::West: mSprite.move(-speed * 1/elapsedTime, 0);
-				break;
-			case Player::North: mSprite.move(0, -speed * 1/elapsedTime);
-				break;
-			}
-		}
-
-		aniCounter += elapsedTime;
-
-		if (aniCounter >= aniFrameDuration)
-		{
-			aniCounter -= aniFrameDuration;
-			mSource.x++;
-
-			if (mSource.x * 64 >= (int)mSprite.getTexture()->getSize().x) {
-				mSource.x = 0;
-			}
-		}
+//		if (collision == false)
+//		{ 
+//			pastPosition = mSprite.getPosition();
+//			switch (direction) {
+//			case Player::South: mSprite.move(0, speed * 1/elapsedTime);
+//				break;
+//			case Player::East: mSprite.move(speed * 1/elapsedTime, 0);
+//				break;
+//			case Player::West: mSprite.move(-speed * 1/elapsedTime, 0);
+//				break;
+//			case Player::North: mSprite.move(0, -speed * 1/elapsedTime);
+//				break;
+//			}
+//		}
+        
+        if (collision == false)
+        {
+            pastPosition = mSprite.getPosition();
+            switch (direction) {
+                case Player::South: mSprite.move(0, speed/4);
+                    break;
+                case Player::East: mSprite.move(speed/4, 0);
+                    break;
+                case Player::West: mSprite.move(-speed/4, 0);
+                    break;
+                case Player::North: mSprite.move(0, -speed/4);
+                    break;
+            }
+        }
+        mSource.x++;
+        if (mSource.x * 64 >= (int)mSprite.getTexture()->getSize().x) {
+            mSource.x = 0;
+        }
+//		aniCounter += elapsedTime;
+//
+//		if (aniCounter >= aniFrameDuration)
+//		{
+//			aniCounter -= aniFrameDuration;
+//			mSource.x++;
+//
+//			if (mSource.x * 64 >= (int)mSprite.getTexture()->getSize().x) {
+//				mSource.x = 0;
+//			}
+//		}
 
 		mSprite.setTextureRect(sf::IntRect(mSource.x * 64, mSource.y * 64, 64, 64));
 	}
