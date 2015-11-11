@@ -258,3 +258,6 @@ _Pvt_Extensions
 # FAKE - F# Make
 .fake/
 RPGTown/RPGTown.vcxproj
+Output-Build.txt
+*.filters
+RPGTown/RPGTown.vcxproj

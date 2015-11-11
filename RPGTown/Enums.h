@@ -1,10 +1,10 @@
 namespace speed {
 
 	enum {
-		Slow = 40,
-		Normal = 60,
-		Fast = 80,
-		Fastest = 100
+		Slow = 1,
+		Normal = 4,
+		Fast = 6,
+		Fastest = 8
 	};
 
 }
@@ -23,7 +23,7 @@ namespace states {
 // include other defined enums here (player enums)
 
 enum Direction {
-	South, West, East, North
+	South, West, East, North, Null
 };
 
 namespace Layer {
