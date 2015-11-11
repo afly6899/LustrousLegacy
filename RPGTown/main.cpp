@@ -231,6 +231,16 @@ int main(int argc, char** argv) {
 		// draw top layer of map
 		ml.Draw(window, Layer::Overlay);
 
+		if (textbox)
+		{
+			if (!pause)
+			{
+				textBox.setPosition(actorPlayer.getPosition());
+				textBox.message(test_string, elapsedTime);
+			}
+			window.draw(textBox);
+		}
+
 		// if game is paused, draw pause screen
 		if (pause)
 		{
@@ -238,13 +248,6 @@ int main(int argc, char** argv) {
 			window.draw(pauseSprite);
 		}
 
-		if (textbox)
-		{
-			textBox.setPosition(actorPlayer.getPosition());
-			textBox.message(test_string, elapsedTime);
-			window.draw(textBox);
-			//const sf::Texture& imagePath, const sf::Font& font, const actor::Player& player, const std::string to_display, const int width, const int height, const int font_size
-		}
 		if (debug) {
 			FPS.setPosition(actorPlayer.getPosition().x - 400, actorPlayer.getPosition().y - 300);
 			window.draw(FPS);
