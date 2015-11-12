@@ -35,7 +35,6 @@ namespace sf {
 		sf::Text displayText;
 		sf::RectangleShape rectText;
 		std::string temp_string = "";
-		std::string text_to_process;
 		sf::Sound& bleep;
 		bool displayingText = false;
 		bool end_message = false;
@@ -43,8 +42,6 @@ namespace sf {
 		int lines = 0;
 		int length_counter = 0;
 		int end_length = 0;
-		int bounds_width = 0;
-		int bounds_height = 0;
 		int string_length = 0;
 		int aniCounter = 0;
 		int aniFrameDuration = 25;

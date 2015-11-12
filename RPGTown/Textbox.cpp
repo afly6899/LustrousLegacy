@@ -46,7 +46,7 @@
 
 	void Textbox::message(std::string to_display, std::string name, float elapsedTime)
 	{
-		if (displayingText != true && end_message != true) {
+		if (!displayingText && !end_message) {
 			end_length = to_display.length();
 			actorName.setString(name);
 			displayingText = true;
