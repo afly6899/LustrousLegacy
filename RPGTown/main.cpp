@@ -7,6 +7,16 @@
 #include "tmx\MapLoader.h"
 using namespace std;
 
+/*
+#--------------------------------------------------------------------------------------------------#
+Game Project: RPGTown (Lustrous Legacy) (v0.3)
+#--------------------------------------------------------------------------------------------------#
+
+UC Irvine - Fall 2015 Quarter (current)
+
+#--------------------------------------------------------------------------------------------------#
+*/
+
 bool sysMovement(actor::Player& player, int &player_speed, float elapsedTime);
 void sysCollision(actor::Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event);
 void sysPause(bool& pause, sf::Music& music); 
@@ -243,7 +253,7 @@ int main(int argc, char** argv) {
 		}
 
 		// START Get debug information:
-		textDebug.setString("FPS: " + to_string(1 / gameClock.getElapsedTime().asSeconds()) + "\nCoordinates: (" + to_string(actorPlayer.getPosition().x) + ", " + to_string(actorPlayer.getPosition().y) + "\nTile Map: (" + to_string(actorPlayer.getPosition().x / tilesize) + ", " + to_string(actorPlayer.getPosition().y / tilesize));
+		textDebug.setString("FPS: " + to_string(1 / gameClock.getElapsedTime().asSeconds()).substr(0, 5) + "\nCoordinates: (" + to_string(actorPlayer.getPosition().x).substr(0, 5) + ", " + to_string(actorPlayer.getPosition().y).substr(0, 5) + "\nTile Map: (" + to_string(actorPlayer.getPosition().x / tilesize).substr(0, 5) + ", " + to_string(actorPlayer.getPosition().y / tilesize).substr(0, 5));
 		// END
 
 		// Get the elapsed time from the game clock
