@@ -24,8 +24,9 @@ namespace sf {
 
 		// player positioning functions
 		void setPosition(const sf::Vector2f position);
-		void message(std::string to_display, float elapsedTime);
+		void message(std::string to_display, std::string name, float elapsedTime);
 		void setSpeed(int speed);
+		void setFontSize(int size);
 
 	private:
 

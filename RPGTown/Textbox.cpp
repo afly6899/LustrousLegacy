@@ -12,7 +12,6 @@
 		faceSprite.setScale(1.0f, 1.0f);
 		actorName.setFont(font);
 		actorName.setColor(sf::Color::White);
-		actorName.setString("Warren");
 		displayText.setFont(font);
 		displayText.setCharacterSize(20);
 		displayText.setColor(sf::Color::White);
@@ -45,10 +44,11 @@
 		actorName.setPosition(position.x - 375, position.y + 115);
 	}
 
-	void Textbox::message(std::string to_display, float elapsedTime)
+	void Textbox::message(std::string to_display, std::string name, float elapsedTime)
 	{
 		if (displayingText != true && end_message != true) {
 			end_length = to_display.length();
+			actorName.setString(name);
 			displayingText = true;
 		}
 		if (displayingText)
@@ -61,15 +61,18 @@
 				bleep.play();
 				int difference_x;
 				int difference_y;
-
 				temp_string += to_display[count];
 				length_counter += 1;
 				difference_x = length_counter*displayText.getCharacterSize() - (rectText.getLocalBounds().width + faceSprite.getLocalBounds().width * 2 + 25);
 				if (difference_x > 0) {
+					int space_pos = temp_string.find_last_of(' ');
+					std::string temp_word = temp_string.substr(space_pos + 1);
+					temp_string = temp_string.substr(0, space_pos);
 					temp_string.push_back('\n');
-					displayText.setString(temp_string);
+					temp_string.append(temp_word);
+					length_counter = temp_word.length();
 					lines += 1;
-					length_counter = 0;
+					displayText.setString(temp_string);			
 				}
 				else {
 					displayText.setString(temp_string);
@@ -104,7 +107,12 @@
 		}
 	}
 
+	// setSpeed sets the speed of the text rendering; a larger value results in slower text rendering
 	void Textbox::setSpeed(int speed)
-	{
+	{	
 		aniFrameDuration = speed;
+	}
+
+	void Textbox::setFontSize(int size) {
+		displayText.setCharacterSize(size);
 	}

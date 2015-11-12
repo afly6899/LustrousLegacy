@@ -66,6 +66,10 @@ int main(int argc, char** argv) {
 
 	int tilesize = 64;
 
+	// TEST FOR TEXTBOX
+	int test_speed = 0;
+	// TEST FOR TEXTBOX
+
 	/*
 	#--------------------------------------------------------------------------------------------------#
 	# World Parameters (Animates backgrounds):
@@ -155,7 +159,10 @@ int main(int argc, char** argv) {
 					textbox = !textbox;
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::F3)) {
-					actorPlayer.setPosition(tilesize * 10 + 32, tilesize * 10 + 32);
+					textBox.setSpeed(test_speed);
+					test_speed += 25;
+					if (test_speed > 100)
+						test_speed = 0;
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && player_event) {
 					player_trigger = !player_trigger;
@@ -236,7 +243,8 @@ int main(int argc, char** argv) {
 			if (!pause)
 			{
 				textBox.setPosition(actorPlayer.getPosition());
-				textBox.message(test_string, elapsedTime);
+				textBox.setFontSize(24);
+				textBox.message(test_string, "Warren", elapsedTime);
 			}
 			window.draw(textBox);
 		}
