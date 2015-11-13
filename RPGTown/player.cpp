@@ -10,7 +10,7 @@ namespace actor {
 	Player::Player(const sf::Texture& imagePath) :
 		mSprite(imagePath),
 		mSource(1, Player::South) {
-		mSprite.setOrigin(32, 64);
+		mSprite.setOrigin(32, 32);
 		mSprite.setScale(1.0f, 1.0f);
 		
 	}
@@ -29,7 +29,7 @@ namespace actor {
 	void Player::move(int direction, int speed, float elapsedTime) {
 		mSource.y = direction;
 		playerDirection = direction;
-
+		pastDirection = direction;
 		pastPosition = getPosition();
 
 		switch (direction) {
@@ -81,8 +81,12 @@ namespace actor {
 		return mSprite.getGlobalBounds();
 	}
 
-
 	int Player::getDirection() {
 		return playerDirection;
 	}
+
+	int Player::getPastDirection() {
+		return pastDirection;
+	}
 }
+

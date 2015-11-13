@@ -223,6 +223,10 @@ int main(int argc, char** argv) {
 	sf::Sprite pauseSprite(syspTexture);
 	pauseSprite.setOrigin(400, 300);
 
+	//test//
+	int grid = 64;
+	//test//
+
 	/*
 	#--------------------------------------------------------------------------------------------------#
 	# BEGIN GAME LOOP:
@@ -264,17 +268,19 @@ int main(int argc, char** argv) {
 		{
 			aniCounter += elapsedTime;
 
+
+			
 			// START - PLAYER GRID CONTROLLER
 			if (!is_moving) {
 				is_moving = sysMovement(actorPlayer, player_speed, elapsedTime);
 				distance_moved = player_speed;
 			}
-			else if (collision) {
+			else if (collision) {	
 				distance_moved = 0;
 				is_moving = false;
 				collision = false;
 			}
-			else if (distance_moved == 32) {
+			else if (distance_moved == grid) {
 				is_moving = false;
 				distance_moved = 0;
 			}
@@ -402,21 +408,15 @@ void sysCollision(actor::Player& player, tmx::MapLoader& map, bool& collision, b
 
 			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
 			{
-				switch (player.getDirection()) {
-				case Direction::North:
-					test_collision = object->Contains(sf::Vector2f(player.getPosition().x + 16, player.getPosition().y - 32)) || object->Contains(sf::Vector2f(player.getPosition().x - 16, player.getPosition().y - 32));
-					break;
-				case Direction::East:
-					test_collision = object->Contains(sf::Vector2f(player.getPosition().x + 31, player.getPosition().y + 16)) || object->Contains(sf::Vector2f(player.getPosition().x + 31, player.getPosition().y + 16));
-					break;
-				case Direction::South:
-					test_collision = object->Contains(sf::Vector2f(player.getPosition().x + 16, player.getPosition().y - 1)) || object->Contains(sf::Vector2f(player.getPosition().x - 16, player.getPosition().y - 1));
-					break;
-				case Direction::West:
-					test_collision = object->Contains(sf::Vector2f(player.getPosition().x - 32, player.getPosition().y + 31)) || object->Contains(sf::Vector2f(player.getPosition().x - 32, player.getPosition().y + 31));
-					break;
-				}
+	
+				sf::Vector2f left = sf::Vector2f(player.getPosition().x - 32, player.getPosition().y);
+				sf::Vector2f right = sf::Vector2f(player.getPosition().x + 31, player.getPosition().y);
+				sf::Vector2f bottom = sf::Vector2f(player.getPosition().x, player.getPosition().y + 31);
+				sf::Vector2f top = sf::Vector2f(player.getPosition().x, player.getPosition().y - 32);
 
+
+				test_collision = object->Contains(left) || object->Contains(right) || object->Contains(bottom) || object->Contains(top);
+				
 				if (test_collision)
 				{
 					console_message("Player has collided with object.");		

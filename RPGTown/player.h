@@ -46,6 +46,7 @@ namespace actor {
 		sf::Vector2f mSource;
 		sf::Vector2f pastPosition;
 		int playerDirection;
+		int pastDirection;
 		int aniCounter = 0;
 		int aniFrameDuration = 200;
 	};

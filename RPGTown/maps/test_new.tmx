@@ -3228,7 +3228,7 @@
   <object id="4" x="224" y="192" width="832" height="64"/>
   <object id="5" x="320" y="576" width="64" height="64"/>
   <object id="6" x="896" y="768" width="64" height="64"/>
-  <object id="7" x="544" y="1088" width="192" height="224"/>
+  <object id="7" x="512" y="1088" width="256" height="256"/>
   <object id="8" x="832" y="1344" width="64" height="64"/>
   <object id="9" x="448" y="1792" width="64" height="64"/>
   <object id="10" x="960" y="1792" width="64" height="64"/>
