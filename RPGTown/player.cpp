@@ -13,6 +13,7 @@ namespace actor {
 		mSource(1, Player::South) {
 		mSprite.setOrigin(32, 32);
 		mSprite.setScale(1.0f, 1.0f);
+		mSprite.setTextureRect(sf::IntRect(mSource.x * 64, mSource.y * 64, 64, 64));
 	}
 
 	// Player virtual destructor;
@@ -128,6 +129,11 @@ namespace actor {
 
 	bool Player::sysMovement()
 	{
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) {
+			playerSpeed = 8;
+		}
+		else
+			playerSpeed = 4;
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 			playerDirection = Direction::North;
 		}

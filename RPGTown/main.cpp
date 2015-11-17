@@ -7,6 +7,7 @@
 #include "title.h"
 #include "tmx\MapLoader.h"
 #include "debug.h"
+#include "fader.h"
 using namespace std;
 
 /*
@@ -248,6 +249,7 @@ int main(int argc, char** argv) {
 	//test//
 	int grid = 64;
 	Title testTitle(titleTexture, cursorTexture, sysFont, soundBleep);
+	Fader sysFader;
 	//test//
 
 	/*
@@ -296,11 +298,20 @@ int main(int argc, char** argv) {
 		textDebug.setString("FPS: " + to_string(1 / gameClock.getElapsedTime().asSeconds()).substr(0, 5) + "\nCoordinates: (" + to_string(actorPlayer.getPosition().x).substr(0, 5) + ", " + to_string(actorPlayer.getPosition().y).substr(0, 5) + "\nTile Map: (" + to_string(actorPlayer.getPosition().x / tilesize).substr(0, 5) + ", " + to_string(actorPlayer.getPosition().y / tilesize).substr(0, 5));
 		// END
 
+		//PRIME THE CAMERA
+		if (!title)
+		{
+			playerView.setCenter(actorPlayer.getPosition());
+			window.setView(playerView);
+		}
+		
+		//
+
 		// Get the elapsed time from the game clock
 		elapsedTime = gameClock.restart().asMilliseconds();
 
 		// if the game is not paused, perform normal game actions
-		if (!pause && !title && window.hasFocus())
+		if (!pause && !title && window.hasFocus() && sysFader.isComplete())
 		{
 			aniCounter += elapsedTime;
 
@@ -381,6 +392,14 @@ int main(int argc, char** argv) {
 			window.draw(testTitle);
 
 		}
+		else {
+			sysFader.setPosition(actorPlayer.getPosition());
+			sysFader.performFade(0, 1);
+			window.draw(sysFader);
+		}
+
+		// fade-in
+		
 		// update screen with changes
 		window.display();
 	}
