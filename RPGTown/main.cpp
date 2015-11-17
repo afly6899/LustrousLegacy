@@ -271,7 +271,7 @@ int main(int argc, char** argv) {
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::F3) && pause) {
 					title = true;
 					testTitle.setPosition(actorPlayer.getPosition().x, actorPlayer.getPosition().y);
-					music.stop();
+					music.pause();
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && player_event)
 					player_trigger = !player_trigger;
@@ -283,7 +283,8 @@ int main(int argc, char** argv) {
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && testTitle.getSelection() == 1) {
 					title = false;
-					music.play();
+					if (!pause)
+						music.play();
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && testTitle.getSelection() == 4) {
 					window.close();
