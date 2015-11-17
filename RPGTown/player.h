@@ -8,7 +8,6 @@
 namespace sf {
 
 	class Texture;
-	class Clock;
 }
 
 namespace actor {
@@ -24,13 +23,21 @@ namespace actor {
 			Idle, Walking
 		};
 
+		enum Speed {
+			Slow = 1,
+			Normal = 4,
+			Fast = 6,
+			Fastest = 8
+		};
+
 		// Player default constructure, requires a playerTexture reference
 		Player(const sf::Texture& playerTexture);
 		// Player destructor (virtual -> destroy derived, then destroy base class)
 		virtual ~Player();
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-		void move(int direction, int speed, float elapsedTime);
+		void move(int speed, float elapsedTime, bool& collision, bool& move_switch, int direction = -1);
 		void idle();
+		bool sysMovement();
 
 		// player positioning functions
 		void setPosition(int x, int y);
@@ -49,6 +56,10 @@ namespace actor {
 		int pastDirection;
 		int aniCounter = 0;
 		int aniFrameDuration = 200;
+		int playerSpeed = Speed::Normal;
+		int distance_moved = 0;
+		bool is_moving = false;
+
 	};
 }
 

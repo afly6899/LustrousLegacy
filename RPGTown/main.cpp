@@ -4,7 +4,9 @@
 #include "player.h"
 #include "Enums.h"
 #include "textbox.h"
+#include "title.h"
 #include "tmx\MapLoader.h"
+#include "debug.h"
 using namespace std;
 
 /*
@@ -17,10 +19,8 @@ UC Irvine - Fall 2015 Quarter (current)
 #--------------------------------------------------------------------------------------------------#
 */
 
-bool sysMovement(actor::Player& player, int &player_speed, float elapsedTime);
 void sysCollision(actor::Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event);
 void sysPause(bool& pause, sf::Music& music); 
-void console_message(string x);
 
 int main(int argc, char** argv) {
 
@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
 
 	int window_width = 800;
 	int window_height = 600;
-	string window_name = "RPGTown 0.3";
+	string window_name = "Lustrous Legacy (RPGTown 0.3)";
 
 	/*
 	#--------------------------------------------------------------------------------------------------#
@@ -62,7 +62,7 @@ int main(int argc, char** argv) {
 	# player_event - is used to notify system when player is inside an event tile
 	# is_moving - is used to notify the system when a player is moving
 	# collision -  is used to stop the player from taking note tiles travelled if colliding with object
-	#
+	# move_flag - to determine manual or automatic movement
 	#--------------------------------------------------------------------------------------------------#
 	*/
 
@@ -73,6 +73,8 @@ int main(int argc, char** argv) {
 	bool player_event = false;
 	bool is_moving = false;
 	bool collision = false;
+	bool move_flag = false;
+	bool title = true;
 
 	/*
 	#--------------------------------------------------------------------------------------------------#
@@ -144,6 +146,20 @@ int main(int argc, char** argv) {
 
 	}
 
+	// TITLE TEXTURE
+	sf::Texture titleTexture;
+	if (!titleTexture.loadFromFile("title.png")) {
+		cerr << "Texture Error" << endl;
+
+	}
+
+	// CURSOR TEXTURE
+	sf::Texture cursorTexture;
+	if (!cursorTexture.loadFromFile("cursor.png")) {
+		cerr << "Texture Error" << endl;
+
+	}
+
 	/*
 	#-------- MUSIC --------#
 	*/
@@ -151,18 +167,24 @@ int main(int argc, char** argv) {
 	sf::Music music;
 	if (!music.openFromFile("test.ogg"))
 		return -1; // error
-	music.play();
 
 	/*
 	#-------- SOUNDS --------#
 	*/
 
 	sf::SoundBuffer bleep;
-	if (!bleep.loadFromFile("test_sound.wav"))
+	if (!bleep.loadFromFile("text_blip.wav"))
+		return -1; // error
+
+	sf::SoundBuffer selection_bleep;
+	if (!selection_bleep.loadFromFile("select_blip.wav"))
 		return -1; // error
 
 	sf::Sound soundBleep;
+	sf::Sound soundSelect;
 	soundBleep.setBuffer(bleep);
+	soundSelect.setBuffer(selection_bleep);
+	sf::Sound& soundSelect_ref = soundSelect;
 	sf::Sound& soundBleep_ref = soundBleep;
 
 	/*
@@ -225,6 +247,7 @@ int main(int argc, char** argv) {
 
 	//test//
 	int grid = 64;
+	Title testTitle(titleTexture, cursorTexture, sysFont, soundBleep);
 	//test//
 
 	/*
@@ -245,14 +268,26 @@ int main(int argc, char** argv) {
 					debug = !debug;
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2))
 					textbox = !textbox;
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::F3)) {
-					textBox.setSpeed(test_speed);
-					test_speed += 25;
-					if (test_speed > 100)
-						test_speed = 0;
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::F3) && pause) {
+					title = true;
+					testTitle.setPosition(actorPlayer.getPosition().x, actorPlayer.getPosition().y);
+					music.stop();
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && player_event)
 					player_trigger = !player_trigger;
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && title) {
+					testTitle.move(4, 0);
+				}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && title) {
+					testTitle.move(4, 1);
+				}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && testTitle.getSelection() == 1) {
+					title = false;
+					music.play();
+				}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && testTitle.getSelection() == 4) {
+					window.close();
+				}
 			}
 		}
 
@@ -264,30 +299,16 @@ int main(int argc, char** argv) {
 		elapsedTime = gameClock.restart().asMilliseconds();
 
 		// if the game is not paused, perform normal game actions
-		if (!pause)
+		if (!pause && !title && window.hasFocus())
 		{
 			aniCounter += elapsedTime;
 
-
-			
-			// START - PLAYER GRID CONTROLLER
-			if (!is_moving) {
-				is_moving = sysMovement(actorPlayer, player_speed, elapsedTime);
-				distance_moved = player_speed;
+			// START - PLAYER MOVEMENT (manual or automatic)
+			if (player_event && player_trigger)
+			{
+				textbox = true;
 			}
-			else if (collision) {	
-				distance_moved = 0;
-				is_moving = false;
-				collision = false;
-			}
-			else if (distance_moved == grid) {
-				is_moving = false;
-				distance_moved = 0;
-			}
-			else {
-				actorPlayer.move(actorPlayer.getDirection(), player_speed, elapsedTime);
-				distance_moved += player_speed;	
-			}
+			actorPlayer.move(player_speed, elapsedTime, collision, move_flag);
 			// END 
 
 			// START - COLLISION AND EVENT DETECTION
@@ -307,6 +328,7 @@ int main(int argc, char** argv) {
 		//update camera if there isn't a collision
 		window.setView(playerView);
 	
+
 		// draw animated background (layers 0 and 1 are alternated)
 		if (aniCounter >= aniFrameDuration)
 		{
@@ -330,9 +352,9 @@ int main(int argc, char** argv) {
 		// draw top layer of map
 		ml.Draw(window, Layer::Overlay);
 
-		if (textbox)
+		if (textbox && !title)
 		{
-			if (!pause)
+			if (!pause && window.hasFocus())
 			{
 				textBox.setPosition(actorPlayer.getPosition());
 				textBox.setFontSize(24);
@@ -353,47 +375,16 @@ int main(int argc, char** argv) {
 			window.draw(textDebug);
 		}
 
+		if (title) {
+			testTitle.animate(elapsedTime);
+			window.draw(testTitle);
+
+		}
 		// update screen with changes
 		window.display();
 	}
 	
 		return 0;
-}
-
-// Player movement system
-bool sysMovement(actor::Player& player, int &player_speed, float elapsedTime)
-{
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-		player_speed = speed::Fastest;
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
-		player_speed = speed::Fast;
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
-		player_speed = speed::Slow;
-	}
-	else {
-		player_speed = speed::Normal;
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-		player.move(actor::Player::North, player_speed, elapsedTime);
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-		player.move(actor::Player::South, player_speed, elapsedTime);
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		player.move(actor::Player::East, player_speed, elapsedTime);
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		player.move(actor::Player::West, player_speed, elapsedTime);
-	}
-	else
-	{
-		player.idle();
-		return false;
-	}
-	return true;
 }
 
 // Collision and Event handling system
@@ -414,7 +405,6 @@ void sysCollision(actor::Player& player, tmx::MapLoader& map, bool& collision, b
 				sf::Vector2f bottom = sf::Vector2f(player.getPosition().x, player.getPosition().y + 31);
 				sf::Vector2f top = sf::Vector2f(player.getPosition().x, player.getPosition().y - 32);
 
-
 				test_collision = object->Contains(left) || object->Contains(right) || object->Contains(bottom) || object->Contains(top);
 				
 				if (test_collision)
@@ -431,15 +421,8 @@ void sysCollision(actor::Player& player, tmx::MapLoader& map, bool& collision, b
 			{
 				if ((object->GetName() == "Start"))
 				{
-					if ((object->Contains(player.getPosition())))
+					if (sf::Vector2f(object->GetPosition().x + 32, object->GetPosition().y + 32) == player.getPosition())
 						player_event = true;
-					else
-						player_event = false;
-
-						if ((player_trigger) && (player.getDirection() == Direction::East))
-						{
-							console_message("START EVENT: " + object->GetName());
-						}
 				}
 			}
 		}
@@ -464,7 +447,3 @@ void sysPause(bool& pause, sf::Music& music)
 	}
 }
 
-// This function is strictly for debugging purposes (use this to create console messages)
-void console_message(string x) {
-	cout << "\nSYSTEM MESSAGE: " + x << endl;
-}

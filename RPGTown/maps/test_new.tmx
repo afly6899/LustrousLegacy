@@ -167,7 +167,7 @@
    <tile gid="15"/>
    <tile gid="15"/>
    <tile gid="15"/>
-   <tile gid="21"/>
+   <tile gid="15"/>
    <tile gid="15"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -2964,7 +2964,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="17"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -2984,6 +2984,14 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
    <tile gid="81"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -2992,19 +3000,11 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="81"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="49"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -3230,17 +3230,14 @@
   <object id="6" x="896" y="768" width="64" height="64"/>
   <object id="7" x="512" y="1088" width="256" height="256"/>
   <object id="8" x="832" y="1344" width="64" height="64"/>
-  <object id="9" x="448" y="1792" width="64" height="64"/>
+  <object id="9" x="448" y="1856" width="64" height="64"/>
   <object id="10" x="960" y="1792" width="64" height="64"/>
   <object id="11" x="256" y="2240" width="64" height="64"/>
   <object id="12" x="832" y="2240" width="64" height="64"/>
   <object id="13" x="960" y="2176" width="64" height="64"/>
   <object id="15" x="960" y="256" width="64" height="64"/>
   <object id="16" name="Box" x="768" y="1920" width="64" height="64"/>
-  <object id="18" x="192" y="256" width="64" height="2048"/>
-  <object id="19" x="320" y="1024"/>
-  <object id="20" x="320" y="1024"/>
-  <object id="21" x="320" y="1024"/>
+  <object id="18" x="128" y="256" width="64" height="2048"/>
   <object id="22" x="320" y="960" width="64" height="64"/>
   <object id="26" x="768" y="320" width="64" height="64"/>
  </objectgroup>
@@ -3793,7 +3790,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="65"/>
+   <tile gid="17"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -3813,7 +3810,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="33"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>

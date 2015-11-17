@@ -20,7 +20,6 @@
 		rectText.setFillColor(sf::Color::Black);
 		rectText.setOutlineColor(sf::Color::White);
 		rectText.setOutlineThickness(2);
-		bleep.setVolume(15);
 		
 	}
 

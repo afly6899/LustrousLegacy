@@ -1,4 +1,5 @@
 #include "player.h"
+#include "debug.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Rect.hpp>
@@ -12,7 +13,6 @@ namespace actor {
 		mSource(1, Player::South) {
 		mSprite.setOrigin(32, 32);
 		mSprite.setScale(1.0f, 1.0f);
-		
 	}
 
 	// Player virtual destructor;
@@ -26,37 +26,74 @@ namespace actor {
 	}
 
 	// Player move function moves sprite and animates based on clock and speed
-	void Player::move(int direction, int speed, float elapsedTime) {
-		mSource.y = direction;
-		playerDirection = direction;
-		pastDirection = direction;
-		pastPosition = getPosition();
-
-		switch (direction) {
-		case Player::South: mSprite.move(0, int(speed));
-			break;
-		case Player::East: mSprite.move(speed, 0);
-			break;
-		case Player::West: mSprite.move(-speed, 0);
-			break;
-		case Player::North: mSprite.move(0, -speed);
-			break;
-		}
-		
-		aniCounter += elapsedTime;
-
-		if (aniCounter >= aniFrameDuration)
-		{
-			aniCounter -= aniFrameDuration;
-			mSource.x++;
-
-			if (mSource.x * 64 >= (int)mSprite.getTexture()->getSize().x) {
-				mSource.x = 0;
+	void Player::move(int speed, float elapsedTime, bool& collision, bool& move_flag, int direction) {
+		if (!is_moving || move_flag) {
+			if (move_flag)
+			{
+				is_moving = true;
 			}
+			else
+				is_moving = sysMovement();
+			move_flag = false;
 		}
+		else if (collision)
+		{
+			aniCounter += elapsedTime;
 
+			if (aniCounter >= aniFrameDuration)
+			{
+				aniCounter -= aniFrameDuration;
+				mSource.x++;
 
-		mSprite.setTextureRect(sf::IntRect(mSource.x * 64, mSource.y * 64, 64, 64));
+				if (mSource.x * 64 >= (int)mSprite.getTexture()->getSize().x) {
+					mSource.x = 0;
+				}
+			}
+
+			is_moving = false;
+			collision = false;
+			distance_moved = 0;
+		}
+		else if (distance_moved == 64) {
+			is_moving = false;
+			distance_moved = 0;
+		}
+		else {
+			if (direction > -1)
+			{
+				playerDirection = direction;
+			}
+			mSource.y = playerDirection;
+			pastDirection = playerDirection;
+			pastPosition = getPosition();
+			switch (playerDirection) {
+			case Player::South: mSprite.move(0, playerSpeed);
+				break;
+			case Player::East: mSprite.move(playerSpeed, 0);
+				break;
+			case Player::West: mSprite.move(-playerSpeed, 0);
+				break;
+			case Player::North: mSprite.move(0, -playerSpeed);
+				break;
+			}
+
+			distance_moved += playerSpeed;
+
+			aniCounter += elapsedTime;
+
+			if (aniCounter >= aniFrameDuration)
+			{
+				aniCounter -= aniFrameDuration;
+				mSource.x++;
+
+				if (mSource.x * 64 >= (int)mSprite.getTexture()->getSize().x) {
+					mSource.x = 0;
+				}
+			}
+
+			mSprite.setTextureRect(sf::IntRect(mSource.x * 64, mSource.y * 64, 64, 64));
+			std::cout << distance_moved << std::endl;
+		}
 	}
 
 	// Player idle sprite is loaded
@@ -88,5 +125,27 @@ namespace actor {
 	int Player::getPastDirection() {
 		return pastDirection;
 	}
-}
 
+	bool Player::sysMovement()
+	{
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+			playerDirection = Direction::North;
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+			playerDirection = Direction::South;
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+			playerDirection = Direction::East;
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+			playerDirection = Direction::West;
+		}
+		else
+		{
+			idle();
+			return false;
+		}
+		return true;
+	}
+
+}

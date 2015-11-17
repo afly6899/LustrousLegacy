@@ -3,8 +3,8 @@ namespace speed {
 	enum {
 		Slow = 1,
 		Normal = 4,
-		Fast = 6,
-		Fastest = 8
+		Fast = 8,
+		Fastest = 16
 	};
 
 }
