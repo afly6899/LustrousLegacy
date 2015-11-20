@@ -330,7 +330,11 @@ int main(int argc, char** argv) {
 		}
 
 		// START Get debug information:
-		textDebug.setString("FPS: " + to_string(1 / gameClock.getElapsedTime().asSeconds()).substr(0, 5) + "\nCoordinates: (" + to_string(actorPlayer.getPosition().x).substr(0, 5) + ", " + to_string(actorPlayer.getPosition().y).substr(0, 5) + "\nTile Map: (" + to_string(actorPlayer.getPosition().x / Tilesize).substr(0, 5) + ", " + to_string(actorPlayer.getPosition().y / Tilesize).substr(0, 5) + ")");
+		textDebug.setString("FPS: " + to_string(1 / gameClock.getElapsedTime().asSeconds()).substr(0, 5) + 
+			"\nCoordinates: (" + to_string(actorPlayer.getPosition().x).substr(0, 5) + ", " + 
+			to_string(actorPlayer.getPosition().y).substr(0, 5) + "\nTile Map: (" + 
+			to_string(actorPlayer.getPosition().x / Tilesize).substr(0, 5) + ", " + 
+			to_string(actorPlayer.getPosition().y / Tilesize).substr(0, 5) + ")");
 		// END
 
 		//PRIME THE CAMERA
@@ -355,15 +359,13 @@ int main(int argc, char** argv) {
 			// START - COLLISION AND EVENT DETECTION
 			sysCollision(actorPlayer, ml, collision, player_trigger, player_event);
 			// END 
-			
-			// after a event has occured, let the system know the event is over
-			player_trigger = false;
 
 			// adjust the camera to be viewing player
 			playerView.setCenter(actorPlayer.getPosition());
+
+			// update textBox position after movement
+			textBox.setPosition(playerView.getCenter());
 		}
-		
-		textBox.setPosition(playerView.getCenter());
 
 		// prepare to update screen
 		window.clear();
