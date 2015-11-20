@@ -21,6 +21,7 @@ UC Irvine - Fall 2015 Quarter (current)
 
 void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event);
 void sysPause(bool& pause, sf::Music& music); 
+sf::Vector2f tile(int tile_num);
 
 int main(int argc, char** argv) {
 
@@ -88,7 +89,6 @@ int main(int argc, char** argv) {
 	#				   player to movement grid
 	# elapsedTime - is used to get the amount of time that has passed after every game loop iteration;
 	#				elapsed time is used for managing the speed of all animations
-	# tilesize - defines the tilesize of the system for readability and operations
 	#
 	#--------------------------------------------------------------------------------------------------#
 	*/
@@ -106,7 +106,6 @@ int main(int argc, char** argv) {
 	int player_speed = Speed::Normal;
 	int distance_moved = 0;
 	float elapsedTime = 0;
-	int tilesize = 64;
 
 	/*
 	#-------- GAME WINDOW --------#
@@ -237,7 +236,7 @@ int main(int argc, char** argv) {
 
 	// SET PLAYER TEXTURE AND POSITION
 	Player actorPlayer(pTexture);
-	actorPlayer.setPosition(tilesize * 10 + 32, tilesize * 10 + 32);
+	actorPlayer.setPosition(tile(10));
 
 	/*
 	#--------------------------------------------------------------------------------------------------#
@@ -311,7 +310,7 @@ int main(int argc, char** argv) {
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && testTitle.getSelection() == 1) {
 					sysFader.resetFader();
-					actorPlayer.setPosition(tilesize * 10 + 32, tilesize * 10 + 32);
+					actorPlayer.setPosition(tile(10));
 					actorPlayer.setDirection(Direction::South);
 					title = false;
 					intro = true;
@@ -331,7 +330,7 @@ int main(int argc, char** argv) {
 		}
 
 		// START Get debug information:
-		textDebug.setString("FPS: " + to_string(1 / gameClock.getElapsedTime().asSeconds()).substr(0, 5) + "\nCoordinates: (" + to_string(actorPlayer.getPosition().x).substr(0, 5) + ", " + to_string(actorPlayer.getPosition().y).substr(0, 5) + "\nTile Map: (" + to_string(actorPlayer.getPosition().x / tilesize).substr(0, 5) + ", " + to_string(actorPlayer.getPosition().y / tilesize).substr(0, 5));
+		textDebug.setString("FPS: " + to_string(1 / gameClock.getElapsedTime().asSeconds()).substr(0, 5) + "\nCoordinates: (" + to_string(actorPlayer.getPosition().x).substr(0, 5) + ", " + to_string(actorPlayer.getPosition().y).substr(0, 5) + "\nTile Map: (" + to_string(actorPlayer.getPosition().x / Tilesize).substr(0, 5) + ", " + to_string(actorPlayer.getPosition().y / Tilesize).substr(0, 5));
 		// END
 
 		//PRIME THE CAMERA
@@ -501,7 +500,7 @@ void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& pl
 				if (test_collision)
 				{
 					console_message("Player has collided with object.");		
-					player.setPosition(player.getPastPosition().x, player.getPastPosition().y);
+					player.setPosition(player.getPastPosition());
 					collision = true;
 				}
 			}
@@ -539,3 +538,8 @@ void sysPause(bool& pause, sf::Music& music)
 	}
 }
 
+// returns the center position of the tile specified
+sf::Vector2f tile(int tile_num) {
+	int temp = System::Tilesize*tile_num + 32;
+	return sf::Vector2f(temp, temp);
+}

@@ -23,13 +23,13 @@ class Player : public sf::Drawable {
 		bool sysMovement();
 
 		// player positioning functions
-		void setPosition(int x, int y);
 		sf::Vector2f getPosition();
 		sf::Vector2f getPastPosition();
 		sf::FloatRect getGlobalBounds();
 		int getPastDirection();
 		int getDirection();
 		void setDirection(int dir);
+		void setPosition(sf::Vector2f pos);
 		bool isMoving();
 
 	private:

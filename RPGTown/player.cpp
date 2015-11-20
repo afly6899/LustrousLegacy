@@ -94,8 +94,8 @@ void Player::idle() {
 	mSprite.setTextureRect(sf::IntRect(mSource.x * 64, mSource.y * 64, 64, 64));
 }
 
-void Player::setPosition(int x, int y) {
-	mSprite.setPosition(x, y);
+void Player::setPosition(sf::Vector2f pos) {
+	mSprite.setPosition(pos);
 }
 
 sf::Vector2f Player::getPosition() {

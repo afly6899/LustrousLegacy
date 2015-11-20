@@ -8,6 +8,10 @@ enum Speed{
 	Fastest = 16
 };
 
+enum System{
+	Tilesize = 64
+};
+
 enum Direction {
 	South, 
 	West, 
