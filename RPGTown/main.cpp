@@ -330,7 +330,7 @@ int main(int argc, char** argv) {
 		}
 
 		// START Get debug information:
-		textDebug.setString("FPS: " + to_string(1 / gameClock.getElapsedTime().asSeconds()).substr(0, 5) + "\nCoordinates: (" + to_string(actorPlayer.getPosition().x).substr(0, 5) + ", " + to_string(actorPlayer.getPosition().y).substr(0, 5) + "\nTile Map: (" + to_string(actorPlayer.getPosition().x / Tilesize).substr(0, 5) + ", " + to_string(actorPlayer.getPosition().y / Tilesize).substr(0, 5));
+		textDebug.setString("FPS: " + to_string(1 / gameClock.getElapsedTime().asSeconds()).substr(0, 5) + "\nCoordinates: (" + to_string(actorPlayer.getPosition().x).substr(0, 5) + ", " + to_string(actorPlayer.getPosition().y).substr(0, 5) + "\nTile Map: (" + to_string(actorPlayer.getPosition().x / Tilesize).substr(0, 5) + ", " + to_string(actorPlayer.getPosition().y / Tilesize).substr(0, 5) + ")");
 		// END
 
 		//PRIME THE CAMERA
@@ -363,12 +363,12 @@ int main(int argc, char** argv) {
 			playerView.setCenter(actorPlayer.getPosition());
 		}
 		
-		textBox.setPosition(actorPlayer.getPosition());
+		textBox.setPosition(playerView.getCenter());
 
 		// prepare to update screen
 		window.clear();
 
-		//update camera if there isn't a collision
+		//update camera
 		window.setView(playerView);
 
 		// draw animated background (layers 0 and 1 are alternated)
@@ -398,7 +398,7 @@ int main(int argc, char** argv) {
 		{
 			if (!pause && window.hasFocus())
 			{
-				textBox.setPosition(actorPlayer.getPosition());
+				textBox.setPosition(playerView.getCenter());
 				textBox.setFontSize(24);
 				if (!textBox.if_endMessage())
 					textBox.message(test_string, "Warren", elapsedTime);
@@ -410,7 +410,7 @@ int main(int argc, char** argv) {
 		// if game is paused, draw pause screen
 		if (pause)
 		{
-			pauseSprite.setPosition(actorPlayer.getPosition());
+			pauseSprite.setPosition(playerView.getCenter());
 			window.draw(pauseSprite);
 		}
 		// BEGIN INTRO ANIMATIONS (AFTER TITLE)
@@ -420,17 +420,17 @@ int main(int argc, char** argv) {
 
 		}
 		else if (!title && !intro) {
-			sysFader.setPosition(actorPlayer.getPosition());
+			sysFader.setPosition(playerView.getCenter());
 			sysFader.performFade(0, 1);
 			window.draw(sysFader);
 		}
 		else if (intro)
 		{
-			blackScreen.setPosition(actorPlayer.getPosition().x - 400, actorPlayer.getPosition().y - 300);
-			introTextbox->setPosition(actorPlayer.getPosition());
+			blackScreen.setPosition(playerView.getCenter().x - 400, playerView.getCenter().y - 300);
+			introTextbox->setPosition(playerView.getCenter());
 			window.draw(blackScreen);
 			
-			book.setPosition(actorPlayer.getPosition());
+			book.setPosition(playerView.getCenter());
 			window.draw(book);
 			bookcounter += elapsedTime;
 			if (bookcounter >= 200) {
@@ -466,7 +466,7 @@ int main(int argc, char** argv) {
 		// END HARD-CODED ALPHA PREVIEW
 		
 		if (debug) {
-			textDebug.setPosition(actorPlayer.getPosition().x - 400, actorPlayer.getPosition().y - 300);
+			textDebug.setPosition(playerView.getCenter().x - 400, playerView.getCenter().y - 300);
 			window.draw(textDebug);
 		}
 
