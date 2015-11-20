@@ -1,8 +1,7 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics.hpp>
 
 // Forward Declaration
 namespace sf {
@@ -46,6 +45,8 @@ namespace actor {
 		sf::FloatRect getGlobalBounds();
 		int getPastDirection();
 		int getDirection();
+		void setDirection(int dir);
+		bool isMoving();
 
 	private:
 

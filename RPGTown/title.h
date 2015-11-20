@@ -3,7 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include <iostream>
 
 // Forward Declaration
 namespace sf {
@@ -39,7 +38,6 @@ namespace sf {
 		int selection = 1;
 		int aniCounter = 0;
 		int aniFrameDuration = 300;
-
 	};
 
 #endif

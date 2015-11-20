@@ -1,9 +1,4 @@
 #include "title.h"
-#include <SFML/Graphics.hpp>
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Rect.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <iostream>
 
 	// Player default constructor; Loads: character sprite from texture and sets position to frame 1 and south
 	Title::Title(const sf::Texture& imagePath_title, const sf::Texture& imagePath_cursor, const sf::Font& font, sf::Sound& bleep):

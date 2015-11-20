@@ -3,7 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include <iostream>
 
 // Forward Declaration
 namespace sf {
@@ -17,16 +16,18 @@ namespace sf {
 	public:
 
 		// Player default constructure, requires a playerTexture reference
-		Textbox(const sf::Texture& imagePath, const sf::Font& font, const sf::Vector2f position, int width, int height, int font_size, sf::Sound& bleep);
+		Textbox(const sf::Font& font, sf::Sound& bleep, const sf::Texture& imagePath, int width_box, int height_box, bool block = false, int font_size = 20, int padding = 25);
 		// Player destructor (virtual -> destroy derived, then destroy base class)
 		virtual ~Textbox();
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 		// player positioning functions
 		void setPosition(const sf::Vector2f position);
-		void message(std::string to_display, std::string name, float elapsedTime);
+		void message(std::string to_display, std::string name = "", float elapsedTime = 0);
 		void setSpeed(int speed);
 		void setFontSize(int size);
+		bool if_endMessage();
+		void reset();
 
 	private:
 
@@ -38,6 +39,9 @@ namespace sf {
 		sf::Sound& bleep;
 		bool displayingText = false;
 		bool end_message = false;
+		bool block_draw;
+		int width;
+		int height;
 		int count = 0;
 		int lines = 0;
 		int length_counter = 0;

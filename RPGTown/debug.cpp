@@ -1,5 +1,3 @@
-#include <iostream>
-#include <string>
 #include "debug.h"
 
 // This function is strictly for debugging purposes (use this to create console messages)

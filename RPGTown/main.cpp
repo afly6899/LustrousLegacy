@@ -1,13 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include <iostream>
 #include "player.h"
 #include "Enums.h"
 #include "textbox.h"
 #include "title.h"
-#include "tmx\MapLoader.h"
 #include "debug.h"
 #include "fader.h"
+#include "tmx\MapLoader.h"
 using namespace std;
 
 /*
@@ -114,7 +113,7 @@ int main(int argc, char** argv) {
 	*/
 
 	sf::RenderWindow window(sf::VideoMode(window_width, window_height), window_name);
-	window.setVerticalSyncEnabled(true);
+	window.setVerticalSyncEnabled(false);
 	window.setFramerateLimit(60);
 
 	/*
@@ -161,6 +160,20 @@ int main(int argc, char** argv) {
 
 	}
 
+	// BLACK TEXTURE
+	sf::Texture blackTexture;
+	if (!blackTexture.loadFromFile("fade.png")) {
+		cerr << "Texture Error" << endl;
+
+	}
+
+	// BOOK TEXTURE
+	sf::Texture bookTexture;
+	if (!bookTexture.loadFromFile("book.png")) {
+		cerr << "Texture Error" << endl;
+
+	}
+
 	/*
 	#-------- MUSIC --------#
 	*/
@@ -168,6 +181,7 @@ int main(int argc, char** argv) {
 	sf::Music music;
 	if (!music.openFromFile("test.ogg"))
 		return -1; // error
+
 
 	/*
 	#-------- SOUNDS --------#
@@ -233,7 +247,8 @@ int main(int argc, char** argv) {
 	#--------------------------------------------------------------------------------------------------#
 	*/
 
-	Textbox textBox(pfTexture, sysFont, actorPlayer.getPosition(), 800, 600, 16, soundBleep_ref);
+	Textbox textBox(sysFont, soundBleep_ref, pfTexture, window_width, window_height);
+	textBox.setPosition(actorPlayer.getPosition());
 
 	/*
 	#--------------------------------------------------------------------------------------------------#
@@ -250,6 +265,18 @@ int main(int argc, char** argv) {
 	int grid = 64;
 	Title testTitle(titleTexture, cursorTexture, sysFont, soundBleep);
 	Fader sysFader;
+	sf::Sprite blackScreen(blackTexture);
+	bool intro= false;
+	Textbox* introTextbox = nullptr;
+	string test1 = "Once upon a time, there was test text... a young mang named Warren came and there was more test text. If you know just how much test text you were about to see; you would be confused!";
+	string test2 = "The 8 bosses that must be defeated, should be defeated, but this test text should be changed or else this game will seem extremely bad.";
+	string test3 = "I'm just trying this all out! Ummmmm, yeaaaaaah.....";
+	string test4 = "You know it, get started!";
+	vector<string> messages = { test1, test2, test3, test4 };
+	sf::Sprite book(bookTexture);
+	sf::Vector2f bookSource(0, 0);
+	book.setTextureRect(sf::IntRect(bookSource.x * 64, bookSource.y * 64, 64, 64));
+	int bookcounter = 0;
 	//test//
 
 	/*
@@ -284,9 +311,17 @@ int main(int argc, char** argv) {
 					testTitle.move(4, 1);
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && testTitle.getSelection() == 1) {
+					sysFader.resetFader();
+					actorPlayer.setPosition(tilesize * 10 + 32, tilesize * 10 + 32);
+					actorPlayer.setDirection(Direction::South);
 					title = false;
-					if (!pause)
+					intro = true;
+					pause = false;
+					introTextbox = new Textbox(sysFont, soundBleep_ref, pfTexture, window_width, window_height, true);
+					introTextbox->setPosition(actorPlayer.getPosition());
+					if (!pause) {
 						music.play();
+					}
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && testTitle.getSelection() == 4) {
 					window.close();
@@ -305,8 +340,6 @@ int main(int argc, char** argv) {
 			window.setView(playerView);
 		}
 		
-		//
-
 		// Get the elapsed time from the game clock
 		elapsedTime = gameClock.restart().asMilliseconds();
 
@@ -316,10 +349,6 @@ int main(int argc, char** argv) {
 			aniCounter += elapsedTime;
 
 			// START - PLAYER MOVEMENT (manual or automatic)
-			if (player_event && player_trigger)
-			{
-				textbox = true;
-			}
 			actorPlayer.move(player_speed, elapsedTime, collision, move_flag);
 			// END 
 
@@ -339,7 +368,6 @@ int main(int argc, char** argv) {
 
 		//update camera if there isn't a collision
 		window.setView(playerView);
-	
 
 		// draw animated background (layers 0 and 1 are alternated)
 		if (aniCounter >= aniFrameDuration)
@@ -364,13 +392,16 @@ int main(int argc, char** argv) {
 		// draw top layer of map
 		ml.Draw(window, Layer::Overlay);
 
-		if (textbox && !title)
+		if (textbox && !title && sysFader.isComplete())
 		{
 			if (!pause && window.hasFocus())
 			{
 				textBox.setPosition(actorPlayer.getPosition());
 				textBox.setFontSize(24);
-				textBox.message(test_string, "Warren", elapsedTime);
+				if (!textBox.if_endMessage())
+					textBox.message(test_string, "Warren", elapsedTime);
+				else
+					textBox.reset();		
 			}
 			window.draw(textBox);
 		}
@@ -386,19 +417,55 @@ int main(int argc, char** argv) {
 			textDebug.setPosition(actorPlayer.getPosition().x - 400, actorPlayer.getPosition().y - 300);
 			window.draw(textDebug);
 		}
-
+		
+		// BEGIN INTRO ANIMATIONS (AFTER TITLE)
 		if (title) {
 			testTitle.animate(elapsedTime);
 			window.draw(testTitle);
 
 		}
-		else {
+		else if (!title && !intro) {
 			sysFader.setPosition(actorPlayer.getPosition());
 			sysFader.performFade(0, 1);
 			window.draw(sysFader);
 		}
-
-		// fade-in
+		else if (intro)
+		{
+			blackScreen.setPosition(actorPlayer.getPosition().x - 400, actorPlayer.getPosition().y - 300);
+			introTextbox->setPosition(actorPlayer.getPosition());
+			window.draw(blackScreen);
+			
+			book.setPosition(actorPlayer.getPosition());
+			window.draw(book);
+			bookcounter += elapsedTime;
+			if (bookcounter >= 200) {
+				bookcounter -= 200;
+				bookSource.y++;
+				if (bookSource.y > 3)
+					bookSource.y = 0;
+				book.setTextureRect(sf::IntRect(bookSource.x * 64, bookSource.y * 64, 64, 64));
+			
+			}
+			
+			if (!messages.empty()) {
+				introTextbox->message(messages.back(), "System", elapsedTime);
+				if (introTextbox->if_endMessage()) {
+					messages.pop_back();
+					if (messages.size() != 0)
+						introTextbox->reset();
+				}
+			}
+			else if (introTextbox->if_endMessage())
+			{
+				intro = false;
+				pause = false;
+				delete introTextbox;
+				introTextbox = nullptr;
+			}
+			if (intro)
+				window.draw(*introTextbox);
+		}
+		// END HARD-CODED ALPHA PREVIEW
 		
 		// update screen with changes
 		window.display();
@@ -463,6 +530,7 @@ void sysPause(bool& pause, sf::Music& music)
 		{
 			console_message("Game has resumed.");
 			music.play();
+		
 		}
 	}
 }

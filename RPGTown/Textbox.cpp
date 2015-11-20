@@ -1,46 +1,58 @@
 #include "textbox.h"
 #include "player.h"
-#include <SFML/Graphics.hpp>
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Rect.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
 
-	// Player default constructor; Loads: character sprite from texture and sets position to frame 1 and south
-	Textbox::Textbox(const sf::Texture& imagePath, const sf::Font& font, const sf::Vector2f position, int width, int height, int font_size, sf::Sound& bleep) :
-		faceSprite(imagePath), bleep(bleep) {
-		faceSprite.setTextureRect(sf::IntRect(0, 0, 128, 128));
-		faceSprite.setScale(1.0f, 1.0f);
-		actorName.setFont(font);
-		actorName.setColor(sf::Color::White);
-		displayText.setFont(font);
-		displayText.setCharacterSize(20);
-		displayText.setColor(sf::Color::White);
-		rectText.setSize(sf::Vector2f(width - 25, height*.3));
-		rectText.setOrigin((width - 25)*.5, height*.5);
-		rectText.setFillColor(sf::Color::Black);
-		rectText.setOutlineColor(sf::Color::White);
-		rectText.setOutlineThickness(2);
+	Textbox::Textbox(const sf::Font& font, sf::Sound& bleep, const sf::Texture& imagePath, int width_box, int height_box, bool block, int font_size, int padding) :
+		faceSprite(imagePath), width(width_box), height(height_box), bleep(bleep), block_draw(block) {
 		
+		displayText.setFont(font);
+		displayText.setCharacterSize(font_size);
+		displayText.setColor(sf::Color::White);
+		
+		if (!block_draw)
+		{
+			faceSprite.setTextureRect(sf::IntRect(0, 0, 128, 128));
+			faceSprite.setScale(1.0f, 1.0f);
+			actorName.setFont(font);
+			actorName.setColor(sf::Color::White);
+			rectText.setSize(sf::Vector2f(width - padding, height*.3));
+			rectText.setOrigin((width - padding)*.5, height*.5);
+			rectText.setFillColor(sf::Color::Black);
+			rectText.setOutlineColor(sf::Color::White);
+			rectText.setOutlineThickness(2);
+		}
+		else {
+			rectText.setSize(sf::Vector2f(width, height));
+			rectText.setOrigin(width*.5, height*.5);
+		}
+			
 	}
 
-	// Player virtual destructor;
 	Textbox::~Textbox() {
-
 	}
 
-	// Derived from the sf::drawable class; Allows to be Player object to be drawn to screen
 	void Textbox::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-		target.draw(rectText, states);
-		target.draw(faceSprite, states);
-		target.draw(actorName, states);
+		
+		if (!block_draw)
+		{
+			target.draw(rectText, states);
+			target.draw(faceSprite, states);
+			target.draw(actorName, states);
+		}
 		target.draw(displayText, states);
 	}
 
 	void Textbox::setPosition(const sf::Vector2f position) {
-		faceSprite.setPosition(position.x - 375, position.y + 150);
-		rectText.setPosition(position.x, position.y + 410);
-		displayText.setPosition(position.x - 225, position.y + 135);
-		actorName.setPosition(position.x - 375, position.y + 115);
+		if (!block_draw)
+		{
+			faceSprite.setPosition(position.x - 375, position.y + 150);
+			rectText.setPosition(position.x, position.y + 410);
+			displayText.setPosition(position.x - 225, position.y + 135);
+			actorName.setPosition(position.x - 375, position.y + 115);
+		}
+		else {
+			displayText.setPosition(position.x - 225, position.y + 135);
+		}
+		
 	}
 
 	void Textbox::message(std::string to_display, std::string name, float elapsedTime)
@@ -62,6 +74,7 @@
 				int difference_y;
 				temp_string += to_display[count];
 				length_counter += 1;
+
 				difference_x = length_counter*displayText.getCharacterSize() - (rectText.getLocalBounds().width + faceSprite.getLocalBounds().width * 2 + 25);
 				if (difference_x > 0) {
 					int space_pos = temp_string.find_last_of(' ');
@@ -76,7 +89,7 @@
 				else {
 					displayText.setString(temp_string);
 				}
-				count += 1;
+
 				difference_y = displayText.getCharacterSize()*lines - (rectText.getLocalBounds().height - 75);
 				if (difference_y > 0) {
 					temp_string = temp_string.substr(temp_string.find_first_of('\n') + 1);;
@@ -84,6 +97,7 @@
 					lines -= 1;
 				}
 
+				count += 1;
 				if (count == end_length)
 				{
 					count = 0;
@@ -95,21 +109,25 @@
 				}
 			}
 		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
-			if (end_message)
-			{
-				temp_string = "";
-				displayText.setString(temp_string);
-				end_message = !end_message;
-			}
-		}
 	}
 
-	// setSpeed sets the speed of the text rendering; a larger value results in slower text rendering
-	void Textbox::setSpeed(int speed)
+	bool Textbox::if_endMessage() {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+			return end_message;
+		}
+		return false;
+	}
+
+	void Textbox::reset() {
+		end_message = false;
+		temp_string = "";
+		displayText.setString(temp_string);
+	}
+
+	// setSpeed sets the speed of the text rendering; a larger value results in slower text rendering in ms
+	void Textbox::setSpeed(int frame_duration)
 	{	
-		aniFrameDuration = speed;
+		aniFrameDuration = frame_duration;
 	}
 
 	void Textbox::setFontSize(int size) {

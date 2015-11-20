@@ -74,11 +74,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\hayde\Dropbox\Development\TMX_loader\include;C:\Users\hayde\Dropbox\Development\zlib\include;C:\Users\hayde\Dropbox\Development\SFML-2.3.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Hayden McFarland\Dropbox\Development\TMX_loader\include;C:\Users\Hayden McFarland\Dropbox\Development\zlib\include;C:\Users\Hayden McFarland\Dropbox\Development\SFML-2.3.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\hayde\Dropbox\Development\zlib\lib;C:\Users\hayde\Dropbox\Development\SFML-2.3.2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Hayden McFarland\Dropbox\Development\zlib\lib;C:\Users\Hayden McFarland\Dropbox\Development\SFML-2.3.2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>zlibstat.lib; sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
@@ -131,6 +131,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="debug.cpp" />
+    <ClCompile Include="fader.cpp" />
     <ClCompile Include="title.cpp" />
     <ClCompile Include="DebugShape.cpp" />
     <ClCompile Include="main.cpp" />
@@ -145,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="debug.h" />
+    <ClInclude Include="fader.h" />
     <ClInclude Include="title.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="player.h" />
