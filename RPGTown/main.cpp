@@ -19,7 +19,7 @@ UC Irvine - Fall 2015 Quarter (current)
 #--------------------------------------------------------------------------------------------------#
 */
 
-void sysCollision(actor::Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event);
+void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event);
 void sysPause(bool& pause, sf::Music& music); 
 
 int main(int argc, char** argv) {
@@ -103,7 +103,7 @@ int main(int argc, char** argv) {
 	textDebug.setFont(sysFont);
 	textDebug.setCharacterSize(18);
 
-	int player_speed = speed::Normal;
+	int player_speed = Speed::Normal;
 	int distance_moved = 0;
 	float elapsedTime = 0;
 	int tilesize = 64;
@@ -236,7 +236,7 @@ int main(int argc, char** argv) {
 	*/
 
 	// SET PLAYER TEXTURE AND POSITION
-	actor::Player actorPlayer(pTexture);
+	Player actorPlayer(pTexture);
 	actorPlayer.setPosition(tilesize * 10 + 32, tilesize * 10 + 32);
 
 	/*
@@ -248,7 +248,6 @@ int main(int argc, char** argv) {
 	*/
 
 	Textbox textBox(sysFont, soundBleep_ref, pfTexture, window_width, window_height);
-	textBox.setPosition(actorPlayer.getPosition());
 
 	/*
 	#--------------------------------------------------------------------------------------------------#
@@ -268,11 +267,11 @@ int main(int argc, char** argv) {
 	sf::Sprite blackScreen(blackTexture);
 	bool intro= false;
 	Textbox* introTextbox = nullptr;
+	vector<string>* messages = nullptr;
 	string test1 = "Once upon a time, there was test text... a young mang named Warren came and there was more test text. If you know just how much test text you were about to see; you would be confused!";
 	string test2 = "The 8 bosses that must be defeated, should be defeated, but this test text should be changed or else this game will seem extremely bad.";
 	string test3 = "I'm just trying this all out! Ummmmm, yeaaaaaah.....";
 	string test4 = "You know it, get started!";
-	vector<string> messages = { test1, test2, test3, test4 };
 	sf::Sprite book(bookTexture);
 	sf::Vector2f bookSource(0, 0);
 	book.setTextureRect(sf::IntRect(bookSource.x * 64, bookSource.y * 64, 64, 64));
@@ -300,7 +299,7 @@ int main(int argc, char** argv) {
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::F3) && pause) {
 					title = true;
 					testTitle.setPosition(actorPlayer.getPosition().x, actorPlayer.getPosition().y);
-					music.pause();
+					music.stop();
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && player_event)
 					player_trigger = !player_trigger;
@@ -319,6 +318,8 @@ int main(int argc, char** argv) {
 					pause = false;
 					introTextbox = new Textbox(sysFont, soundBleep_ref, pfTexture, window_width, window_height, true);
 					introTextbox->setPosition(actorPlayer.getPosition());
+					messages = new vector<string>(4);
+					*messages = { test1, test2, test3, test4 };
 					if (!pause) {
 						music.play();
 					}
@@ -363,6 +364,8 @@ int main(int argc, char** argv) {
 			playerView.setCenter(actorPlayer.getPosition());
 		}
 		
+		textBox.setPosition(actorPlayer.getPosition());
+
 		// prepare to update screen
 		window.clear();
 
@@ -405,19 +408,12 @@ int main(int argc, char** argv) {
 			}
 			window.draw(textBox);
 		}
-
 		// if game is paused, draw pause screen
 		if (pause)
 		{
 			pauseSprite.setPosition(actorPlayer.getPosition());
 			window.draw(pauseSprite);
 		}
-
-		if (debug) {
-			textDebug.setPosition(actorPlayer.getPosition().x - 400, actorPlayer.getPosition().y - 300);
-			window.draw(textDebug);
-		}
-		
 		// BEGIN INTRO ANIMATIONS (AFTER TITLE)
 		if (title) {
 			testTitle.animate(elapsedTime);
@@ -447,11 +443,11 @@ int main(int argc, char** argv) {
 			
 			}
 			
-			if (!messages.empty()) {
-				introTextbox->message(messages.back(), "System", elapsedTime);
+			if (!messages->empty()) {
+				introTextbox->message(messages->back(), "System", elapsedTime);
 				if (introTextbox->if_endMessage()) {
-					messages.pop_back();
-					if (messages.size() != 0)
+					messages->pop_back();
+					if (messages->size() != 0)
 						introTextbox->reset();
 				}
 			}
@@ -460,13 +456,21 @@ int main(int argc, char** argv) {
 				intro = false;
 				pause = false;
 				delete introTextbox;
+				delete messages;
+				messages = nullptr;
 				introTextbox = nullptr;
+
 			}
 			if (intro)
 				window.draw(*introTextbox);
 		}
 		// END HARD-CODED ALPHA PREVIEW
 		
+		if (debug) {
+			textDebug.setPosition(actorPlayer.getPosition().x - 400, actorPlayer.getPosition().y - 300);
+			window.draw(textDebug);
+		}
+
 		// update screen with changes
 		window.display();
 	}
@@ -475,7 +479,7 @@ int main(int argc, char** argv) {
 }
 
 // Collision and Event handling system
-void sysCollision(actor::Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event)
+void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event)
 {
 	bool test_collision = false;
 

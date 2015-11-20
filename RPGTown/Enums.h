@@ -1,39 +1,29 @@
-namespace speed {
+#ifndef ENUMS_H_
+#define ENUMS_H_
 
-	enum {
-		Slow = 1,
-		Normal = 4,
-		Fast = 8,
-		Fastest = 16
-	};
-
-}
-
-// design and implement these states
-
-namespace states {
-	enum {
-		PAUSE,
-		IDLE,
-		WALKING,
-		DEATH
-	};
-}
-
-// include other defined enums here (player enums)
-
-enum Direction {
-	South, West, East, North, Null
+enum Speed{
+	Slow = 1,
+	Normal = 4,
+	Fast = 8,
+	Fastest = 16
 };
 
-namespace Layer {
-	enum {
-		Background_1,
-		Background_2,
-		Field,
-		Collision_Objects,
-		Collision_Boxes,
-		Event_Layer,
-		Overlay
-	};
-}
+enum Direction {
+	South, 
+	West, 
+	East, 
+	North,
+	Null
+};
+
+enum Layer{
+	Background_1,
+	Background_2,
+	Field,
+	Collision_Objects,
+	Collision_Boxes,
+	Event_Layer,
+	Overlay
+};
+
+#endif
