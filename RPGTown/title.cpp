@@ -5,7 +5,7 @@
 		titleSprite(imagePath_title), 
 		cursorSprite(imagePath_cursor),
 		cursorSource(0,0), 
-		selectBleep(bleep){
+		cursorBleep(bleep) {
 		
 		textTitle.setFont(font);
 		textTitle.setCharacterSize(52);
@@ -46,7 +46,7 @@
 			}
 			else
 				cursorSprite.setPosition(cursorSprite.getPosition().x, cursorSprite.getPosition().y + 46);
-			selectBleep.play();
+			cursorBleep.play();
 		}
 		else {
 			selection -= 1;
@@ -56,7 +56,7 @@
 			}
 			else
 				cursorSprite.setPosition(cursorSprite.getPosition().x, cursorSprite.getPosition().y - 46);
-			selectBleep.play();
+			cursorBleep.play();
 		}
 
 	}

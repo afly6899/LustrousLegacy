@@ -21,6 +21,7 @@ UC Irvine - Fall 2015 Quarter (current)
 
 void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event);
 void sysPause(bool& pause, sf::Music& music); 
+sf::Vector2f window_topleft(sf::Vector2f center_pos);
 sf::Vector2f tile(int tile_num);
 
 int main(int argc, char** argv) {
@@ -181,6 +182,7 @@ int main(int argc, char** argv) {
 	if (!music.openFromFile("test.ogg"))
 		return -1; // error
 
+	music.setVolume(25);
 
 	/*
 	#-------- SOUNDS --------#
@@ -198,8 +200,6 @@ int main(int argc, char** argv) {
 	sf::Sound soundSelect;
 	soundBleep.setBuffer(bleep);
 	soundSelect.setBuffer(selection_bleep);
-	sf::Sound& soundSelect_ref = soundSelect;
-	sf::Sound& soundBleep_ref = soundBleep;
 
 	/*
 	#--------------------------------------------------------------------------------------------------#
@@ -246,7 +246,7 @@ int main(int argc, char** argv) {
 	#--------------------------------------------------------------------------------------------------#
 	*/
 
-	Textbox textBox(sysFont, soundBleep_ref, pfTexture, window_width, window_height);
+	Textbox textBox(sysFont, soundBleep, pfTexture, window_width, window_height);
 
 	/*
 	#--------------------------------------------------------------------------------------------------#
@@ -260,7 +260,6 @@ int main(int argc, char** argv) {
 	pauseSprite.setOrigin(400, 300);
 
 	//test//
-	int grid = 64;
 	Title testTitle(titleTexture, cursorTexture, sysFont, soundBleep);
 	Fader sysFader;
 	sf::Sprite blackScreen(blackTexture);
@@ -315,7 +314,7 @@ int main(int argc, char** argv) {
 					title = false;
 					intro = true;
 					pause = false;
-					introTextbox = new Textbox(sysFont, soundBleep_ref, pfTexture, window_width, window_height, true);
+					introTextbox = new Textbox(sysFont, soundBleep, pfTexture, window_width, window_height, true);
 					introTextbox->setPosition(actorPlayer.getPosition());
 					messages = new vector<string>(4);
 					*messages = { test1, test2, test3, test4 };
@@ -428,7 +427,7 @@ int main(int argc, char** argv) {
 		}
 		else if (intro)
 		{
-			blackScreen.setPosition(playerView.getCenter().x - 400, playerView.getCenter().y - 300);
+			blackScreen.setPosition(window_topleft(playerView.getCenter()));
 			introTextbox->setPosition(playerView.getCenter());
 			window.draw(blackScreen);
 			
@@ -468,7 +467,7 @@ int main(int argc, char** argv) {
 		// END HARD-CODED ALPHA PREVIEW
 		
 		if (debug) {
-			textDebug.setPosition(playerView.getCenter().x - 400, playerView.getCenter().y - 300);
+			textDebug.setPosition(window_topleft(playerView.getCenter()));
 			window.draw(textDebug);
 		}
 
@@ -544,4 +543,9 @@ void sysPause(bool& pause, sf::Music& music)
 sf::Vector2f tile(int tile_num) {
 	int temp = System::Tilesize*tile_num + 32;
 	return sf::Vector2f(temp, temp);
+}
+
+// returns the top left corner of the window based on the position provided (we assume center of the screen)
+sf::Vector2f window_topleft(sf::Vector2f center_pos) {
+	return sf::Vector2f(center_pos.x - 400, center_pos.y - 300);
 }

@@ -34,7 +34,7 @@ namespace sf {
 		sf::Sprite titleSprite;
 		sf::Vector2f cursorSource;
 		sf::Vector2f originalPos;
-		sf::Sound& selectBleep;
+		sf::Sound& cursorBleep;
 		int selection = 1;
 		int aniCounter = 0;
 		int aniFrameDuration = 300;
