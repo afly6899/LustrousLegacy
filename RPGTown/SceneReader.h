@@ -1,4 +1,4 @@
-#ifndef SCENE_READER_H
+mac#ifndef SCENE_READER_H
 #define SCENE_READER_H
 
 #include <queue>
@@ -22,8 +22,9 @@ public:
     //
     
     // Creates and enqueues all SpeechBubbles for a scene
-    // Predefine: sceneID is the ID for the scene in which you wish to create.
-    SceneReader(const SceneID& sceneID);
+    // Predefine: fileName is the file in which the desired scene is stored.
+    // sceneID is the ID for the scene in which you wish to create.
+    SceneReader(const FileName& fileName, const SceneID& sceneID);
 
     //
     // Queries
@@ -42,7 +43,7 @@ public:
     // Commands
     //
 
-    // Cycles to the next SpeechBubble and returns it.
+    // Returns current SpeechBubble and Cycles to the next SpeechBubble.
     SpeechBubble nextMessage();    
 };
 
