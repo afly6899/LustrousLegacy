@@ -1,8 +1,10 @@
-mac#ifndef SCENE_READER_H
+#ifndef SCENE_READER_H
 #define SCENE_READER_H
 
 #include <queue>
 #include "SceneUtility.h"
+
+class SceneReaderEmptyException {};
 
 // Allows messages in a scene to be accessed in order.
 typedef std::queue<SpeechBubble> SceneQueue;
