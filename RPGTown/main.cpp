@@ -6,6 +6,7 @@
 #include "title.h"
 #include "debug.h"
 #include "fader.h"
+#include "SceneReader.h"
 #include "tmx\MapLoader.h"
 using namespace std;
 
@@ -281,6 +282,11 @@ int main(int argc, char** argv) {
 	sf::Vector2f bookSource(0, 0);
 	book.setTextureRect(sf::IntRect(bookSource.x * 64, bookSource.y * 64, 64, 64));
 	int bookcounter = 0;
+	// SCENE READER TEST
+
+	SceneReader reader("SceneTest.txt", "Scene1");
+
+	// END SCENE READER
 	//test//
 
 	/*
@@ -319,7 +325,7 @@ int main(int argc, char** argv) {
 					actorPlayer.setPosition(tile(10));
 					actorPlayer.setDirection(Direction::South);
 					title = false;
-					intro = true;
+					intro = false; // false for testing (scene-reader) 
 					pause = false;
 					introTextbox = new Textbox(sysFont, soundBleep, pfTexture, window_width, window_height, true);
 					introTextbox->setPosition(actorPlayer.getPosition());
@@ -409,9 +415,17 @@ int main(int argc, char** argv) {
 				textBox.setPosition(playerView.getCenter());
 				textBox.setFontSize(24);
 				if (!textBox.if_endMessage())
-					textBox.message(test_string, "Warren", elapsedTime);
+					textBox.message(reader.currentMessage().second, reader.currentMessage().first, elapsedTime);
 				else
-					textBox.reset();		
+					{
+						textBox.reset();
+						if (!reader.isEmpty())
+							reader.nextMessage();
+						if (reader.isEmpty())
+							reader = SceneReader("SceneTest.txt", "Scene1");
+					}
+				
+						
 			}
 			window.draw(textBox);
 		}

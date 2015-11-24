@@ -25,6 +25,15 @@ SceneReader::SceneReader(const FileName& fileName, const SceneID& sceneID)
 }
 
 //
+// assignment
+//
+
+SceneReader& SceneReader::operator=(const SceneReader& copy) {
+	sceneLines = copy.sceneLines;
+	return *this;
+}
+
+//
 // Queries
 //
 

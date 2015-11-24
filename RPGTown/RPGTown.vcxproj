@@ -132,6 +132,8 @@
   <ItemGroup>
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="fader.cpp" />
+    <ClCompile Include="SceneReader.cpp" />
+    <ClCompile Include="SceneUtility.cpp" />
     <ClCompile Include="title.cpp" />
     <ClCompile Include="DebugShape.cpp" />
     <ClCompile Include="main.cpp" />
@@ -147,6 +149,8 @@
   <ItemGroup>
     <ClInclude Include="debug.h" />
     <ClInclude Include="fader.h" />
+    <ClInclude Include="SceneReader.h" />
+    <ClInclude Include="SceneUtility.h" />
     <ClInclude Include="title.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="player.h" />
