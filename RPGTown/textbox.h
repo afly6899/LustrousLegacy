@@ -42,6 +42,7 @@ namespace sf {
 		bool block_draw;
 		int width;
 		int height;
+		int padding;
 		int count = 0;
 		int lines = 0;
 		int length_counter = 0;
@@ -50,5 +51,4 @@ namespace sf {
 		int aniCounter = 0;
 		int aniFrameDuration = 25;
 	};
-
 #endif

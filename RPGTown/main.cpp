@@ -20,7 +20,7 @@ UC Irvine - Fall 2015 Quarter (current)
 */
 
 void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event);
-void sysPause(bool& pause, sf::Music& music); 
+void sysPause(bool& pause, bool& intro, bool& title, sf::Music& music);
 sf::Vector2f window_topleft(sf::Vector2f center_pos);
 sf::Vector2f tile(int tile_num);
 
@@ -141,14 +141,20 @@ int main(int argc, char** argv) {
 
 	// FACE TEXTURES
 	sf::Texture pfTexture;
-	if (!pfTexture.loadFromFile("face.png")) {
+	if (!pfTexture.loadFromFile("face_warren.png")) {
 		cerr << "Texture Error" << endl;
 
 	}
 
+	// TITLE BACKGROUND TEXTURE
+	sf::Texture bgtitleTexture;
+	if (!bgtitleTexture.loadFromFile("title.png")) {
+		cerr << "Texture Error" << endl;
+
+	}
 	// TITLE TEXTURE
 	sf::Texture titleTexture;
-	if (!titleTexture.loadFromFile("title.png")) {
+	if (!titleTexture.loadFromFile("LustrousLegacyLogo.png")) {
 		cerr << "Texture Error" << endl;
 
 	}
@@ -260,7 +266,7 @@ int main(int argc, char** argv) {
 	pauseSprite.setOrigin(400, 300);
 
 	//test//
-	Title testTitle(titleTexture, cursorTexture, sysFont, soundBleep);
+	Title testTitle(titleTexture, bgtitleTexture, cursorTexture, sysFont, soundBleep);
 	Fader sysFader;
 	sf::Sprite blackScreen(blackTexture);
 	bool intro= false;
@@ -271,6 +277,7 @@ int main(int argc, char** argv) {
 	string test3 = "I'm just trying this all out! Ummmmm, yeaaaaaah.....";
 	string test4 = "You know it, get started!";
 	sf::Sprite book(bookTexture);
+	book.setOrigin(32, 32);
 	sf::Vector2f bookSource(0, 0);
 	book.setTextureRect(sf::IntRect(bookSource.x * 64, bookSource.y * 64, 64, 64));
 	int bookcounter = 0;
@@ -289,7 +296,7 @@ int main(int argc, char** argv) {
 				window.close();
 			}
 			else if (event.type == sf::Event::KeyPressed) {
-				sysPause(pause, music);
+				sysPause(pause, intro, title, music);
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1))
 					debug = !debug;
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2))
@@ -471,6 +478,8 @@ int main(int argc, char** argv) {
 			window.draw(textDebug);
 		}
 
+
+
 		// update screen with changes
 		window.display();
 	}
@@ -521,9 +530,9 @@ void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& pl
 }
 
 // Pause system
-void sysPause(bool& pause, sf::Music& music)
+void sysPause(bool& pause, bool& intro, bool& title, sf::Music& music)
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && !intro &&!title) {
 		pause = !pause;
 		if (pause)
 		{
@@ -536,6 +545,7 @@ void sysPause(bool& pause, sf::Music& music)
 			music.play();
 		
 		}
+
 	}
 }
 

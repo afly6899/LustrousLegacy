@@ -2,7 +2,7 @@
 #include "player.h"
 
 	Textbox::Textbox(const sf::Font& font, sf::Sound& bleep, const sf::Texture& imagePath, int width_box, int height_box, bool block, int font_size, int padding) :
-		faceSprite(imagePath), width(width_box), height(height_box), bleep(bleep), block_draw(block) {
+		faceSprite(imagePath), width(width_box), height(height_box), bleep(bleep), block_draw(block), padding(padding) {
 		
 		displayText.setFont(font);
 		displayText.setCharacterSize(font_size);
@@ -10,7 +10,8 @@
 		
 		if (!block_draw)
 		{
-			faceSprite.setTextureRect(sf::IntRect(0, 0, 128, 128));
+			faceSprite.setTextureRect(sf::IntRect(0, 0, 384, 384));
+			faceSprite.setOrigin(384 * .5, 384 * .5);
 			faceSprite.setScale(1.0f, 1.0f);
 			actorName.setFont(font);
 			actorName.setColor(sf::Color::White);
@@ -44,13 +45,13 @@
 	void Textbox::setPosition(const sf::Vector2f position) {
 		if (!block_draw)
 		{
-			faceSprite.setPosition(position.x - 375, position.y + 150);
+			faceSprite.setPosition(position.x - 200, position.y - 85);
 			rectText.setPosition(position.x, position.y + 410);
-			displayText.setPosition(position.x - 225, position.y + 135);
-			actorName.setPosition(position.x - 375, position.y + 115);
+			displayText.setPosition(position.x - 350, position.y + 150);
+			actorName.setPosition(position.x - 325, position.y + 115);
 		}
 		else {
-			displayText.setPosition(position.x - 225, position.y + 135);
+			displayText.setPosition(position.x - 350, position.y + 135);
 		}
 		
 	}
@@ -75,7 +76,7 @@
 				temp_string += to_display[count];
 				length_counter += 1;
 
-				difference_x = length_counter*displayText.getCharacterSize() - (rectText.getLocalBounds().width + faceSprite.getLocalBounds().width * 2 + 25);
+				difference_x = length_counter*displayText.getCharacterSize() - (width*2 - (padding*3)*4);
 				if (difference_x > 0) {
 					int space_pos = temp_string.find_last_of(' ');
 					std::string temp_word = temp_string.substr(space_pos + 1);
@@ -90,7 +91,7 @@
 					displayText.setString(temp_string);
 				}
 
-				difference_y = displayText.getCharacterSize()*lines - (rectText.getLocalBounds().height - 75);
+				difference_y = displayText.getCharacterSize()*lines - (rectText.getLocalBounds().height - 100);
 				if (difference_y > 0) {
 					temp_string = temp_string.substr(temp_string.find_first_of('\n') + 1);;
 					displayText.setString(temp_string);

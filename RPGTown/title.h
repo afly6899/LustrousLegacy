@@ -16,7 +16,7 @@ namespace sf {
 	public:
 
 		// Cursor default constructur, requires a cursorTexture reference
-		Title(const sf::Texture& imagePath_title, const sf::Texture& imagePath_cursor, const sf::Font& font, sf::Sound& bleep);
+		Title(const sf::Texture& imagePath_title, const sf::Texture& imagePath_bgtitle, const sf::Texture& imagePath_cursor, const sf::Font& font, sf::Sound& bleep);
 		// Cursor destructor (virtual -> destroy derived, then destroy base class)
 		virtual ~Title();
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -29,9 +29,9 @@ namespace sf {
 	private:
 
 		sf::Text textSelections;
-		sf::Text textTitle;
 		sf::Sprite cursorSprite;
 		sf::Sprite titleSprite;
+		sf::Sprite bgtitleSprite;
 		sf::Vector2f cursorSource;
 		sf::Vector2f originalPos;
 		sf::Sound& cursorBleep;
