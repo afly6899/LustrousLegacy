@@ -12,11 +12,13 @@ public:
 	void setPosition(const sf::Vector2f position);
 	void performFade(int fade_type, int speed);
 	void resetFader();
+	sf::RectangleShape blackScreen();
 	bool isComplete();
 
 private:
 
 	sf::RectangleShape rectFade;
+	sf::RectangleShape rectBlack;
 	bool fading = false;
 	bool complete = false;
 	int fader_type;

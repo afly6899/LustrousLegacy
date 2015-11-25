@@ -6,6 +6,7 @@
 #include "title.h"
 #include "debug.h"
 #include "fader.h"
+#include "NPC.h"
 #include "SceneReader.h"
 #include "tmx\MapLoader.h"
 using namespace std;
@@ -20,6 +21,7 @@ UC Irvine - Fall 2015 Quarter (current)
 #--------------------------------------------------------------------------------------------------#
 */
 
+// main game loop control functions
 void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event);
 void sysPause(bool& pause, bool& intro, bool& title, sf::Music& music);
 sf::Vector2f window_topleft(sf::Vector2f center_pos);
@@ -32,12 +34,20 @@ int main(int argc, char** argv) {
 	# Test Parameters: (temporary variables to test functionality of game)
 	#
 	# test_string - is used to send a message to the textbox that is will display to test word wrapping
-	# test_speed - is used to control the text speed of the textbox for testing (F3 controls change)
+	# window_top
 	#--------------------------------------------------------------------------------------------------#
 	*/
 
-	std::string test_string = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
-	int test_speed = 0;
+	std::string test_string = "Lorem Ipsum is simply\
+		dummy text of the printing and typesetting industry. \
+		Lorem Ipsum has been the industry's standard dummy text \
+		ever since the 1500s, when an unknown printer took a galley \
+		of type and scrambled it to make a type specimen book. It has \
+		survived not only five centuries, but also the leap into electronic \
+		typesetting, remaining essentially unchanged. It was popularised in the \
+		1960s with the release of Letraset sheets containing Lorem Ipsum passages, \
+		and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+
 
 	/*
 	#--------------------------------------------------------------------------------------------------#
@@ -53,6 +63,52 @@ int main(int argc, char** argv) {
 	int window_width = 800;
 	int window_height = 600;
 	string window_name = "Lustrous Legacy (RPGTown 0.3)";
+
+	/*
+	#-------- GAME WINDOW --------#
+	*/
+
+	sf::RenderWindow window(sf::VideoMode(window_width, window_height), window_name);
+	window.setVerticalSyncEnabled(false);
+	window.setFramerateLimit(60);
+
+	/*
+	#-------- GAME CAMERA AND CLOCK--------#
+	*/
+
+	sf::View playerView(sf::FloatRect(0, 0, (float)window_width, (float)window_height));
+	sf::Clock gameClock;
+
+	/*
+	#--------------------------------------------------------------------------------------------------#
+	# System Parameters:
+	#
+	# sysFont - is used to set the font used for text in the game.
+	# textDebug - is used to store and display the frames per second of the game
+	#			  as well as other debug information.
+	# player_speed - controls the movement speed of the player
+	# distance_moved - is used to keep track of the distance the player has moved in order to align
+	#				   player to movement grid
+	# elapsedTime - is used to get the amount of time that has passed after every game loop iteration;
+	#				elapsed time is used for managing the speed of all animations
+	#
+	#--------------------------------------------------------------------------------------------------#
+	*/
+
+	// load the system font
+	sf::Font sysFont;
+	if (!sysFont.loadFromFile("Vera.ttf")) {
+		cerr << "Font Error" << endl;
+	}
+
+	// debug text instantiation
+	sf::Text textDebug;
+	textDebug.setFont(sysFont);
+	textDebug.setCharacterSize(18);
+
+	// basic default player parameters and time since last loop iteration
+	int player_speed = Speed::Normal;
+	float elapsedTime = 0;
 
 	/*
 	#--------------------------------------------------------------------------------------------------#
@@ -80,51 +136,6 @@ int main(int argc, char** argv) {
 	bool title = true;
 
 	/*
-	#--------------------------------------------------------------------------------------------------#
-	# System Parameters:
-	#
-	# sysFont - is used to set the font used for text in the game.
-	# textDebug - is used to store and display the frames per second of the game 
-	#			  as well as other debug information.
-	# player_speed - controls the movement speed of the player
-	# distance_moved - is used to keep track of the distance the player has moved in order to align 
-	#				   player to movement grid
-	# elapsedTime - is used to get the amount of time that has passed after every game loop iteration;
-	#				elapsed time is used for managing the speed of all animations
-	#
-	#--------------------------------------------------------------------------------------------------#
-	*/
-
-	sf::Font sysFont;
-	if (!sysFont.loadFromFile("Vera.ttf"))
-	{
-		cerr << "Font Error" << endl;
-	}
-
-	sf::Text textDebug;
-	textDebug.setFont(sysFont);
-	textDebug.setCharacterSize(18);
-
-	int player_speed = Speed::Normal;
-	int distance_moved = 0;
-	float elapsedTime = 0;
-
-	/*
-	#-------- GAME WINDOW --------#
-	*/
-
-	sf::RenderWindow window(sf::VideoMode(window_width, window_height), window_name);
-	window.setVerticalSyncEnabled(false);
-	window.setFramerateLimit(60);
-
-	/*
-	#-------- GAME CAMERA AND CLOCK--------#
-	*/
-
-	sf::View playerView(sf::FloatRect(0, 0, (float)window_width, (float)window_height));
-	sf::Clock gameClock;
-
-	/*
 	#-------- TEXTURES --------#
 	*/
 
@@ -144,41 +155,30 @@ int main(int argc, char** argv) {
 	sf::Texture pfTexture;
 	if (!pfTexture.loadFromFile("face_warren.png")) {
 		cerr << "Texture Error" << endl;
-
 	}
 
 	// TITLE BACKGROUND TEXTURE
 	sf::Texture bgtitleTexture;
 	if (!bgtitleTexture.loadFromFile("title.png")) {
 		cerr << "Texture Error" << endl;
-
 	}
+
 	// TITLE TEXTURE
 	sf::Texture titleTexture;
 	if (!titleTexture.loadFromFile("LustrousLegacyLogo.png")) {
 		cerr << "Texture Error" << endl;
-
 	}
 
 	// CURSOR TEXTURE
 	sf::Texture cursorTexture;
 	if (!cursorTexture.loadFromFile("cursor.png")) {
 		cerr << "Texture Error" << endl;
-
-	}
-
-	// BLACK TEXTURE
-	sf::Texture blackTexture;
-	if (!blackTexture.loadFromFile("fade.png")) {
-		cerr << "Texture Error" << endl;
-
 	}
 
 	// BOOK TEXTURE
 	sf::Texture bookTexture;
 	if (!bookTexture.loadFromFile("book.png")) {
 		cerr << "Texture Error" << endl;
-
 	}
 
 	/*
@@ -269,7 +269,6 @@ int main(int argc, char** argv) {
 	//test//
 	Title testTitle(titleTexture, bgtitleTexture, cursorTexture, sysFont, soundBleep);
 	Fader sysFader;
-	sf::Sprite blackScreen(blackTexture);
 	bool intro= false;
 	Textbox* introTextbox = nullptr;
 	vector<string>* messages = nullptr;
@@ -277,11 +276,7 @@ int main(int argc, char** argv) {
 	string test2 = "The 8 bosses that must be defeated, should be defeated, but this test text should be changed or else this game will seem extremely bad.";
 	string test3 = "I'm just trying this all out! Ummmmm, yeaaaaaah.....";
 	string test4 = "You know it, get started!";
-	sf::Sprite book(bookTexture);
-	book.setOrigin(32, 32);
-	sf::Vector2f bookSource(0, 0);
-	book.setTextureRect(sf::IntRect(bookSource.x * 64, bookSource.y * 64, 64, 64));
-	int bookcounter = 0;
+	NPC book(bookTexture);
 	// SCENE READER TEST
 
 	SceneReader reader("SceneTest.txt", "Scene1");
@@ -300,6 +295,12 @@ int main(int argc, char** argv) {
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed) {
 				window.close();
+			}
+			else if (event.type == sf::Event::Resized)
+			{
+				window_width = event.size.width;
+				window_height = event.size.height;
+				window.setSize(sf::Vector2u(800, 600));
 			}
 			else if (event.type == sf::Event::KeyPressed) {
 				sysPause(pause, intro, title, music);
@@ -325,7 +326,7 @@ int main(int argc, char** argv) {
 					actorPlayer.setPosition(tile(10));
 					actorPlayer.setDirection(Direction::South);
 					title = false;
-					intro = false; // false for testing (scene-reader) 
+					intro = true; // false for testing (scene-reader) 
 					pause = false;
 					introTextbox = new Textbox(sysFont, soundBleep, pfTexture, window_width, window_height, true);
 					introTextbox->setPosition(actorPlayer.getPosition());
@@ -363,7 +364,6 @@ int main(int argc, char** argv) {
 		if (!pause && !title && window.hasFocus() && sysFader.isComplete())
 		{
 			aniCounter += elapsedTime;
-
 			// START - PLAYER MOVEMENT (manual or automatic)
 			actorPlayer.move(player_speed, elapsedTime, collision, move_flag);
 			// END 
@@ -424,8 +424,6 @@ int main(int argc, char** argv) {
 						if (reader.isEmpty())
 							reader = SceneReader("SceneTest.txt", "Scene1");
 					}
-				
-						
 			}
 			window.draw(textBox);
 		}
@@ -448,21 +446,12 @@ int main(int argc, char** argv) {
 		}
 		else if (intro)
 		{
-			blackScreen.setPosition(window_topleft(playerView.getCenter()));
 			introTextbox->setPosition(playerView.getCenter());
-			window.draw(blackScreen);
-			
+			sysFader.setPosition(playerView.getCenter());
+			window.draw(sysFader.blackScreen());
 			book.setPosition(playerView.getCenter());
+			book.hover(elapsedTime);
 			window.draw(book);
-			bookcounter += elapsedTime;
-			if (bookcounter >= 200) {
-				bookcounter -= 200;
-				bookSource.y++;
-				if (bookSource.y > 3)
-					bookSource.y = 0;
-				book.setTextureRect(sf::IntRect(bookSource.x * 64, bookSource.y * 64, 64, 64));
-			
-			}
 			
 			if (!messages->empty()) {
 				introTextbox->message(messages->back(), "System", elapsedTime);
@@ -480,7 +469,6 @@ int main(int argc, char** argv) {
 				delete messages;
 				messages = nullptr;
 				introTextbox = nullptr;
-
 			}
 			if (intro)
 				window.draw(*introTextbox);
@@ -491,8 +479,6 @@ int main(int argc, char** argv) {
 			textDebug.setPosition(window_topleft(playerView.getCenter()));
 			window.draw(textDebug);
 		}
-
-
 
 		// update screen with changes
 		window.display();
@@ -505,7 +491,7 @@ int main(int argc, char** argv) {
 void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event)
 {
 	bool test_collision = false;
-
+	
 	for (auto layer = map.GetLayers().begin(); layer != map.GetLayers().end(); ++layer)
 	{
 		if (layer->name == "Collision")

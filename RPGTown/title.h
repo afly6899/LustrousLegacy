@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include "cursor.h"
 
 // Forward Declaration
 namespace sf {
@@ -29,12 +30,11 @@ namespace sf {
 	private:
 
 		sf::Text textSelections;
-		sf::Sprite cursorSprite;
 		sf::Sprite titleSprite;
 		sf::Sprite bgtitleSprite;
-		sf::Vector2f cursorSource;
-		sf::Vector2f originalPos;
 		sf::Sound& cursorBleep;
+		sf::Vector2f originalPos;
+		Cursor titleCursor;
 		int selection = 1;
 		int aniCounter = 0;
 		int aniFrameDuration = 300;

@@ -130,8 +130,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cursor.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="fader.cpp" />
+    <ClCompile Include="NPC.cpp" />
+    <ClCompile Include="pause.cpp" />
     <ClCompile Include="SceneReader.cpp" />
     <ClCompile Include="SceneUtility.cpp" />
     <ClCompile Include="title.cpp" />
@@ -147,8 +150,11 @@
     <ClCompile Include="Textbox.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="NPC.h" />
+    <ClInclude Include="cursor.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="fader.h" />
+    <ClInclude Include="pause.h" />
     <ClInclude Include="SceneReader.h" />
     <ClInclude Include="SceneUtility.h" />
     <ClInclude Include="title.h" />

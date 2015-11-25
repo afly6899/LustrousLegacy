@@ -4,8 +4,7 @@
 	Title::Title(const sf::Texture& imagePath_title, const sf::Texture& imagePath_bgtitle, const sf::Texture& imagePath_cursor, const sf::Font& font, sf::Sound& bleep):
 		titleSprite(imagePath_title),
 		bgtitleSprite(imagePath_bgtitle), 
-		cursorSprite(imagePath_cursor),
-		cursorSource(0,0), 
+		titleCursor(imagePath_cursor),
 		cursorBleep(bleep) {
 	
 		textSelections.setFont(font);
@@ -13,9 +12,8 @@
 		textSelections.setCharacterSize(20);
 		textSelections.setPosition(350, 350);
 		titleSprite.setPosition(275, 100);
-		cursorSprite.setOrigin(8, 8);
-		cursorSprite.setPosition(400, 386);
-		originalPos = cursorSprite.getPosition();
+		titleCursor.setPosition(sf::Vector2f(400, 386));
+		originalPos = titleCursor.getPosition();
 	}
 
 	// Player virtual destructor;
@@ -28,7 +26,7 @@
 		target.draw(bgtitleSprite, states);
 		target.draw(textSelections, states);
 		target.draw(titleSprite, states);
-		target.draw(cursorSprite, states);
+		target.draw(titleCursor, states);
 	}
 
 	// Player move function moves sprite and animates based on clock and speed
@@ -37,21 +35,21 @@
 		{
 			selection += 1;
 			if (selection > num_of_selections) {
-				cursorSprite.setPosition(originalPos);
+				titleCursor.setPosition(originalPos);
 				selection = 1;
 			}
 			else
-				cursorSprite.setPosition(cursorSprite.getPosition().x, cursorSprite.getPosition().y + 46);
+				titleCursor.setPosition(sf::Vector2f(titleCursor.getPosition().x, titleCursor.getPosition().y + 46));
 			cursorBleep.play();
 		}
 		else {
 			selection -= 1;
 			if (selection < 1) {
 				selection = num_of_selections;
-				cursorSprite.setPosition(cursorSprite.getPosition().x, cursorSprite.getPosition().y + 46 * (num_of_selections - 1));
+				titleCursor.setPosition(sf::Vector2f(titleCursor.getPosition().x, titleCursor.getPosition().y + 46 * (num_of_selections - 1)));
 			}
 			else
-				cursorSprite.setPosition(cursorSprite.getPosition().x, cursorSprite.getPosition().y - 46);
+				titleCursor.setPosition(sf::Vector2f(titleCursor.getPosition().x, titleCursor.getPosition().y - 46));
 			cursorBleep.play();
 		}
 
@@ -64,23 +62,12 @@
 	void Title::setPosition(int x, int y) {
 		titleSprite.setPosition(x - 125, y - 200);
 		textSelections.setPosition(x - 50, y + 50);
-		cursorSprite.setPosition(x, y + 86);
+		titleCursor.setPosition(sf::Vector2f(x, y + 86));
 		bgtitleSprite.setPosition(x - 400, y - 300);
-		originalPos = cursorSprite.getPosition();
+		originalPos = titleCursor.getPosition();
 	}
 
 	void Title::animate(float elapsedTime) {
 
-		aniCounter += elapsedTime;
-
-		if (aniCounter >= aniFrameDuration)
-		{
-			aniCounter -= aniFrameDuration;
-			cursorSource.y++;
-
-			if (cursorSource.y * 16 >= (int)cursorSprite.getTexture()->getSize().y) {
-				cursorSource.y = 0;
-			}
-			cursorSprite.setTextureRect(sf::IntRect(cursorSource.x, cursorSource.y * 16, 16, 16));
-		}
+		titleCursor.animate(elapsedTime);
 	}

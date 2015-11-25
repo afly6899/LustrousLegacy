@@ -3,6 +3,8 @@
 // Player default constructor; Loads: character sprite from texture and sets position to frame 1 and south
 Fader::Fader() {
 	rectFade.setSize(sf::Vector2f(800, 600));
+	rectBlack = rectFade;
+	rectBlack.setFillColor(sf::Color(0, 0, 0, 255));
 }
 
 // Player virtual destructor;
@@ -17,7 +19,7 @@ void Fader::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 void Fader::setPosition(const sf::Vector2f position) {
 	rectFade.setPosition(position.x - 400, position.y - 300);
-
+	rectBlack.setPosition(position.x - 400, position.y - 300);
 }
 
 void Fader::performFade(int fade_type, int speed) {
@@ -63,6 +65,10 @@ void Fader::performFade(int fade_type, int speed) {
 void Fader::resetFader() {
 	fading = false;
 	complete = false;
+}
+
+sf::RectangleShape Fader::blackScreen() {
+	return rectBlack;
 }
 
 bool Fader::isComplete() {

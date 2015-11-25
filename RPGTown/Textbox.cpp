@@ -10,9 +10,9 @@
 		
 		if (!block_draw)
 		{
-			faceSprite.setTextureRect(sf::IntRect(0, 0, 384, 384));
-			faceSprite.setOrigin(384 * .5, 384 * .5);
-			faceSprite.setScale(1.0f, 1.0f);
+			faceSprite.setTextureRect(sf::IntRect(0, 0, faceSprite.getLocalBounds().width, faceSprite.getLocalBounds().height));
+			faceSprite.setOrigin(faceSprite.getLocalBounds().width*.5, faceSprite.getLocalBounds().height*.5);
+			faceSprite.setScale(.75f, .75f);
 			actorName.setFont(font);
 			actorName.setColor(sf::Color::White);
 			rectText.setSize(sf::Vector2f(width - padding, height*.3));
