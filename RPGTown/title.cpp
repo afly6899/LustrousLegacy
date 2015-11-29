@@ -1,37 +1,64 @@
 #include "title.h"
+#include "Enums.h"
 
-	// Player default constructor; Loads: character sprite from texture and sets position to frame 1 and south
-	Title::Title(const sf::Texture& imagePath_title, const sf::Texture& imagePath_bgtitle, const sf::Texture& imagePath_cursor, const sf::Font& font, sf::Sound& bleep):
+	Title::Title(const sf::Texture& imagePath_title, const sf::Texture& imagePath_bgtitle, const sf::Texture& imagePath_cursor, const sf::Font& font, sf::Sound& bleep, int win_width, int win_height):
 		titleSprite(imagePath_title),
 		bgtitleSprite(imagePath_bgtitle), 
 		titleCursor(imagePath_cursor),
-		cursorBleep(bleep) {
-	
-		textSelections.setFont(font);
-		textSelections.setString(" Play Game\n\nLoad Game\n\n   Settings\n\n Exit Game");
-		textSelections.setCharacterSize(20);
-		textSelections.setPosition(350, 350);
-		titleSprite.setPosition(275, 100);
-		titleCursor.setPosition(sf::Vector2f(400, 386));
+		cursorBleep(bleep),
+		window_width(win_width),
+		window_height(win_height) {
+
+		play_game.setFont(font);
+		play_game.setString("Play Game");
+		play_game.setColor(sf::Color::Yellow);
+		play_game.setStyle(play_game.Italic);
+		play_game.setCharacterSize(Font_Size::Default);
+		play_game.setOrigin(play_game.getLocalBounds().width*.5, play_game.getLocalBounds().height*.5);
+		load_game.setFont(font);
+		load_game.setString("Load Game");
+		load_game.setCharacterSize(Font_Size::Default);
+		load_game.setOrigin(load_game.getLocalBounds().width *.5, load_game.getLocalBounds().height*.5);
+		settings.setFont(font);
+		settings.setString("Settings");
+		settings.setCharacterSize(Font_Size::Default);
+		settings.setOrigin(settings.getLocalBounds().width *.5, settings.getLocalBounds().height*.5);
+		exit_game.setFont(font);
+		exit_game.setString("Exit");
+		exit_game.setCharacterSize(Font_Size::Default);
+		exit_game.setOrigin(exit_game.getLocalBounds().width *.5, exit_game.getLocalBounds().height*.5);
+
+		bgtitleSprite.setOrigin(bgtitleSprite.getLocalBounds().width*.5, bgtitleSprite.getLocalBounds().height*.5);
+		bgtitleSprite.setPosition(window_width*.5, window_height*.5);
+
+		titleSprite.setOrigin(titleSprite.getLocalBounds().width*.5, titleSprite.getLocalBounds().height*.5);
+		titleSprite.setPosition(bgtitleSprite.getPosition().x, bgtitleSprite.getPosition().y - 100);
+
+		play_game.setPosition(bgtitleSprite.getPosition().x, bgtitleSprite.getPosition().y + 100);
+		load_game.setPosition(play_game.getPosition().x, play_game.getPosition().y + seperation);
+		settings.setPosition(load_game.getPosition().x, load_game.getPosition().y + seperation);
+		exit_game.setPosition(settings.getPosition().x, settings.getPosition().y + seperation);
+		
+		titleCursor.setPosition(sf::Vector2f(play_game.getPosition().x, play_game.getPosition().y + seperation*.5));
 		originalPos = titleCursor.getPosition();
 	}
 
-	// Player virtual destructor;
 	Title::~Title() {
 
 	}
 
-	// Derived from the sf::drawable class; Allows to be Player object to be drawn to screen
 	void Title::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 		target.draw(bgtitleSprite, states);
-		target.draw(textSelections, states);
+		target.draw(play_game, states);
+		target.draw(load_game, states);
+		target.draw(settings, states);
+		target.draw(exit_game, states);
 		target.draw(titleSprite, states);
 		target.draw(titleCursor, states);
 	}
 
-	// Player move function moves sprite and animates based on clock and speed
-	void Title::move(int num_of_selections, int up_or_down) {
-		if (up_or_down == 0)
+	void Title::change_selection(int num_of_selections, int up_or_down) {
+		if (up_or_down == Cursor_Direction::Down)
 		{
 			selection += 1;
 			if (selection > num_of_selections) {
@@ -39,31 +66,76 @@
 				selection = 1;
 			}
 			else
-				titleCursor.setPosition(sf::Vector2f(titleCursor.getPosition().x, titleCursor.getPosition().y + 46));
+				titleCursor.setPosition(sf::Vector2f(titleCursor.getPosition().x, titleCursor.getPosition().y + seperation));
 			cursorBleep.play();
 		}
 		else {
 			selection -= 1;
 			if (selection < 1) {
 				selection = num_of_selections;
-				titleCursor.setPosition(sf::Vector2f(titleCursor.getPosition().x, titleCursor.getPosition().y + 46 * (num_of_selections - 1)));
+				titleCursor.setPosition(sf::Vector2f(titleCursor.getPosition().x, titleCursor.getPosition().y + seperation * (num_of_selections - 1)));
 			}
 			else
-				titleCursor.setPosition(sf::Vector2f(titleCursor.getPosition().x, titleCursor.getPosition().y - 46));
+				titleCursor.setPosition(sf::Vector2f(titleCursor.getPosition().x, titleCursor.getPosition().y - seperation));
 			cursorBleep.play();
 		}
 
+		if (selection == Selection::Play_Game) {
+			play_game.setColor(sf::Color::Yellow);
+			play_game.setStyle(play_game.Italic);
+		}
+		else {
+			play_game.setColor(sf::Color::White);
+			play_game.setStyle(0);
+		}
+
+		if (selection == Selection::Load_Game) {
+			load_game.setColor(sf::Color::Yellow);
+			load_game.setStyle(load_game.Italic);
+		}
+		else {
+			load_game.setColor(sf::Color::White);
+			load_game.setStyle(0);
+		}
+
+		if (selection == Selection::Settings) {
+			settings.setColor(sf::Color::Yellow);
+			settings.setStyle(settings.Italic);
+		}
+		else {
+			settings.setColor(sf::Color::White);
+			settings.setStyle(0);
+		}
+
+		if (selection == Selection::Exit) {
+			exit_game.setColor(sf::Color::Yellow);
+			exit_game.setStyle(exit_game.Italic);
+		}
+		else {
+			exit_game.setColor(sf::Color::White);
+			exit_game.setStyle(0);
+		}
 	}
 
 	int Title::getSelection() {
 		return selection;
 	}
 
-	void Title::setPosition(int x, int y) {
-		titleSprite.setPosition(x - 125, y - 200);
-		textSelections.setPosition(x - 50, y + 50);
-		titleCursor.setPosition(sf::Vector2f(x, y + 86));
-		bgtitleSprite.setPosition(x - 400, y - 300);
+	sf::Vector2f Title::getPosition() {
+		return bgtitleSprite.getPosition();
+	}
+
+	void Title::setPosition(sf::Vector2f pos) {
+
+		bgtitleSprite.setPosition(pos);
+		titleSprite.setPosition(bgtitleSprite.getPosition().x, bgtitleSprite.getPosition().y - 100);
+
+		play_game.setPosition(bgtitleSprite.getPosition().x, bgtitleSprite.getPosition().y + 100);
+		load_game.setPosition(play_game.getPosition().x, play_game.getPosition().y + seperation);
+		settings.setPosition(load_game.getPosition().x, load_game.getPosition().y + seperation);
+		exit_game.setPosition(settings.getPosition().x, settings.getPosition().y + seperation);
+
+		titleCursor.setPosition(sf::Vector2f(play_game.getPosition().x, play_game.getPosition().y + seperation*.5));
 		originalPos = titleCursor.getPosition();
 	}
 

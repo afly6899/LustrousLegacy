@@ -8,24 +8,30 @@
 		displayText.setCharacterSize(font_size);
 		displayText.setColor(sf::Color::White);
 		
+		// TEMPORARY FACE TEXTURE FOR MISSING NPC TEXTURES
+		sf::Texture ;
+		faceTemp.loadFromFile("face_temp.png");
+		faceSprite2.setTexture(faceTemp);
+		// END TEMPORARY FACE TEXTURE
+
 		if (!block_draw)
 		{
 			faceSprite.setTextureRect(sf::IntRect(0, 0, faceSprite.getLocalBounds().width, faceSprite.getLocalBounds().height));
 			faceSprite.setOrigin(faceSprite.getLocalBounds().width*.5, faceSprite.getLocalBounds().height*.5);
-			faceSprite.setScale(.75f, .75f);
-			actorName.setFont(font);
-			actorName.setColor(sf::Color::White);
+			faceSprite2.setTextureRect(sf::IntRect(0, 0, faceSprite2.getLocalBounds().width, faceSprite2.getLocalBounds().height));
+			faceSprite2.setOrigin(faceSprite2.getLocalBounds().width*.5, faceSprite2.getLocalBounds().height*.5);
 			rectText.setSize(sf::Vector2f(width - padding, height*.3));
 			rectText.setOrigin((width - padding)*.5, height*.5);
 			rectText.setFillColor(sf::Color::Black);
 			rectText.setOutlineColor(sf::Color::White);
 			rectText.setOutlineThickness(2);
+			actorName.setColor(sf::Color::Yellow);
+			actorName.setFont(font);
 		}
 		else {
 			rectText.setSize(sf::Vector2f(width, height));
 			rectText.setOrigin(width*.5, height*.5);
-		}
-			
+		}	
 	}
 
 	Textbox::~Textbox() {
@@ -36,7 +42,10 @@
 		if (!block_draw)
 		{
 			target.draw(rectText, states);
-			target.draw(faceSprite, states);
+			if (!newActor)
+				target.draw(faceSprite, states);
+			else
+				target.draw(faceSprite2, states);
 			target.draw(actorName, states);
 		}
 		target.draw(displayText, states);
@@ -45,10 +54,12 @@
 	void Textbox::setPosition(const sf::Vector2f position) {
 		if (!block_draw)
 		{
+			rectText.setPosition(position.x, position.y + 410);
+			faceSprite2.setPosition(position.x + 200, position.y - 85);
 			faceSprite.setPosition(position.x - 200, position.y - 85);
 			rectText.setPosition(position.x, position.y + 410);
 			displayText.setPosition(position.x - 350, position.y + 150);
-			actorName.setPosition(position.x - 325, position.y + 115);
+			actorName.setPosition(position.x - 350, position.y + 115);
 		}
 		else {
 			displayText.setPosition(position.x - 350, position.y + 135);
@@ -62,6 +73,13 @@
 			end_length = to_display.length();
 			actorName.setString(name);
 			displayingText = true;
+			if (previous_name == "")
+				previous_name = actorName.getString();
+
+			if (previous_name != actorName.getString()) {
+				newActor = !newActor;
+				previous_name = actorName.getString();
+			}
 		}
 		if (displayingText)
 		{
@@ -119,6 +137,7 @@
 		return false;
 	}
 
+	// reset prepares the Textbox for the next input string
 	void Textbox::reset() {
 		end_message = false;
 		temp_string = "";

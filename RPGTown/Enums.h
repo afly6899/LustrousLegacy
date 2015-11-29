@@ -30,4 +30,23 @@ enum Layer{
 	Overlay
 };
 
+enum Selection {
+	Play_Game = 1,
+	Load_Game = 2,
+	Settings = 3,
+	Exit = 4,
+};
+
+enum Cursor_Direction {
+	Down,
+	Up
+};
+
+enum Font_Size {
+	Small = 14,
+	Default = 18, 
+	Large = 24,
+	Big = 32
+};
+
 #endif

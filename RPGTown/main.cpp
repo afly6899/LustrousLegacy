@@ -8,6 +8,7 @@
 #include "fader.h"
 #include "NPC.h"
 #include "SceneReader.h"
+#include "pause.h"
 #include "tmx\MapLoader.h"
 using namespace std;
 
@@ -23,31 +24,11 @@ UC Irvine - Fall 2015 Quarter (current)
 
 // main game loop control functions
 void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event);
-void sysPause(bool& pause, bool& intro, bool& title, sf::Music& music);
+void sysPause(bool& pause, bool& intro, bool& title, sf::Music& music, Fader& sysFader);
 sf::Vector2f window_topleft(sf::Vector2f center_pos);
 sf::Vector2f tile(int tile_num);
 
 int main(int argc, char** argv) {
-
-	/*
-	#--------------------------------------------------------------------------------------------------#
-	# Test Parameters: (temporary variables to test functionality of game)
-	#
-	# test_string - is used to send a message to the textbox that is will display to test word wrapping
-	# window_top
-	#--------------------------------------------------------------------------------------------------#
-	*/
-
-	std::string test_string = "Lorem Ipsum is simply\
-		dummy text of the printing and typesetting industry. \
-		Lorem Ipsum has been the industry's standard dummy text \
-		ever since the 1500s, when an unknown printer took a galley \
-		of type and scrambled it to make a type specimen book. It has \
-		survived not only five centuries, but also the leap into electronic \
-		typesetting, remaining essentially unchanged. It was popularised in the \
-		1960s with the release of Letraset sheets containing Lorem Ipsum passages, \
-		and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
-
 
 	/*
 	#--------------------------------------------------------------------------------------------------#
@@ -62,7 +43,7 @@ int main(int argc, char** argv) {
 
 	int window_width = 800;
 	int window_height = 600;
-	string window_name = "Lustrous Legacy (RPGTown 0.3)";
+	string window_name = "Lustrous Legacy (Prototype)";
 
 	/*
 	#-------- GAME WINDOW --------#
@@ -104,7 +85,7 @@ int main(int argc, char** argv) {
 	// debug text instantiation
 	sf::Text textDebug;
 	textDebug.setFont(sysFont);
-	textDebug.setCharacterSize(18);
+	textDebug.setCharacterSize(Font_Size::Large);
 
 	// basic default player parameters and time since last loop iteration
 	int player_speed = Speed::Normal;
@@ -127,13 +108,14 @@ int main(int argc, char** argv) {
 
 	bool debug = false;
 	bool textbox = false;
-	bool pause = false;
 	bool player_trigger = false;
 	bool player_event = false;
 	bool is_moving = false;
 	bool collision = false;
 	bool move_flag = false;
 	bool title = true;
+	bool pause = false;
+	bool intro = false;
 
 	/*
 	#-------- TEXTURES --------#
@@ -142,12 +124,6 @@ int main(int argc, char** argv) {
 	// PLAYER TEXTURE
 	sf::Texture pTexture;
 	if (!pTexture.loadFromFile("playerSprite.png")) {
-		cerr << "Texture Error" << endl;
-	}
-
-	// PAUSE TEXTURE
-	sf::Texture syspTexture;
-	if (!syspTexture.loadFromFile("pause.png")) {
 		cerr << "Texture Error" << endl;
 	}
 
@@ -189,7 +165,7 @@ int main(int argc, char** argv) {
 	if (!music.openFromFile("test.ogg"))
 		return -1; // error
 
-	music.setVolume(25);
+	//music.setVolume(0);
 
 	/*
 	#-------- SOUNDS --------#
@@ -231,7 +207,7 @@ int main(int argc, char** argv) {
 	*/
 
 	tmx::MapLoader ml("maps");
-	ml.Load("test_new.tmx");
+	ml.Load("start.tmx");
 
 	/*
 	#--------------------------------------------------------------------------------------------------#
@@ -263,27 +239,14 @@ int main(int argc, char** argv) {
 	#--------------------------------------------------------------------------------------------------#
 	*/
 
-	sf::Sprite pauseSprite(syspTexture);
-	pauseSprite.setOrigin(400, 300);
-
 	//test//
-	Title testTitle(titleTexture, bgtitleTexture, cursorTexture, sysFont, soundBleep);
+	Title screenTitle(titleTexture, bgtitleTexture, cursorTexture, sysFont, soundBleep, window_width, window_height);
+	Pause screenPause(sysFont, window_width, window_width);
+	SceneReader* reader = new SceneReader("Scenes.txt", "Intro");
 	Fader sysFader;
-	bool intro= false;
 	Textbox* introTextbox = nullptr;
-	vector<string>* messages = nullptr;
-	string test1 = "Once upon a time, there was test text... a young mang named Warren came and there was more test text. If you know just how much test text you were about to see; you would be confused!";
-	string test2 = "The 8 bosses that must be defeated, should be defeated, but this test text should be changed or else this game will seem extremely bad.";
-	string test3 = "I'm just trying this all out! Ummmmm, yeaaaaaah.....";
-	string test4 = "You know it, get started!";
 	NPC book(bookTexture);
-	// SCENE READER TEST
-
-	SceneReader reader("SceneTest.txt", "Scene1");
-
-	// END SCENE READER
-	//test//
-
+	
 	/*
 	#--------------------------------------------------------------------------------------------------#
 	# BEGIN GAME LOOP:
@@ -303,40 +266,40 @@ int main(int argc, char** argv) {
 				window.setSize(sf::Vector2u(800, 600));
 			}
 			else if (event.type == sf::Event::KeyPressed) {
-				sysPause(pause, intro, title, music);
+				sysPause(pause, intro, title, music, sysFader);
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1))
 					debug = !debug;
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2))
 					textbox = !textbox;
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::F3) && pause) {
 					title = true;
-					testTitle.setPosition(actorPlayer.getPosition().x, actorPlayer.getPosition().y);
+					delete reader;
+					reader = new SceneReader("Scenes.txt", "Intro");
+					screenTitle.setPosition(actorPlayer.getPosition());
 					music.stop();
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && player_event)
 					player_trigger = !player_trigger;
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && title) {
-					testTitle.move(4, 0);
+					screenTitle.change_selection(4, Cursor_Direction::Down);
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && title) {
-					testTitle.move(4, 1);
+					screenTitle.change_selection(4, Cursor_Direction::Up);
 				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && testTitle.getSelection() == 1) {
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && screenTitle.getSelection() == Selection::Play_Game) {
 					sysFader.resetFader();
 					actorPlayer.setPosition(tile(10));
 					actorPlayer.setDirection(Direction::South);
 					title = false;
-					intro = true; // false for testing (scene-reader) 
+					intro = true; 
 					pause = false;
 					introTextbox = new Textbox(sysFont, soundBleep, pfTexture, window_width, window_height, true);
 					introTextbox->setPosition(actorPlayer.getPosition());
-					messages = new vector<string>(4);
-					*messages = { test1, test2, test3, test4 };
 					if (!pause) {
 						music.play();
 					}
 				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && testTitle.getSelection() == 4) {
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && screenTitle.getSelection() == 4) {
 					window.close();
 				}
 			}
@@ -345,10 +308,10 @@ int main(int argc, char** argv) {
 		// START Get debug information:
 		textDebug.setString("FPS: " + to_string(1 / gameClock.getElapsedTime().asSeconds()).substr(0, 5) + 
 			"\nCoordinates: (" + to_string(actorPlayer.getPosition().x).substr(0, 5) + ", " + 
-			to_string(actorPlayer.getPosition().y).substr(0, 5) + "\nTile Map: (" + 
+			to_string(actorPlayer.getPosition().y).substr(0, 5) + ")\nTile Map: (" + 
 			to_string(actorPlayer.getPosition().x / Tilesize).substr(0, 5) + ", " + 
 			to_string(actorPlayer.getPosition().y / Tilesize).substr(0, 5) + ")");
-		// END
+		// END debug information
 
 		//PRIME THE CAMERA
 		if (!title)
@@ -359,11 +322,13 @@ int main(int argc, char** argv) {
 		
 		// Get the elapsed time from the game clock
 		elapsedTime = gameClock.restart().asMilliseconds();
+		if (!pause) {
+			aniCounter += elapsedTime;
+		}
 
 		// if the game is not paused, perform normal game actions
 		if (!pause && !title && window.hasFocus() && sysFader.isComplete())
 		{
-			aniCounter += elapsedTime;
 			// START - PLAYER MOVEMENT (manual or automatic)
 			actorPlayer.move(player_speed, elapsedTime, collision, move_flag);
 			// END 
@@ -390,13 +355,13 @@ int main(int argc, char** argv) {
 		{
 			aniCounter -= aniFrameDuration;
 			ml.Draw(window, layer);
-			layer = layer + 1;
+			layer += 1;
 			if (layer > Layer::Background_2)
 				layer = Layer::Background_1;
 		}
 		else
 		{
-			ml.Draw(window, layer, 0);
+			ml.Draw(window, layer, Background_1);
 		}
 
 		// draw walkable and collidable tiles
@@ -413,30 +378,31 @@ int main(int argc, char** argv) {
 			if (!pause && window.hasFocus())
 			{
 				textBox.setPosition(playerView.getCenter());
-				textBox.setFontSize(24);
+				textBox.setFontSize(Font_Size::Large);
 				if (!textBox.if_endMessage())
-					textBox.message(reader.currentMessage().second, reader.currentMessage().first, elapsedTime);
+					textBox.message(reader->currentMessage().second, reader->currentMessage().first, elapsedTime);
 				else
 					{
 						textBox.reset();
-						if (!reader.isEmpty())
-							reader.nextMessage();
-						if (reader.isEmpty())
-							reader = SceneReader("SceneTest.txt", "Scene1");
+						if (!reader->isEmpty())
+							reader->nextMessage();
+						if (reader->isEmpty()) {
+							delete reader;
+							reader = new SceneReader("Scenes.txt", "Scene1");
+						}
+							
 					}
 			}
 			window.draw(textBox);
 		}
-		// if game is paused, draw pause screen
 		if (pause)
 		{
-			pauseSprite.setPosition(playerView.getCenter());
-			window.draw(pauseSprite);
+			screenPause.setPosition(playerView.getCenter());
+			window.draw(screenPause);
 		}
-		// BEGIN INTRO ANIMATIONS (AFTER TITLE)
 		if (title) {
-			testTitle.animate(elapsedTime);
-			window.draw(testTitle);
+			screenTitle.animate(elapsedTime);
+			window.draw(screenTitle);
 
 		}
 		else if (!title && !intro) {
@@ -452,27 +418,25 @@ int main(int argc, char** argv) {
 			book.setPosition(playerView.getCenter());
 			book.hover(elapsedTime);
 			window.draw(book);
-			
-			if (!messages->empty()) {
-				introTextbox->message(messages->back(), "System", elapsedTime);
-				if (introTextbox->if_endMessage()) {
-					messages->pop_back();
-					if (messages->size() != 0)
-						introTextbox->reset();
+			if (!introTextbox->if_endMessage())
+				introTextbox->message(reader->currentMessage().second, reader->currentMessage().first, elapsedTime);
+			else
+			{
+				introTextbox->reset();
+				if (!reader->isEmpty())
+					reader->nextMessage();
+				if (reader->isEmpty()) {
+					intro = false;
+					pause = false;
+					delete introTextbox;
+					introTextbox = nullptr;
+					delete reader;
+					reader = new SceneReader("Scenes.txt", "Scene1");
 				}
 			}
-			else if (introTextbox->if_endMessage())
-			{
-				intro = false;
-				pause = false;
-				delete introTextbox;
-				delete messages;
-				messages = nullptr;
-				introTextbox = nullptr;
-			}
-			if (intro)
-				window.draw(*introTextbox);
 		}
+		if (intro)
+			window.draw(*introTextbox);
 		// END HARD-CODED ALPHA PREVIEW
 		
 		if (debug) {
@@ -483,7 +447,6 @@ int main(int argc, char** argv) {
 		// update screen with changes
 		window.display();
 	}
-	
 		return 0;
 }
 
@@ -506,7 +469,6 @@ void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& pl
 				sf::Vector2f top = sf::Vector2f(player.getPosition().x, player.getPosition().y - 32);
 
 				test_collision = object->Contains(left) || object->Contains(right) || object->Contains(bottom) || object->Contains(top);
-				
 				if (test_collision)
 				{
 					console_message("Player has collided with object.");		
@@ -530,9 +492,9 @@ void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& pl
 }
 
 // Pause system
-void sysPause(bool& pause, bool& intro, bool& title, sf::Music& music)
+void sysPause(bool& pause, bool& intro, bool& title, sf::Music& music, Fader& sysFader)
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && !intro &&!title) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && !intro &&!title && sysFader.isComplete()) {
 		pause = !pause;
 		if (pause)
 		{

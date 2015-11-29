@@ -1,18 +1,17 @@
 #include "fader.h"
 
-// Player default constructor; Loads: character sprite from texture and sets position to frame 1 and south
+// Fader default constructor
 Fader::Fader() {
 	rectFade.setSize(sf::Vector2f(800, 600));
 	rectBlack = rectFade;
 	rectBlack.setFillColor(sf::Color(0, 0, 0, 255));
 }
 
-// Player virtual destructor;
+// Fader virtual destructor
 Fader::~Fader() {
 
 }
 
-// Derived from the sf::drawable class; Allows to be Player object to be drawn to screen
 void Fader::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(rectFade, states);
 }

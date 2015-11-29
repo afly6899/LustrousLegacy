@@ -15,13 +15,9 @@ namespace sf {
 	class Textbox : public sf::Drawable {
 	public:
 
-		// Player default constructure, requires a playerTexture reference
 		Textbox(const sf::Font& font, sf::Sound& bleep, const sf::Texture& imagePath, int width_box, int height_box, bool block = false, int font_size = 20, int padding = 25);
-		// Player destructor (virtual -> destroy derived, then destroy base class)
 		virtual ~Textbox();
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-
-		// player positioning functions
 		void setPosition(const sf::Vector2f position);
 		void message(std::string to_display, std::string name = "", float elapsedTime = 0);
 		void setSpeed(int speed);
@@ -32,12 +28,16 @@ namespace sf {
 	private:
 
 		sf::Sprite faceSprite;
+		sf::Sprite faceSprite2;
 		sf::Text actorName;
 		sf::Text displayText;
 		sf::RectangleShape rectText;
 		std::string temp_string = "";
+		std::string previous_name = "";
 		sf::Sound& bleep;
+		sf::Texture faceTemp;
 		bool displayingText = false;
+		bool newActor = false;
 		bool end_message = false;
 		bool block_draw;
 		int width;

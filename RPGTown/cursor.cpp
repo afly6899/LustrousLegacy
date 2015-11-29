@@ -1,13 +1,13 @@
 #include "cursor.h"
 
-// Player default constructor; Loads: character sprite from texture and sets position to frame 1 and south
+// Cursor default constructor
 Cursor::Cursor(const sf::Texture& imagePath_cursor) :
 	cursorSprite(imagePath_cursor),
 	cursorSource(0, 0){
 	cursorSprite.setOrigin(8, 8);
 }
 
-// Player virtual destructor;
+// Cursor virtual destructor
 Cursor::~Cursor() {
 
 }
@@ -15,7 +15,7 @@ Cursor::~Cursor() {
 sf::Vector2f Cursor::getPosition() {
 	return cursorSprite.getPosition();
 }
-// Derived from the sf::drawable class; Allows to be Player object to be drawn to screen
+
 void Cursor::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(cursorSprite, states);
 }
