@@ -12,7 +12,7 @@
 		play_game.setFont(font);
 		play_game.setString("Play Game");
 		play_game.setColor(sf::Color::Yellow);
-		play_game.setStyle(play_game.Italic);
+		play_game.setStyle(sf::Text::Italic);
 		play_game.setCharacterSize(Font_Size::Default);
 		play_game.setOrigin(play_game.getLocalBounds().width*.5, play_game.getLocalBounds().height*.5);
 		load_game.setFont(font);
@@ -82,7 +82,7 @@
 
 		if (selection == Selection::Play_Game) {
 			play_game.setColor(sf::Color::Yellow);
-			play_game.setStyle(play_game.Italic);
+			play_game.setStyle(sf::Text::Italic);
 		}
 		else {
 			play_game.setColor(sf::Color::White);
@@ -91,7 +91,7 @@
 
 		if (selection == Selection::Load_Game) {
 			load_game.setColor(sf::Color::Yellow);
-			load_game.setStyle(load_game.Italic);
+			load_game.setStyle(sf::Text::Italic);
 		}
 		else {
 			load_game.setColor(sf::Color::White);
@@ -100,7 +100,7 @@
 
 		if (selection == Selection::Settings) {
 			settings.setColor(sf::Color::Yellow);
-			settings.setStyle(settings.Italic);
+			settings.setStyle(sf::Text::Italic);
 		}
 		else {
 			settings.setColor(sf::Color::White);
@@ -109,7 +109,7 @@
 
 		if (selection == Selection::Exit) {
 			exit_game.setColor(sf::Color::Yellow);
-			exit_game.setStyle(exit_game.Italic);
+			exit_game.setStyle(sf::Text::Italic);
 		}
 		else {
 			exit_game.setColor(sf::Color::White);

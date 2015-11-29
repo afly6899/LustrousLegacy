@@ -1,13 +1,11 @@
 #include "fader.h"
 
-// Fader default constructor
 Fader::Fader() {
 	rectFade.setSize(sf::Vector2f(800, 600));
 	rectBlack = rectFade;
 	rectBlack.setFillColor(sf::Color(0, 0, 0, 255));
 }
 
-// Fader virtual destructor
 Fader::~Fader() {
 
 }

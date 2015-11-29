@@ -1,6 +1,5 @@
 #include "pause.h"
 
-// Pause default constructor
 Pause::Pause(const sf::Font& font, int window_width, int window_height, int font_size) {
 	pauseText.setFont(font);
 	pauseText.setCharacterSize(font_size);
@@ -11,7 +10,6 @@ Pause::Pause(const sf::Font& font, int window_width, int window_height, int font
 	rectOverlay.setFillColor(sf::Color(0, 0, 0, 150));
 }
 
-// Pause virtual destructor
 Pause::~Pause() {
 
 }

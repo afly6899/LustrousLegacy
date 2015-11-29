@@ -4,7 +4,6 @@
 #include "Enums.h""
 #include <SFML/Graphics.hpp>
 
-// Forward Declaration
 namespace sf {
 
 	class Texture;
@@ -13,25 +12,20 @@ namespace sf {
 class Player : public sf::Drawable {
 	public:
 
-		// Player default constructure, requires a playerTexture reference
 		Player(const sf::Texture& playerTexture);
-		// Player destructor (virtual -> destroy derived, then destroy base class)
 		virtual ~Player();
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 		void move(int speed, float elapsedTime, bool& collision, bool& move_switch, int direction = -1);
 		void idle();
-		bool sysMovement();
-
-		// player positioning functions
+		void setDirection(int dir);
+		int getDirection();
+		int getPastDirection();
+		void setPosition(sf::Vector2f pos);
 		sf::Vector2f getPosition();
 		sf::Vector2f getPastPosition();
-		sf::FloatRect getGlobalBounds();
-		int getPastDirection();
-		int getDirection();
-		void setDirection(int dir);
-		void setPosition(sf::Vector2f pos);
+		bool sysMovement();
 		bool isMoving();
-
+	
 	private:
 
 		sf::Sprite mSprite;
@@ -44,7 +38,5 @@ class Player : public sf::Drawable {
 		int playerSpeed = Speed::Normal;
 		int distance_moved = 0;
 		bool is_moving = false;
-
 	};
-
 #endif

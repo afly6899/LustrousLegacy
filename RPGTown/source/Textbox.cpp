@@ -10,7 +10,7 @@
 		
 		// TEMPORARY FACE TEXTURE FOR MISSING NPC TEXTURES
 		sf::Texture ;
-		faceTemp.loadFromFile("face_temp.png");
+		faceTemp.loadFromFile("resources/textures/face_temp.png");
 		faceSprite2.setTexture(faceTemp);
 		// END TEMPORARY FACE TEXTURE
 

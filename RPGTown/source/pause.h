@@ -4,7 +4,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-// Forward Declaration
 namespace sf {
 
 	class Texture;
@@ -26,5 +25,4 @@ private:
 	sf::RectangleShape rectOverlay;
 	sf::Text pauseText;
 };
-
 #endif

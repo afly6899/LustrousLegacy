@@ -1,26 +1,36 @@
 #include "player.h"
-#include "debug.h"
-#include "enums.h"
+#include "debug/debug.h"
+#include "Enums.h"
 
-// Player default constructor; Loads: character sprite from texture and sets position to frame 1 and south
+/*********************************************************************
+Player class default constructor.
+\brief Requires a texture for instantiation.
+*********************************************************************/
 Player::Player(const sf::Texture& imagePath) :
 	mSprite(imagePath),
-	mSource(1, Direction::South) {
+	mSource(Source::Idle, Direction::South) {
 	mSprite.setOrigin(32, 32);
-	mSprite.setScale(1.0f, 1.0f);
 	mSprite.setTextureRect(sf::IntRect(mSource.x * 64, mSource.y * 64, 64, 64));
 }
 
-// Player virtual destructor;
+/*********************************************************************
+Player class virtual destructor.
+*********************************************************************/
 Player::~Player() {
 }
 
-// Derived from the sf::drawable class; Allows to be Player object to be drawn to screen
+/*********************************************************************
+draw; inherited from class drawable.
+\brief Allows drawable class members to be drawn to the screen.
+*********************************************************************/
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(mSprite, states);
 }
 
-// Player move function moves sprite and animates based on clock and speed
+/*********************************************************************
+\brief Moves the player based on provided speed and direction.
+\param Speed, Elapsed Time, Collision Switch, System Control Switch, Direction
+*********************************************************************/
 void Player::move(int speed, float elapsedTime, bool& collision, bool& move_flag, int direction) {
 	if (!is_moving || move_flag) {
 		if (move_flag)
@@ -71,7 +81,6 @@ void Player::move(int speed, float elapsedTime, bool& collision, bool& move_flag
 		}
 
 		distance_moved += playerSpeed;
-
 		aniCounter += elapsedTime;
 
 		if (aniCounter >= aniFrameDuration)
@@ -88,32 +97,47 @@ void Player::move(int speed, float elapsedTime, bool& collision, bool& move_flag
 	}
 }
 
-// Player idle sprite is loaded
+/*********************************************************************
+\brief Forces the player texture at the idle stance.
+*********************************************************************/
 void Player::idle() {
 	mSource.x = 1;
 	mSprite.setTextureRect(sf::IntRect(mSource.x * 64, mSource.y * 64, 64, 64));
 }
 
+/*********************************************************************
+\brief Sets the player at the provided position.
+\param sf::Vector2f that defines the position.
+*********************************************************************/
 void Player::setPosition(sf::Vector2f pos) {
 	mSprite.setPosition(pos);
 }
 
+/*********************************************************************
+\brief Returns the current position of the player.
+*********************************************************************/
 sf::Vector2f Player::getPosition() {
 	return mSprite.getPosition();
 }
 
+/*********************************************************************
+\brief Returns the previous cycle's position of the player.
+*********************************************************************/
 sf::Vector2f Player::getPastPosition() {
 	return pastPosition;
 }
 
-sf::FloatRect Player::getGlobalBounds() {
-	return mSprite.getGlobalBounds();
-}
-
+/*********************************************************************
+\brief Returns the the current direction the player is facing.
+*********************************************************************/
 int Player::getDirection() {
 	return playerDirection;
 }
 
+/*********************************************************************
+\brief Sets the direction that the player is facing.
+\param Direction
+*********************************************************************/
 void Player::setDirection(int dir) {
 	playerDirection = dir;
 	mSource.y = playerDirection;
@@ -121,10 +145,19 @@ void Player::setDirection(int dir) {
 	mSprite.setTextureRect(sf::IntRect(mSource.x * 64, mSource.y * 64, 64, 64));
 }
 
+/*********************************************************************
+\brief Returns the direction the player was facing in the last cycle.
+*********************************************************************/
 int Player::getPastDirection() {
 	return pastDirection;
 }
 
+/*********************************************************************
+\brief Checks the player's input for movement. 
+sysMovement checks the input from the keyboard and then returns
+true if the player has pressed keys that should perform movement.
+sysMovement returns false otherwise.
+*********************************************************************/
 bool Player::sysMovement()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) {
@@ -152,6 +185,11 @@ bool Player::sysMovement()
 	return true;
 }
 
+/*********************************************************************
+\brief Returns the current status of player movement.
+isMoving returns true if the player is moving.
+isMoving returns false if the player is not moving.
+*********************************************************************/
 bool Player::isMoving() {
 	return is_moving;
 }

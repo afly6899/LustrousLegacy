@@ -18,6 +18,39 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\cursor.cpp" />
+    <ClCompile Include="source\Debug\debug.cpp" />
+    <ClCompile Include="source\fader.cpp" />
+    <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\NPC.cpp" />
+    <ClCompile Include="source\pause.cpp" />
+    <ClCompile Include="source\player.cpp" />
+    <ClCompile Include="source\SceneReader.cpp" />
+    <ClCompile Include="source\SceneUtility.cpp" />
+    <ClCompile Include="source\Textbox.cpp" />
+    <ClCompile Include="source\title.cpp" />
+    <ClCompile Include="source\TMXloader\DebugShape.cpp" />
+    <ClCompile Include="source\TMXloader\MapLayer.cpp" />
+    <ClCompile Include="source\TMXloader\MapLoaderPrivate.cpp" />
+    <ClCompile Include="source\TMXloader\MapLoaderPublic.cpp" />
+    <ClCompile Include="source\TMXloader\MapObject.cpp" />
+    <ClCompile Include="source\TMXloader\pugixml\pugixml.cpp" />
+    <ClCompile Include="source\TMXloader\QuadTreeNode.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\cursor.h" />
+    <ClInclude Include="source\Debug\debug.h" />
+    <ClInclude Include="source\Enums.h" />
+    <ClInclude Include="source\fader.h" />
+    <ClInclude Include="source\NPC.h" />
+    <ClInclude Include="source\pause.h" />
+    <ClInclude Include="source\player.h" />
+    <ClInclude Include="source\SceneReader.h" />
+    <ClInclude Include="source\SceneUtility.h" />
+    <ClInclude Include="source\textbox.h" />
+    <ClInclude Include="source\title.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{79388DB2-0DD7-4F82-A1A9-791370D9BD11}</ProjectGuid>
     <RootNamespace>RPGTown</RootNamespace>
@@ -74,11 +107,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Hayden McFarland\Dropbox\Development\TMX_loader\include;C:\Users\Hayden McFarland\Dropbox\Development\zlib\include;C:\Users\Hayden McFarland\Dropbox\Development\SFML-2.3.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\hayde\Dropbox\Development\Git\RPGTown_VGDC\RPGTown;C:\Users\hayde\Dropbox\Development\TMX_loader\include;C:\Users\hayde\Dropbox\Development\zlib\include;C:\Users\hayde\Dropbox\Development\SFML-2.3.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Hayden McFarland\Dropbox\Development\zlib\lib;C:\Users\Hayden McFarland\Dropbox\Development\SFML-2.3.2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\hayde\Dropbox\Development\zlib\lib;C:\Users\hayde\Dropbox\Development\SFML-2.3.2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>zlibstat.lib; sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
@@ -129,39 +162,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="cursor.cpp" />
-    <ClCompile Include="debug.cpp" />
-    <ClCompile Include="fader.cpp" />
-    <ClCompile Include="NPC.cpp" />
-    <ClCompile Include="pause.cpp" />
-    <ClCompile Include="SceneReader.cpp" />
-    <ClCompile Include="SceneUtility.cpp" />
-    <ClCompile Include="title.cpp" />
-    <ClCompile Include="DebugShape.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="MapLayer.cpp" />
-    <ClCompile Include="MapLoaderPrivate.cpp" />
-    <ClCompile Include="MapLoaderPublic.cpp" />
-    <ClCompile Include="MapObject.cpp" />
-    <ClCompile Include="player.cpp" />
-    <ClCompile Include="pugixml\pugixml.cpp" />
-    <ClCompile Include="QuadTreeNode.cpp" />
-    <ClCompile Include="Textbox.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="NPC.h" />
-    <ClInclude Include="cursor.h" />
-    <ClInclude Include="debug.h" />
-    <ClInclude Include="fader.h" />
-    <ClInclude Include="pause.h" />
-    <ClInclude Include="SceneReader.h" />
-    <ClInclude Include="SceneUtility.h" />
-    <ClInclude Include="title.h" />
-    <ClInclude Include="Enums.h" />
-    <ClInclude Include="player.h" />
-    <ClInclude Include="textbox.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

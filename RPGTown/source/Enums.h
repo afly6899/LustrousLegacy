@@ -49,4 +49,8 @@ enum Font_Size {
 	Big = 32
 };
 
+enum Source {
+	Idle = 1
+};
+
 #endif

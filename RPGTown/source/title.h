@@ -16,13 +16,10 @@ namespace sf {
 	class Title : public sf::Drawable {
 	public:
 
-		// Title default constructur, requires a cursorTexture reference
 		Title(const sf::Texture& imagePath_title, const sf::Texture& imagePath_bgtitle, const sf::Texture& imagePath_cursor, const sf::Font& font, sf::Sound& bleep, int window_width, int window_height);
-		// Title destructor (virtual -> destroy derived, then destroy base class)
 		virtual ~Title();
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 		void change_selection(int num_of_selections, int up_or_down);
-		// returns an integer value representing the current selection
 		int getSelection();
 		void setPosition(sf::Vector2f pos);
 		sf::Vector2f Title::getPosition();
@@ -41,5 +38,4 @@ namespace sf {
 		int aniFrameDuration = 300;
 		int seperation = 50;
 	};
-
 #endif

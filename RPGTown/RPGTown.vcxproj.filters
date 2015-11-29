@@ -13,95 +13,104 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\library_TMXLoader">
+      <UniqueIdentifier>{48c89ee9-926d-4698-9a8d-077ca3850105}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_SceneReader">
+      <UniqueIdentifier>{058efb2e-9ee9-47b1-bec4-8b7cfa07be78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Components">
+      <UniqueIdentifier>{6cf11799-f2e3-41e1-b482-ff43c5691bcd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\TMXloader\MapObject.cpp">
+      <Filter>Source Files\library_TMXLoader</Filter>
     </ClCompile>
-    <ClCompile Include="DebugShape.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\TMXloader\MapLayer.cpp">
+      <Filter>Source Files\library_TMXLoader</Filter>
     </ClCompile>
-    <ClCompile Include="MapLayer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\TMXloader\MapLoaderPrivate.cpp">
+      <Filter>Source Files\library_TMXLoader</Filter>
     </ClCompile>
-    <ClCompile Include="MapLoaderPrivate.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\TMXloader\MapLoaderPublic.cpp">
+      <Filter>Source Files\library_TMXLoader</Filter>
     </ClCompile>
-    <ClCompile Include="MapLoaderPublic.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\TMXloader\pugixml\pugixml.cpp">
+      <Filter>Source Files\library_TMXLoader</Filter>
     </ClCompile>
-    <ClCompile Include="MapObject.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\TMXloader\QuadTreeNode.cpp">
+      <Filter>Source Files\library_TMXLoader</Filter>
     </ClCompile>
-    <ClCompile Include="QuadTreeNode.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\SceneUtility.cpp">
+      <Filter>Source Files\_SceneReader</Filter>
     </ClCompile>
-    <ClCompile Include="pugixml\pugixml.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\SceneReader.cpp">
+      <Filter>Source Files\_SceneReader</Filter>
     </ClCompile>
-    <ClCompile Include="Textbox.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\Debug\debug.cpp">
+      <Filter>Source Files\_Components</Filter>
     </ClCompile>
-    <ClCompile Include="title.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\fader.cpp">
+      <Filter>Source Files\_Components</Filter>
     </ClCompile>
-    <ClCompile Include="debug.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\title.cpp">
+      <Filter>Source Files\_Components</Filter>
     </ClCompile>
-    <ClCompile Include="fader.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\NPC.cpp">
+      <Filter>Source Files\_Components</Filter>
     </ClCompile>
-    <ClCompile Include="SceneReader.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\pause.cpp">
+      <Filter>Source Files\_Components</Filter>
     </ClCompile>
-    <ClCompile Include="SceneUtility.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\player.cpp">
+      <Filter>Source Files\_Components</Filter>
     </ClCompile>
-    <ClCompile Include="pause.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\Textbox.cpp">
+      <Filter>Source Files\_Components</Filter>
     </ClCompile>
-    <ClCompile Include="cursor.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\cursor.cpp">
+      <Filter>Source Files\_Components</Filter>
     </ClCompile>
-    <ClCompile Include="NPC.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\TMXloader\DebugShape.cpp">
+      <Filter>Source Files\library_TMXLoader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="player.h">
+    <ClInclude Include="source\cursor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Enums.h">
+    <ClInclude Include="source\Enums.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="textbox.h">
+    <ClInclude Include="source\fader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="title.h">
+    <ClInclude Include="source\NPC.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="debug.h">
+    <ClInclude Include="source\pause.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="fader.h">
+    <ClInclude Include="source\player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SceneReader.h">
+    <ClInclude Include="source\SceneReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SceneUtility.h">
+    <ClInclude Include="source\SceneUtility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="pause.h">
+    <ClInclude Include="source\textbox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cursor.h">
+    <ClInclude Include="source\title.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NPC.h">
+    <ClInclude Include="source\Debug\debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

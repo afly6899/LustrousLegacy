@@ -1,13 +1,11 @@
 #include "cursor.h"
 
-// Cursor default constructor
 Cursor::Cursor(const sf::Texture& imagePath_cursor) :
 	cursorSprite(imagePath_cursor),
 	cursorSource(0, 0){
 	cursorSprite.setOrigin(8, 8);
 }
 
-// Cursor virtual destructor
 Cursor::~Cursor() {
 
 }

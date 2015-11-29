@@ -3,7 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 
-// Forward Declaration
 namespace sf {
 
 	class Texture;
@@ -12,9 +11,7 @@ namespace sf {
 class Cursor : public sf::Drawable {
 public:
 
-	// Cursor default constructur, requires a cursorTexture reference
 	Cursor(const sf::Texture& imagePath_cursor);
-	// Cursor destructor (virtual -> destroy derived, then destroy base class)
 	virtual ~Cursor();
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	sf::Vector2f getPosition();
@@ -28,5 +25,4 @@ private:
 	int aniCounter = 0;
 	int aniFrameDuration = 300;
 };
-
 #endif
