@@ -23,7 +23,7 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 // Include libraries
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include "tmx\MapLoader.h"
+#include "tmx/MapLoader.h"
 // Class definitions
 #include "SceneReader.h"
 #include "Enums.h"
@@ -33,7 +33,7 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "title.h"
 #include "pause.h"
 #include "fader.h"
-#include "debug\debug.h"
+#include "debug/debug.h"
 using namespace std;
 
 void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event);

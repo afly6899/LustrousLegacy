@@ -261,3 +261,6 @@ RPGTown/RPGTown.vcxproj
 Output-Build.txt
 *.filters
 RPGTown/RPGTown.vcxproj
+*.sln
+LustrousLegacy/LustrousLegacy/LustrousLegacy.vcxproj
+*.vcxproj
