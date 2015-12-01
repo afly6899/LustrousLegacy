@@ -6,7 +6,7 @@ Lustrous Legacy is a game project being developed for the Video Game and Develop
 - Hayden McFarland _(Project Lead / Programmer)_
 - Jonathan Mayer _(Programmer)_
 - Audrey Fu Lai _(Programmer)_
-- Darion Downsen _(Writer)_
+- Darion Downs-Enriquez _(Writer)_
 - Diego Guzman _(Designer)_
 - Mark Pareja _(Artist)_
 - Kristina Wong _(Sound Engineer)_
