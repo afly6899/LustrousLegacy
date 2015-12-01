@@ -1,266 +1,542 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include <iostream>
 #include "player.h"
 #include "Enums.h"
-//#include "tmx\MapLoader.h"
+#include "textbox.h"
+#include "title.h"
+#include "debug.h"
+#include "fader.h"
+#include <tmx/MapLoader.h>
+#include "TutorialEvent.h" // auto movement
 using namespace std;
 
-bool sysMovement(actor::Player&, int &player_speed, bool collision);
 /*
-//void sysCollision(actor::Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event);
+#--------------------------------------------------------------------------------------------------#
+Game Project: RPGTown (Lustrous Legacy) (v0.3)
+#--------------------------------------------------------------------------------------------------#
+
+UC Irvine - Fall 2015 Quarter (current)
+
+#--------------------------------------------------------------------------------------------------#
 */
-void sysPause(bool& pause, sf::Music& music);
-void console_message(string x);
+
+void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event);
+void sysPause(bool& pause, bool& intro, bool& title, sf::Music& music);
+sf::Vector2f window_topleft(sf::Vector2f center_pos);
+sf::Vector2f tile(int tile_num);
 
 int main(int argc, char** argv) {
-    // Animation Controller
-    bool is_moving = false;
-    int distance_moved = 0;
 
-	// Window parameters
+	/*
+	#--------------------------------------------------------------------------------------------------#
+	# Test Parameters: (temporary variables to test functionality of game)
+	#
+	# test_string - is used to send a message to the textbox that is will display to test word wrapping
+	# test_speed - is used to control the text speed of the textbox for testing (F3 controls change)
+	#--------------------------------------------------------------------------------------------------#
+	*/
+
+	std::string test_string = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+	int test_speed = 0;
+
+	/*
+	#--------------------------------------------------------------------------------------------------#
+	# Game Window Parameters:
+	#
+	# window_width	- defines the width of the window
+	# window_height - defines the height of the window
+	# window_name	- defines the name of the window
+	#
+	#--------------------------------------------------------------------------------------------------#
+	*/
 
 	int window_width = 800;
 	int window_height = 600;
-	string window_name = "RPGTown 0.3";
+	string window_name = "Lustrous Legacy (RPGTown 0.3)";
 
-	//-------------  Debug tools and TESTS -----------------//
-	sf::Font Vera;
+	/*
+	#--------------------------------------------------------------------------------------------------#
+	# System Switches:
+	#
+	# debug - toggle to display debug information (FPS/Position : F1)
+	# textbox - toggle to display textbox (F2)
+	# pause - toggle to pause game (esc)
+	# player_trigger - is used to notify system to when a player presses ENTER
+	# player_event - is used to notify system when player is inside an event tile
+	# is_moving - is used to notify the system when a player is moving
+	# collision -  is used to stop the player from taking note tiles travelled if colliding with object
+	# move_flag - to determine manual or automatic movement
+	#--------------------------------------------------------------------------------------------------#
+	*/
+
 	bool debug = false;
 	bool textbox = false;
+	bool pause = false;
+	bool player_trigger = false;
+	bool player_event = false;
+	bool is_moving = false;
+	bool collision = false;
+	bool move_flag = false;
+	bool title = false; // change back to true later
+    
+    // Audrey's trying to do game event stuff
+    bool event_start = false; // only turns true if press Enter at that start box thing
+    // once true, should have the character move down 2 spaces
+//    int start_pos, end_pos; //once it reaches 2, stop event
+//    Direction event_move = Direction::South;
+    int start_position = 0;
+    Event tutorial = {{Direction::South,128} , {Direction::West,128}, {Direction::North,128}, {Direction::East,128}};
 
-	if (!Vera.loadFromFile("Vera.ttf"))
+	/*
+	#--------------------------------------------------------------------------------------------------#
+	# System Parameters:
+	#
+	# sysFont - is used to set the font used for text in the game.
+	# textDebug - is used to store and display the frames per second of the game 
+	#			  as well as other debug information.
+	# player_speed - controls the movement speed of the player
+	# distance_moved - is used to keep track of the distance the player has moved in order to align 
+	#				   player to movement grid
+	# elapsedTime - is used to get the amount of time that has passed after every game loop iteration;
+	#				elapsed time is used for managing the speed of all animations
+	#
+	#--------------------------------------------------------------------------------------------------#
+	*/
+
+	sf::Font sysFont;
+	if (!sysFont.loadFromFile("Vera.ttf"))
 	{
 		cerr << "Font Error" << endl;
 	}
 
-	sf::Text FPS;
-	FPS.setFont(Vera);
-	FPS.setCharacterSize(18);
+	sf::Text textDebug;
+	textDebug.setFont(sysFont);
+	textDebug.setCharacterSize(18);
 
-	sf::RectangleShape rectText;
-	rectText.setSize(sf::Vector2f(window_width - 25, window_height*.3));
-	rectText.setOrigin((window_width - 25)*.5, window_height*.5);
-	rectText.setFillColor(sf::Color::Black);
-	rectText.setOutlineColor(sf::Color::White);
-	rectText.setOutlineThickness(2);
-
-	//------------- EMD DEBUG TOOLS AND TEST --------------//
-
-	// Define parameters for player functions
-	int player_speed = speed::Normal;
-	float aniCounter = 0;
-	float aniFrameDuration = 800;
+	int player_speed = Speed::Normal;
+	int distance_moved = 0;
 	float elapsedTime = 0;
-	int layer = 0;
-	int tilesize = 64;
-	bool collision = false;
-	bool pause = false;
-	bool player_trigger = false;
-	bool player_event = false;
 
-	// window
+	/*
+	#-------- GAME WINDOW --------#
+	*/
+
 	sf::RenderWindow window(sf::VideoMode(window_width, window_height), window_name);
-	window.setVerticalSyncEnabled(true);
+	window.setVerticalSyncEnabled(false);
 	window.setFramerateLimit(60);
 
-	// view (2d camera)
+	/*
+	#-------- GAME CAMERA AND CLOCK--------#
+	*/
+
 	sf::View playerView(sf::FloatRect(0, 0, (float)window_width, (float)window_height));
-
-    /*
-//	// TMX map loader
-//	tmx::MapLoader ml("maps");
-//	ml.Load("test_new.tmx");
-     */
-
-	// clock
 	sf::Clock gameClock;
 
-	// pause texture
-	sf::Texture syspTexture;
-	if (!syspTexture.loadFromFile("pause.png")) {
-		cerr << "Texture Error" << endl;
-	}
-	// setting up pause 'screen'
-	sf::Sprite pauseSprite(syspTexture);
-	pauseSprite.setOrigin(400, 300);
+	/*
+	#-------- TEXTURES --------#
+	*/
 
-	// player texture
+	// PLAYER TEXTURE
 	sf::Texture pTexture;
 	if (!pTexture.loadFromFile("playerSprite.png")) {
 		cerr << "Texture Error" << endl;
 	}
 
-	// give player their texture
-	actor::Player actorPlayer(pTexture);
+	// PAUSE TEXTURE
+	sf::Texture syspTexture;
+	if (!syspTexture.loadFromFile("pause.png")) {
+		cerr << "Texture Error" << endl;
+	}
 
-	// set player position on screen
-	actorPlayer.setPosition(tilesize*1 + 32, tilesize*1 + 32);
+	// FACE TEXTURES
+	sf::Texture pfTexture;
+	if (!pfTexture.loadFromFile("face_warren.png")) {
+		cerr << "Texture Error" << endl;
 
-	// Music!
+	}
+
+	// TITLE BACKGROUND TEXTURE
+	sf::Texture bgtitleTexture;
+	if (!bgtitleTexture.loadFromFile("title.png")) {
+		cerr << "Texture Error" << endl;
+
+	}
+	// TITLE TEXTURE
+	sf::Texture titleTexture;
+	if (!titleTexture.loadFromFile("LustrousLegacyLogo.png")) {
+		cerr << "Texture Error" << endl;
+
+	}
+
+	// CURSOR TEXTURE
+	sf::Texture cursorTexture;
+	if (!cursorTexture.loadFromFile("cursor.png")) {
+		cerr << "Texture Error" << endl;
+
+	}
+
+	// BLACK TEXTURE
+	sf::Texture blackTexture;
+	if (!blackTexture.loadFromFile("fade.png")) {
+		cerr << "Texture Error" << endl;
+
+	}
+
+	// BOOK TEXTURE
+	sf::Texture bookTexture;
+	if (!bookTexture.loadFromFile("book.png")) {
+		cerr << "Texture Error" << endl;
+
+	}
+
+	/*
+	#-------- MUSIC --------#
+	*/
+	
 	sf::Music music;
 	if (!music.openFromFile("test.ogg"))
-	return -1; // error
-	music.play();
+		return -1; // error
 
-	// game loop
+	music.setVolume(25);
+
+	/*
+	#-------- SOUNDS --------#
+	*/
+
+	sf::SoundBuffer bleep;
+	if (!bleep.loadFromFile("text_blip.wav"))
+		return -1; // error
+
+	sf::SoundBuffer selection_bleep;
+	if (!selection_bleep.loadFromFile("select_blip.wav"))
+		return -1; // error
+
+	sf::Sound soundBleep;
+	sf::Sound soundSelect;
+	soundBleep.setBuffer(bleep);
+	soundSelect.setBuffer(selection_bleep);
+
+	/*
+	#--------------------------------------------------------------------------------------------------#
+	# World Parameters (Animates backgrounds):
+	#
+	# aniCounter - used as a decrementer to perform animation
+	# aniFrameDuration - used to determine animation speed
+	# layer - to keep track of layer to draw
+	#--------------------------------------------------------------------------------------------------#
+	*/
+
+	float aniCounter = 0;
+	float aniFrameDuration = 800;
+	int layer = 0;
+
+	/*
+	#--------------------------------------------------------------------------------------------------#
+	# LOAD MAP
+	#
+	# Create all maps and load the first map.
+	#--------------------------------------------------------------------------------------------------#
+	*/
+
+	tmx::MapLoader ml("maps");
+	ml.Load("test_new.tmx");
+
+	/*
+	#--------------------------------------------------------------------------------------------------#
+	# PREPARE CHARACTER
+	#
+	# Create the player and assign the player texture and set starting position.
+	#--------------------------------------------------------------------------------------------------#
+	*/
+
+	// SET PLAYER TEXTURE AND POSITION
+	Player actorPlayer(pTexture);
+	actorPlayer.setPosition(tile(10));
+
+	/*
+	#--------------------------------------------------------------------------------------------------#
+	# PREPARE TEXTBOX
+	#
+	# Create the textbox object and set position based on character.
+	#--------------------------------------------------------------------------------------------------#
+	*/
+
+	Textbox textBox(sysFont, soundBleep, pfTexture, window_width, window_height);
+
+	/*
+	#--------------------------------------------------------------------------------------------------#
+	# PREPARE SCREENS
+	#
+	# Set up pause screen.
+	#--------------------------------------------------------------------------------------------------#
+	*/
+
+	sf::Sprite pauseSprite(syspTexture);
+	pauseSprite.setOrigin(400, 300);
+
+	//test//
+	Title testTitle(titleTexture, bgtitleTexture, cursorTexture, sysFont, soundBleep);
+	Fader sysFader;
+	sf::Sprite blackScreen(blackTexture);
+	bool intro= false;
+	Textbox* introTextbox = nullptr;
+	vector<string>* messages = nullptr;
+	string test1 = "Once upon a time, there was test text... a young mang named Warren came and there was more test text. If you know just how much test text you were about to see; you would be confused!";
+	string test2 = "The 8 bosses that must be defeated, should be defeated, but this test text should be changed or else this game will seem extremely bad.";
+	string test3 = "I'm just trying this all out! Ummmmm, yeaaaaaah.....";
+	string test4 = "You know it, get started!";
+	sf::Sprite book(bookTexture);
+	book.setOrigin(32, 32);
+	sf::Vector2f bookSource(0, 0);
+	book.setTextureRect(sf::IntRect(bookSource.x * 64, bookSource.y * 64, 64, 64));
+	int bookcounter = 0;
+	//test//
+
+	/*
+	#--------------------------------------------------------------------------------------------------#
+	# BEGIN GAME LOOP:
+	#--------------------------------------------------------------------------------------------------#
+	*/
+
 	while (window.isOpen()) {
 		sf::Event event;
-		while (window.pollEvent(event)) {
+		while (!event_start && window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed) {
 				window.close();
 			}
 			else if (event.type == sf::Event::KeyPressed) {
-				sysPause(pause, music);
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1)) {
+				sysPause(pause, intro, title, music);
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1))
 					debug = !debug;
-				}
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2))
 					textbox = !textbox;
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::F3) && pause) {
+					title = true;
+					testTitle.setPosition(actorPlayer.getPosition().x, actorPlayer.getPosition().y);
+					music.stop();
 				}
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && player_event) {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && player_event) {
+                    event_start = true; // this will start the event!!
+                    start_position = actorPlayer.getPosition().y; // keeping track of where the player is
+                    
 					player_trigger = !player_trigger;
+                }
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && title) {
+					testTitle.move(4, 0);
+				}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && title) {
+					testTitle.move(4, 1);
+				}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && testTitle.getSelection() == 1) {
+					sysFader.resetFader();
+					actorPlayer.setPosition(tile(10));
+					actorPlayer.setDirection(Direction::South);
+					title = false;
+					intro = true;
+					pause = false;
+					introTextbox = new Textbox(sysFont, soundBleep, pfTexture, window_width, window_height, true);
+					introTextbox->setPosition(actorPlayer.getPosition());
+					messages = new vector<string>(4);
+					*messages = { test1, test2, test3, test4 };
+					if (!pause) {
+						music.play();
+					}
+				}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && testTitle.getSelection() == 4) {
+					window.close();
 				}
 			}
 		}
 
-		// get FPS
-		FPS.setString("FPS: " + to_string(1/(float)gameClock.getElapsedTime().asSeconds()) + "\nCoordinates: (" + to_string(actorPlayer.getPosition().x) + ", " + to_string(actorPlayer.getPosition().y) + "\nTile Map: (" + to_string(actorPlayer.getPosition().x / tilesize) + ", " + to_string(actorPlayer.getPosition().y / tilesize));
-        
-		// store how much time has elapsed
-		elapsedTime = (float)gameClock.restart().asMilliseconds();
+		// START Get debug information:
+		textDebug.setString("FPS: " + to_string(1 / gameClock.getElapsedTime().asSeconds()).substr(0, 5) + 
+			"\nCoordinates: (" + to_string(actorPlayer.getPosition().x).substr(0, 5) + ", " + 
+			to_string(actorPlayer.getPosition().y).substr(0, 5) + "\nTile Map: (" + 
+			to_string(actorPlayer.getPosition().x / Tilesize).substr(0, 5) + ", " + 
+			to_string(actorPlayer.getPosition().y / Tilesize).substr(0, 5) + ")");
+		// END
 
-		if (!pause)
+		//PRIME THE CAMERA
+		if (!title)
+		{
+			playerView.setCenter(actorPlayer.getPosition());
+			window.setView(playerView);
+		}
+		
+		// Get the elapsed time from the game clock
+		elapsedTime = gameClock.restart().asMilliseconds();
+        
+        // Audrey trying to do automatic movement:
+//        if (event_start) {
+//            
+//            
+//        }
+
+		// if the game is not paused, perform normal game actions
+		if (!pause && !title && window.hasFocus() && sysFader.isComplete())
 		{
 			aniCounter += elapsedTime;
+            
+            if (event_start) {
+                tutorial.runEvent(event_start, actorPlayer, elapsedTime);
+                if (!event_start)
+                    player_event = false;
+//                actorPlayer.move(player_speed, elapsedTime, collision, move_flag, event_move);
+//                if (event_move == Direction::West || event_move == Direction::East)
+//                    end_pos = actorPlayer.getPosition().x;
+//                else
+//                    end_pos = actorPlayer.getPosition().y;
+//                
+//                if (end_pos - start_pos == 128 && event_move == Direction::South) {
+//                    event_move = Direction::West;
+//                    start_pos = actorPlayer.getPosition().x;
+//                } else if (end_pos - start_pos == -128 && event_move == Direction::West) {
+//                    event_move = Direction::North;
+//                    start_pos = actorPlayer.getPosition().y;
+//                } else if (end_pos - start_pos == -128 && event_move == Direction::North) {
+//                    event_move = Direction::East;
+//                    start_pos = actorPlayer.getPosition().x;
+//                } else if (end_pos - start_pos == 128 && event_move == Direction::East) {
+//                    std::cout << "Event has ended" << std::endl;
+//                    event_start = false;
+//                    event_move = Direction::South;
+//                }
+            } else {
+			// START - PLAYER MOVEMENT (manual or automatic)
+			actorPlayer.move(player_speed, elapsedTime, collision, move_flag);
+			// END
+            }
 
-			// player movement system and control parameters
-            if (!is_moving) {
-                is_moving = sysMovement(actorPlayer, player_speed, collision);
-                distance_moved = player_speed;
-            }
-            else if (distance_moved == 64) {
-                is_moving = false;
-                distance_moved = 0;
-                actorPlayer.resetAniCounter();
-            }
-            else {
-                actorPlayer.move(actorPlayer.getDirection(), player_speed, collision);
-                distance_moved += player_speed;
-            }
+			// START - COLLISION AND EVENT DETECTION
+			sysCollision(actorPlayer, ml, collision, player_trigger, player_event);
+			// END 
+
+			// adjust the camera to be viewing player
+			playerView.setCenter(actorPlayer.getPosition());
+
+			// update textBox position after movement
+			textBox.setPosition(playerView.getCenter());
         }
-            /*
-			// player collision and event system
-//			sysCollision(actorPlayer, ml, collision, player_trigger, player_event);
 
-			player_trigger = false;
-
-			// adjust view to keep it on player
-//			playerView.setCenter(actorPlayer.getPosition());
-		}
-		*/
 		// prepare to update screen
 		window.clear();
 
-		/*
-        // update camera if there isn't a collision
-		if (collision != true)
-		{
-			window.setView(playerView);
-		}
+		//update camera
+		window.setView(playerView);
 
 		// draw animated background (layers 0 and 1 are alternated)
 		if (aniCounter >= aniFrameDuration)
 		{
 			aniCounter -= aniFrameDuration;
-//			ml.Draw(window, layer);
-//			layer = layer + 1;
-//			if (layer > Layer::Background_2)
-//			{
-//				layer = Layer::Background_1;
-//			}
-		}
+			ml.Draw(window, layer);
+			layer = layer + 1;
+			if (layer > Layer::Background_2)
+				layer = Layer::Background_1;
+        }
 		else
 		{
-//			ml.Draw(window, layer, 0);
-		}
+			ml.Draw(window, layer, 0);
+        }
 
 		// draw walkable and collidable tiles
-//		ml.Draw(window, Layer::Field);
-//		ml.Draw(window, Layer::Collision_Objects);
-         */
+		ml.Draw(window, Layer::Field);
+		ml.Draw(window, Layer::Collision_Objects);
+
 		// draw player
 		window.draw(actorPlayer);
-        /*
 		// draw top layer of map
-//		ml.Draw(window, Layer::Overlay);
-        */
+		ml.Draw(window, Layer::Overlay);
+
+		if (textbox && !title && sysFader.isComplete())
+		{
+			if (!pause && window.hasFocus())
+			{
+				textBox.setPosition(playerView.getCenter());
+				textBox.setFontSize(24);
+				if (!textBox.if_endMessage())
+					textBox.message(test_string, "Warren", elapsedTime);
+				else
+					textBox.reset();		
+			}
+			window.draw(textBox);
+        }
 		// if game is paused, draw pause screen
 		if (pause)
 		{
-			pauseSprite.setPosition(actorPlayer.getPosition());
+			pauseSprite.setPosition(playerView.getCenter());
 			window.draw(pauseSprite);
 		}
+		// BEGIN INTRO ANIMATIONS (AFTER TITLE)
+		if (title) {
+			testTitle.animate(elapsedTime);
+			window.draw(testTitle);
 
-		if (textbox)
-		{
-			rectText.setPosition(actorPlayer.getPosition().x, actorPlayer.getPosition().y + 410);
-			window.draw(rectText);
 		}
+		else if (!title && !intro) {
+			sysFader.setPosition(playerView.getCenter());
+			sysFader.performFade(0, 1);
+			window.draw(sysFader);
+		}
+		else if (intro)
+		{
+			blackScreen.setPosition(window_topleft(playerView.getCenter()));
+			introTextbox->setPosition(playerView.getCenter());
+			window.draw(blackScreen);
+			
+			book.setPosition(playerView.getCenter());
+			window.draw(book);
+			bookcounter += elapsedTime;
+			if (bookcounter >= 200) {
+				bookcounter -= 200;
+				bookSource.y++;
+				if (bookSource.y > 3)
+					bookSource.y = 0;
+				book.setTextureRect(sf::IntRect(bookSource.x * 64, bookSource.y * 64, 64, 64));
+			
+			}
+			
+			if (!messages->empty()) {
+				introTextbox->message(messages->back(), "System", elapsedTime);
+				if (introTextbox->if_endMessage()) {
+					messages->pop_back();
+					if (messages->size() != 0)
+						introTextbox->reset();
+				}
+			}
+			else if (introTextbox->if_endMessage())
+			{
+				intro = false;
+				pause = false;
+				delete introTextbox;
+				delete messages;
+				messages = nullptr;
+				introTextbox = nullptr;
+
+			}
+			if (intro)
+				window.draw(*introTextbox);
+        }
+		// END HARD-CODED ALPHA PREVIEW
 		
 		if (debug) {
-			FPS.setPosition(actorPlayer.getPosition().x - 400, actorPlayer.getPosition().y - 300);
-			window.draw(FPS);
+			textDebug.setPosition(window_topleft(playerView.getCenter()));
+			window.draw(textDebug);
 		}
+
+
 
 		// update screen with changes
 		window.display();
 	}
 	
-	return 0;
+		return 0;
 }
 
-// Player movement system
-bool sysMovement(actor::Player& player, int &player_speed, bool collision)
-{
-	// currently, game clock is passed to player object (probably don't want to do this)
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-		player_speed = speed::Fastest;
-	}
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
-        player_speed = speed::Fast;
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
-        player_speed = speed::Slow;
-    }
-    else {
-		player_speed = speed::Normal;
-    }
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-		player.move(actor::Player::North, player_speed, collision);
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-		player.move(actor::Player::South, player_speed, collision);
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		player.move(actor::Player::East, player_speed, collision);
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		player.move(actor::Player::West, player_speed, collision);
-	}
-	else
-	{
-		player.idle();
-        return false;
-    }
-    return true;
-}
-
-/*
 // Collision and Event handling system
-void sysCollision(actor::Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event)
+void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event)
 {
+	bool test_collision = false;
+
 	for (auto layer = map.GetLayers().begin(); layer != map.GetLayers().end(); ++layer)
 	{
 		if (layer->name == "Collision")
@@ -268,25 +544,19 @@ void sysCollision(actor::Player& player, tmx::MapLoader& map, bool& collision, b
 
 			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
 			{
-				switch (player.getDirection()) {
-				case Direction::North:
-					collision = object->Contains(sf::Vector2f(player.getPosition().x + 16, player.getPosition().y)) || object->Contains(sf::Vector2f(player.getPosition().x - 16, player.getPosition().y));
-					break;
-				case Direction::East:
-					collision = object->Contains(sf::Vector2f(player.getPosition().x + 16, player.getPosition().y + 32)) || object->Contains(sf::Vector2f(player.getPosition().x + 16, player.getPosition().y + 32));
-					break;
-				case Direction::South:
-					collision = object->Contains(sf::Vector2f(player.getPosition().x + 16, player.getPosition().y + 32)) || object->Contains(sf::Vector2f(player.getPosition().x - 16, player.getPosition().y + 32));
-					break;
-				case Direction::West:
-					collision = object->Contains(sf::Vector2f(player.getPosition().x - 16, player.getPosition().y + 32)) || object->Contains(sf::Vector2f(player.getPosition().x - 16, player.getPosition().y + 32));
-					break;
-				}
+	
+				sf::Vector2f left = sf::Vector2f(player.getPosition().x - 32, player.getPosition().y);
+				sf::Vector2f right = sf::Vector2f(player.getPosition().x + 31, player.getPosition().y);
+				sf::Vector2f bottom = sf::Vector2f(player.getPosition().x, player.getPosition().y + 31);
+				sf::Vector2f top = sf::Vector2f(player.getPosition().x, player.getPosition().y - 32);
 
-				if (collision == true)
+				test_collision = object->Contains(left) || object->Contains(right) || object->Contains(bottom) || object->Contains(top);
+				
+				if (test_collision)
 				{
-					console_message("Player has collided with object.");					
-					player.setPosition((int)player.getPastPosition().x, (int)player.getPastPosition().y);
+					console_message("Player has collided with object.");		
+					player.setPosition(player.getPastPosition());
+					collision = true;
 				}
 			}
 		}
@@ -296,41 +566,41 @@ void sysCollision(actor::Player& player, tmx::MapLoader& map, bool& collision, b
 			{
 				if ((object->GetName() == "Start"))
 				{
-					if ((object->Contains(player.getPosition())))
+					if (sf::Vector2f(object->GetPosition().x + 32, object->GetPosition().y + 32) == player.getPosition())
 						player_event = true;
-					else
-						player_event = false;
-
-						if ((player_trigger) && (player.getDirection() == Direction::East))
-						{
-							cout << "This shit works!" << endl;
-						}
 				}
 			}
 		}
 	}
 }
-*/
 
 // Pause system
-void sysPause(bool& pause, sf::Music& music)
+void sysPause(bool& pause, bool& intro, bool& title, sf::Music& music)
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && !intro &&!title) {
 		pause = !pause;
-		if (pause == true)
+		if (pause)
 		{
 			console_message("Game is paused.");
 			music.pause();
 		}
-		else if (pause == false)
+		else
 		{
 			console_message("Game has resumed.");
 			music.play();
+		
 		}
+
 	}
 }
 
-// This function is strictly for debugging purposes (use this to create console messages)
-void console_message(string x) {
-	cout << "\nSYSTEM MESSAGE: " + x << endl;
+// returns the center position of the tile specified
+sf::Vector2f tile(int tile_num) {
+	int temp = System::Tilesize*tile_num + 32;
+	return sf::Vector2f(temp, temp);
+}
+
+// returns the top left corner of the window based on the position provided (we assume center of the screen)
+sf::Vector2f window_topleft(sf::Vector2f center_pos) {
+	return sf::Vector2f(center_pos.x - 400, center_pos.y - 300);
 }
