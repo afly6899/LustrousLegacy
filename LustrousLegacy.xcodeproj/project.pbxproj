@@ -51,7 +51,7 @@
 		BC8A93EF1C0D622B00793586 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
 		BC8A93F01C0D622B00793586 /* fader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fader.cpp; sourceTree = "<group>"; };
 		BC8A93F11C0D622B00793586 /* fader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fader.h; sourceTree = "<group>"; };
-		BC8A93F21C0D622B00793586 /* LustrousLegacy-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "LustrousLegacy-Info.plist"; path = "source/LustrousLegacy-Info.plist"; sourceTree = "<group>"; };
+		BC8A93F21C0D622B00793586 /* LustrousLegacy-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LustrousLegacy-Info.plist"; sourceTree = "<group>"; };
 		BC8A93F31C0D622B00793586 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		BC8A93F41C0D622B00793586 /* NPC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NPC.cpp; sourceTree = "<group>"; };
 		BC8A93F51C0D622B00793586 /* NPC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NPC.h; sourceTree = "<group>"; };
@@ -544,7 +544,7 @@
 		BC3B147E1BFAC74F00F8A9C9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				INFOPLIST_FILE = "RPG_Town/LustrousLegacy-Info.plist";
+				INFOPLIST_FILE = "LustrousLegacy/LustrousLegacy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				PRODUCT_NAME = LustrousLegacy;
 			};
@@ -553,7 +553,7 @@
 		BC3B147F1BFAC74F00F8A9C9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				INFOPLIST_FILE = "RPG_Town/LustrousLegacy-Info.plist";
+				INFOPLIST_FILE = "LustrousLegacy/LustrousLegacy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				PRODUCT_NAME = LustrousLegacy;
 			};

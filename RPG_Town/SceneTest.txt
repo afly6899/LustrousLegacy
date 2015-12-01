@@ -1,8 +1,0 @@
-Scene1
-Bob McCabe:Wassup!
-Bob McCabe:Hey! What's wrong man?
-Joe McGee:My google tests are failing.
-Bob McCabe:That sucks!
-Misc
-Bob McCabe:Yes?
-Joe McGee:I just need to be left alone.
