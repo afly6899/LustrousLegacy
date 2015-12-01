@@ -1,19 +1,14 @@
 #include "textbox.h"
 #include "player.h"
 
-	Textbox::Textbox(const sf::Font& font, sf::Sound& bleep, const sf::Texture& imagePath, int width_box, int height_box, bool block, int font_size, int padding) :
-		faceSprite(imagePath), width(width_box), height(height_box), bleep(bleep), block_draw(block), padding(padding) {
+	Textbox::Textbox(std::map<std::string, sf::Sprite>& faceMap, const sf::Font& font, sf::Sound& bleep, int width_box, int height_box, bool block, int font_size, int padding) :
+		faceMap(faceMap), width(width_box), height(height_box), bleep(bleep), block_draw(block), padding(padding) {
 		
 		displayText.setFont(font);
 		displayText.setCharacterSize(font_size);
 		displayText.setColor(sf::Color::White);
 		
-		// TEMPORARY FACE TEXTURE FOR MISSING NPC TEXTURES
-		sf::Texture ;
-		faceTemp.loadFromFile("resources/textures/face_temp.png");
-		faceSprite2.setTexture(faceTemp);
-		// END TEMPORARY FACE TEXTURE
-
+		bleep.setPitch(2);
 		if (!block_draw)
 		{
 			faceSprite.setTextureRect(sf::IntRect(0, 0, faceSprite.getLocalBounds().width, faceSprite.getLocalBounds().height));
@@ -41,11 +36,8 @@
 		
 		if (!block_draw)
 		{
+			target.draw(faceMap[actorName.getString()], states);
 			target.draw(rectText, states);
-			if (!newActor)
-				target.draw(faceSprite, states);
-			else
-				target.draw(faceSprite2, states);
 			target.draw(actorName, states);
 		}
 		target.draw(displayText, states);
@@ -55,8 +47,10 @@
 		if (!block_draw)
 		{
 			rectText.setPosition(position.x, position.y + 410);
-			faceSprite2.setPosition(position.x + 200, position.y - 85);
-			faceSprite.setPosition(position.x - 200, position.y - 85);
+			if (actorName.getString() == "Warren")
+				faceMap[actorName.getString()].setPosition(position.x - 200, position.y - 85);
+			else
+				faceMap[actorName.getString()].setPosition(position.x + 200, position.y - 85);
 			rectText.setPosition(position.x, position.y + 410);
 			displayText.setPosition(position.x - 350, position.y + 150);
 			actorName.setPosition(position.x - 350, position.y + 115);
@@ -88,7 +82,9 @@
 			if (aniCounter >= aniFrameDuration)
 			{
 				aniCounter -= aniFrameDuration;
-				bleep.play();
+				if (bleep.getStatus() == sf::Sound::Stopped)
+					bleep.play();
+				
 				int difference_x;
 				int difference_y;
 				temp_string += to_display[count];

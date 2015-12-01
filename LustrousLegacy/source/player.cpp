@@ -37,8 +37,14 @@ void Player::move(int speed, float elapsedTime, bool& collision, bool& move_flag
 		{
 			is_moving = true;
 		}
-		else
-			is_moving = sysMovement();
+		else {
+			if (direction == -1)
+				is_moving = sysMovement();
+			else {
+				is_moving = true;
+				move(speed, elapsedTime, collision, move_flag, direction);
+			}
+		}
 		move_flag = false;
 	}
 	else if (collision) {

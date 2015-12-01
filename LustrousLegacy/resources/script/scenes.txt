@@ -3,12 +3,6 @@ Resdin:Hey! Warren!
 
 Intro
 System:The world was a desolate place of destruction and despair. Eight beings had learned and mastered the dark arts and used it to gain control of the land.
-System:Their excessive use of black magic had changed them, it made them lose their humanity and gain an insatiable appetite for power. Once they grasped control, they began to wage war with one other and caused never ending chain of chaos and suffering.
-System:They came to be known as the Feral Lords.
-System:One day a brave sage was determined to rid the world of this evil once and for all. He dedicated his life to studying magic in hopes to destroy the Feral Lords and bring about peace.
-System:Sadly he found that his powers were not enough to finish them off, however, he resolved to use what he had learned to seal them away forever in hidden locations across the land. In fear of the day that they would rise again, he wrote down everything he had learned in a Grimoire so that his knowledge could outlive him...
-System:The tales of what had happened long ago live on only in legend. Now many years have passed and the land lives in peace, however, even in this peace there are those who would seek to bring back the Feral Lords and call upon their power for selfish reasons.
-System:Only four heroes have the power and the will to stand up to the dark forces that have stayed dormant for so long. Warren, Barcio, Lamoria, and Fiore will use their skills to fight those who wish to bring back the age of darkness and defend their era of Light.
 
 Scene1
 Warren:Hey Resdin.
@@ -26,21 +20,21 @@ Warren:If I can do it you can too, no problem!
 Resdin:Thanks Warren, you always have faith in me. Good luck today!
 
 Misc
-NPCHarris:I still remember your first week, you were so happy to start the job. Now here you are!
-NPCMira:Hello sweetie, big day for you no doubt. Congratulations!
-NPCMitch:Luke and I go way back. He’s told me all about you… 
-NPCMitch:All good things, no need to worry
-NPCKris:As a younger Captain hopefully you won’t sleep on the job as much as that old   fart.
-NPCSiel:Now that Luke is retiring he better start helping out around the house.
-NPCSiel:Oh who am I kidding, he isn’t going to wanna get out of bed.
-NPCMarin:Way to go Warren, First day of the rest of your career!
-NPCMarin:I hear the pay is good, you got a lucky draw kid.
-NPCFrancis:Looks like you’re the new guy in charge huh.
-NPCFrancis:You were always a good kid. You’ll be perfect for the job, go get ‘em!
-NPCAngelica:What are you so happy about?
-NPCMay:I suppose this makes you one of the youngest Captains we’ve had. Bravo Warren.
-NPCMica:My My, you’ve grown up quite fast. Now you’re head honcho around here huh?
-NPCMica:Careful swinging that old blade around, I hear its quite heavy.
+Harris:I still remember your first week, you were so happy to start the job. Now here you are!
+Mira:Hello sweetie, big day for you no doubt. Congratulations!
+Mitch:Luke and I go way back. He’s told me all about you… 
+Mitch:All good things, no need to worry
+Kris:As a younger Captain hopefully you won’t sleep on the job as much as that old   fart.
+Siel:Now that Luke is retiring he better start helping out around the house.
+Siel:Oh who am I kidding, he isn’t going to wanna get out of bed.
+Marin:Way to go Warren, First day of the rest of your career!
+Marin:I hear the pay is good, you got a lucky draw kid.
+Francis:Looks like you’re the new guy in charge huh.
+Francis:You were always a good kid. You’ll be perfect for the job, go get ‘em!
+Angelica:What are you so happy about?
+May:I suppose this makes you one of the youngest Captains we’ve had. Bravo Warren.
+Mica:My My, you’ve grown up quite fast. Now you’re head honcho around here huh?
+Mica:Careful swinging that old blade around, I hear its quite heavy.
 
 TalkingToLuke
 Luke:Well, You seem quite chipper today.

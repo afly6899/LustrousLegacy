@@ -33,10 +33,13 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "title.h"
 #include "pause.h"
 #include "fader.h"
+#include "TutorialEvent.h"
 #include "debug/debug.h"
+#include <ltbl/lighting/LightSystem.h>
+#include <map>
 using namespace std;
 
-void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event);
+void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_event);
 void sysPause(bool& pause, bool& intro, bool& title, sf::Music& music, Fader& sysFader);
 sf::Vector2f tile(int tile_row, int tile_column);
 
@@ -104,7 +107,6 @@ int main(int argc, char** argv) {
 
 	bool debug = false;
 	bool textbox = false;
-	bool player_trigger = false;
 	bool player_event = false;
 	bool is_moving = false;
 	bool collision = false;
@@ -112,6 +114,13 @@ int main(int argc, char** argv) {
 	bool title = true;
 	bool pause = false;
 	bool intro = false;
+
+	// Audrey's trying to do game event stuff
+	bool event_start = false; // only turns true if press Enter at that start box thing
+							  // once true, should have the character move down 2 spaces
+							  //    int start_pos, end_pos; //once it reaches 2, stop event
+							  //    Direction event_move = Direction::South;
+	Event tutorial = { { Direction::South,128 } ,{ Direction::West,128 },{ Direction::North,128 },{ Direction::East,128 } };
 
 	/*********************************************************************
 	TEXTURES
@@ -129,9 +138,21 @@ int main(int argc, char** argv) {
 		cerr << "Texture Error" << endl;
 	}
 
-	// FACE TEXTURE
+	// WARREN FACE TEXTURE
 	sf::Texture pfTexture;
 	if (!pfTexture.loadFromFile("resources/textures/face_warren.png")) {
+		cerr << "Texture Error" << endl;
+	}
+
+	// RESDIN FACE TEXTURE
+	sf::Texture resdinfTexture;
+	if (!resdinfTexture.loadFromFile("resources/textures/face_resdin.png")) {
+		cerr << "Texture Error" << endl;
+	}
+
+	// LUKE FACE TEXTURE
+	sf::Texture lukefTexture;
+	if (!lukefTexture.loadFromFile("resources/textures/face_luke.png")) {
 		cerr << "Texture Error" << endl;
 	}
 
@@ -159,6 +180,14 @@ int main(int argc, char** argv) {
 		cerr << "Texture Error" << endl;
 	}
 
+	std::map<std::string, sf::Sprite> faceMap;
+	faceMap["Warren"] = sf::Sprite(pfTexture);
+	faceMap["Warren"].setOrigin(faceMap["Warren"].getLocalBounds().width*.5, faceMap["Warren"].getLocalBounds().height*.5);
+	faceMap["Resdin"] = sf::Sprite(resdinfTexture);
+	faceMap["Resdin"].setOrigin(faceMap["Resdin"].getLocalBounds().width*.5, faceMap["Resdin"].getLocalBounds().height*.5);
+	faceMap["Luke"] = sf::Sprite(lukefTexture);
+	faceMap["Luke"].setOrigin(faceMap["Luke"].getLocalBounds().width*.5, faceMap["Luke"].getLocalBounds().height*.5);
+
 	/*********************************************************************
 	MUSIC
 	*********************************************************************/
@@ -167,7 +196,7 @@ int main(int argc, char** argv) {
 	if (!music.openFromFile("resources/audio/test.ogg"))
 		return -1; // error
 
-	//music.setVolume(0);
+	music.setVolume(10);
 
 	/*********************************************************************
 	SOUNDS
@@ -177,14 +206,14 @@ int main(int argc, char** argv) {
 	if (!bleep.loadFromFile("resources/audio/text_blip.wav"))
 		return -1; // error
 
-	sf::SoundBuffer selection_bleep;
-	if (!selection_bleep.loadFromFile("resources/audio/select_blip.wav"))
+	sf::SoundBuffer bleep2;
+	if (!bleep2.loadFromFile("resources/audio/text_blip2.wav"))
 		return -1; // error
 
 	sf::Sound soundBleep;
-	sf::Sound soundSelect;
+	sf::Sound soundBleep2;
 	soundBleep.setBuffer(bleep);
-	soundSelect.setBuffer(selection_bleep);
+	soundBleep2.setBuffer(bleep2);
 
 	/*********************************************************************
 	WORLD PARAMETERS:
@@ -212,14 +241,14 @@ int main(int argc, char** argv) {
 
 	// SET PLAYER TEXTURE AND POSITION
 	Player actorPlayer(pTexture);
-	actorPlayer.setPosition(tile(10, 10));
+	actorPlayer.setPosition(tile(10, 9));
 
 	/*********************************************************************
 	PREPARE TEXTBOX
 	Create the textbox object and set position based on character.
 	*********************************************************************/
 
-	Textbox textBox(sysFont, soundBleep, pfTexture, window_width, window_height);
+	Textbox textBox(faceMap, sysFont, soundBleep, window_width, window_height);
 
 	/*********************************************************************
 	PREPARE SCREENS, ANIMATIONS, AND UTILITIES
@@ -233,6 +262,35 @@ int main(int argc, char** argv) {
 	NPC tempNPC(npcTexture);
 	tempNPC.setPosition(tile(9, 9));
 	NPC book(bookTexture);
+
+	/*********************************************************************
+	LIGHTING SYSTEM TEST 
+	*********************************************************************/
+
+	sf::Shader unshadowShader;
+	sf::Shader lightOverShapeShader;
+	unshadowShader.loadFromFile("resources/unshadowShader.vert", "resources/unshadowShader.frag");
+	lightOverShapeShader.loadFromFile("resources/lightOverShapeShader.vert", "resources/lightOverShapeShader.frag");
+	
+	sf::Texture penumbraTexture;
+	penumbraTexture.loadFromFile("resources/penumbraTexture.png");
+	penumbraTexture.setSmooth(true);
+	sf::Texture pointTexture; 
+	pointTexture.loadFromFile("resources/pointLightTexture.png");
+	pointTexture.setSmooth(true);
+
+	ltbl::LightSystem ls;
+	ls.create(sf::FloatRect(-1000.0f, -1000.0f, 1000.0f, 1000.0f), window.getSize(), penumbraTexture, unshadowShader, lightOverShapeShader);
+	
+	std::shared_ptr<ltbl::LightPointEmission> light = std::make_shared<ltbl::LightPointEmission>();
+
+	light->_emissionSprite.setOrigin(sf::Vector2f(pointTexture.getSize().x * 0.5f, pointTexture.getSize().y * 0.5f));
+	light->_emissionSprite.setTexture(pointTexture);
+	light->_emissionSprite.setScale(sf::Vector2f(20.0f, 20.0f));
+	light->_emissionSprite.setColor(sf::Color(255, 230, 200));
+	light->_emissionSprite.setPosition(sf::Vector2f(400, 300)); // This is where the shadows emanate from relative to the sprite
+
+	ls.addLight(light);
 	
 	/*********************************************************************
 	BEGIN GAME LOOP:
@@ -263,8 +321,9 @@ int main(int argc, char** argv) {
 					screenTitle.setPosition(actorPlayer.getPosition());
 					music.stop();
 				}
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && player_event)
-					player_trigger = !player_trigger;
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && player_event) {
+					event_start = true; // this will start the event!!
+				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && title) {
 					screenTitle.change_selection(4, Cursor_Direction::Down);
 				}
@@ -273,18 +332,18 @@ int main(int argc, char** argv) {
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && screenTitle.getSelection() == Selection::Play_Game) {
 					sysFader.resetFader();
-					actorPlayer.setPosition(tile(10, 10));
+					actorPlayer.setPosition(tile(10, 9));
 					actorPlayer.setDirection(Direction::South);
 					title = false;
 					intro = true; 
 					pause = false;
-					introTextbox = new Textbox(sysFont, soundBleep, pfTexture, window_width, window_height, true);
+					introTextbox = new Textbox(faceMap, sysFont, soundBleep, window_width, window_height, true);
 					introTextbox->setPosition(actorPlayer.getPosition());
 					if (!pause) {
 						music.play();
 					}
 				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && screenTitle.getSelection() == 4) {
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && screenTitle.getSelection() == Selection::Exit) {
 					window.close();
 				}
 			}
@@ -297,6 +356,15 @@ int main(int argc, char** argv) {
 			to_string(actorPlayer.getPosition().x / Tilesize).substr(0, 5) + ", " + 
 			to_string(actorPlayer.getPosition().y / Tilesize).substr(0, 5) + ")");
 		// END debug information
+
+		// LIGHTING SYSTEM TEST
+		ls.render(window.getDefaultView(), unshadowShader, lightOverShapeShader);
+		sf::Sprite sprite;
+		sprite.setOrigin(400, 300);
+		sprite.setTexture(ls.getLightingTexture());
+		sf::RenderStates lightRenderStates;
+		lightRenderStates.blendMode = sf::BlendMultiply;
+		// END LIGHTING SYSTEM TEST
 
 		// prime the camera
 		if (!title)
@@ -315,11 +383,40 @@ int main(int argc, char** argv) {
 		if (!pause && !title && window.hasFocus() && sysFader.isComplete())
 		{
 			// START - PLAYER MOVEMENT (manual or automatic)
-			actorPlayer.move(player_speed, elapsedTime, collision, move_flag);
+			if (event_start) {
+				tutorial.runEvent(event_start, actorPlayer, elapsedTime);
+				if (!event_start)
+					player_event = false;
+				//                actorPlayer.move(player_speed, elapsedTime, collision, move_flag, event_move);
+				//                if (event_move == Direction::West || event_move == Direction::East)
+				//                    end_pos = actorPlayer.getPosition().x;
+				//                else
+				//                    end_pos = actorPlayer.getPosition().y;
+				//                
+				//                if (end_pos - start_pos == 128 && event_move == Direction::South) {
+				//                    event_move = Direction::West;
+				//                    start_pos = actorPlayer.getPosition().x;
+				//                } else if (end_pos - start_pos == -128 && event_move == Direction::West) {
+				//                    event_move = Direction::North;
+				//                    start_pos = actorPlayer.getPosition().y;
+				//                } else if (end_pos - start_pos == -128 && event_move == Direction::North) {
+				//                    event_move = Direction::East;
+				//                    start_pos = actorPlayer.getPosition().x;
+				//                } else if (end_pos - start_pos == 128 && event_move == Direction::East) {
+				//                    std::cout << "Event has ended" << std::endl;
+				//                    event_start = false;
+				//                    event_move = Direction::South;
+				//                }
+			}
+			else {
+				// START - PLAYER MOVEMENT (manual or automatic)
+				actorPlayer.move(player_speed, elapsedTime, collision, move_flag);
+				// END
+			}
 			// END 
 
 			// START - COLLISION AND EVENT DETECTION
-			sysCollision(actorPlayer, ml, collision, player_trigger, player_event);
+			sysCollision(actorPlayer, ml, collision, player_event);
 			// END 
 
 			// adjust the camera to be viewing player
@@ -356,22 +453,13 @@ int main(int argc, char** argv) {
 		// draw player
 		window.draw(actorPlayer);
 
-		// draw npc
-		if (sysFader.isComplete() && !intro)
-		{
-			if (!tempNPC.moveComplete()) {
-				tempNPC.reset_move();
-				tempNPC.move(4, Direction::East, elapsedTime);
-			}
-			if (tempNPC.moveComplete()) {
-				tempNPC.reset_move();
-				tempNPC.move(4, Direction::West, elapsedTime);
-			}
-			window.draw(tempNPC);
-		}
-
 		// draw top layer of map
 		ml.Draw(window, Layer::Overlay);
+
+		// LIGHTING TEST
+		sprite.setPosition(actorPlayer.getPosition());
+		window.draw(sprite, lightRenderStates);
+		// LIGHTING TEST
 
 		if (textbox && !title && sysFader.isComplete())
 		{
@@ -443,7 +531,7 @@ int main(int argc, char** argv) {
 			textDebug.setPosition(playerView.getCenter().x - window_width*.5, playerView.getCenter().y - window_height*.5);
 			window.draw(textDebug);
 		}
-
+		
 		// update screen with changes
 		window.display();
 	}
@@ -457,7 +545,7 @@ int main(int argc, char** argv) {
 
 \param Player, Map, Collision Switch, Player Use Switch, Player Event Switch
 *********************************************************************/
-void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_trigger, bool& player_event)
+void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_event)
 {
 	bool test_collision = false;
 	
@@ -489,6 +577,8 @@ void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& pl
 				{
 					if (sf::Vector2f(object->GetPosition().x + 32, object->GetPosition().y + 32) == player.getPosition())
 						player_event = true;
+					else
+						player_event = false;
 				}
 			}
 		}

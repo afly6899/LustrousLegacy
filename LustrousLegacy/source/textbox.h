@@ -15,7 +15,7 @@ namespace sf {
 	class Textbox : public sf::Drawable {
 	public:
 
-		Textbox(const sf::Font& font, sf::Sound& bleep, const sf::Texture& imagePath, int width_box, int height_box, bool block = false, int font_size = 20, int padding = 25);
+		Textbox(std::map<std::string, sf::Sprite>& faceMap, const sf::Font& font, sf::Sound& bleep, int width_box, int height_box, bool block = false, int font_size = 20, int padding = 25);
 		virtual ~Textbox();
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 		void setPosition(const sf::Vector2f position);
@@ -27,6 +27,7 @@ namespace sf {
 
 	private:
 
+		std::map<std::string, sf::Sprite>& faceMap;
 		sf::Sprite faceSprite;
 		sf::Sprite faceSprite2;
 		sf::Text actorName;
