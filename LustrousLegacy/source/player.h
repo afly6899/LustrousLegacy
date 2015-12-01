@@ -1,7 +1,7 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
-#include "Enums.h""
+#include "Enums.h"
 #include <SFML/Graphics.hpp>
 
 namespace sf {
@@ -16,6 +16,7 @@ class Player : public sf::Drawable {
 		virtual ~Player();
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 		void move(int speed, float elapsedTime, bool& collision, bool& move_switch, int direction = -1);
+        void faceDirection(int direction);
 		void idle();
 		void setDirection(int dir);
 		int getDirection();

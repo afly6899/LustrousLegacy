@@ -1,5 +1,5 @@
-#ifndef __RPG_Town__TutorialEvent__
-#define __RPG_Town__TutorialEvent__
+#ifndef __RPG_Town__Event__
+#define __RPG_Town__Event__
 
 #include <queue>
 #include <initializer_list>
@@ -31,7 +31,6 @@ public:
     void nextEvent();
     
 private:
-//    TutorialEvent* event_chain = nullptr;
     std::queue<TutorialEvent> event_chain;
     std::queue<TutorialEvent> event_keeper; // this is too keep the events, change later
     TutorialEvent current_event = {Direction::Null, -1};
@@ -40,29 +39,6 @@ private:
     bool collision = false;
     bool auto_move = true;
 
-    
-    
-//    class TutorialEvent {
-//    public:
-//        ~TutorialEvent();
-//        TutorialEvent(Direction, int);
-//        
-//        void move(Player& player, float elapsedTime);
-//        //    void setSpeed(int new_speed);
-//        //    void setDirection(Direction direction);
-//        //    void setStopPosition(int stop_after);
-//        
-//        bool eventIsDone(Player& player, int start);
-//        
-//        
-//    private:
-//        TutorialEvent* next;
-//        Direction dir;
-//        int stop_distance;
-//        int speed = 2;
-//        bool collision = false;
-//        bool auto_move = true;
-//    };
 };
 
-#endif /* defined(__RPG_Town__TutorialEvent__) */
+#endif /* defined(__RPG_Town__Event__) */

@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "BC3B14671BFAC74F00F8A9C9"
-               BuildableName = "RPG_Town.app"
-               BlueprintName = "RPG_Town"
-               ReferencedContainer = "container:RPG_Town.xcodeproj">
+               BuildableName = "LustrousLegacy.app"
+               BlueprintName = "LustrousLegacy"
+               ReferencedContainer = "container:LustrousLegacy.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "BC3B14671BFAC74F00F8A9C9"
-            BuildableName = "RPG_Town.app"
-            BlueprintName = "RPG_Town"
-            ReferencedContainer = "container:RPG_Town.xcodeproj">
+            BuildableName = "LustrousLegacy.app"
+            BlueprintName = "LustrousLegacy"
+            ReferencedContainer = "container:LustrousLegacy.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -44,7 +44,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "YES"
-      customWorkingDirectory = "/Users/audreylai/XcodeTutorials/RPG_Town/RPG_Town"
+      customWorkingDirectory = "/Users/audreylai/XcodeTutorials/LustrousLegacy/LustrousLegacy"
       buildConfiguration = "Debug"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
@@ -54,9 +54,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "BC3B14671BFAC74F00F8A9C9"
-            BuildableName = "RPG_Town.app"
-            BlueprintName = "RPG_Town"
-            ReferencedContainer = "container:RPG_Town.xcodeproj">
+            BuildableName = "LustrousLegacy.app"
+            BlueprintName = "LustrousLegacy"
+            ReferencedContainer = "container:LustrousLegacy.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -73,9 +73,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "BC3B14671BFAC74F00F8A9C9"
-            BuildableName = "RPG_Town.app"
-            BlueprintName = "RPG_Town"
-            ReferencedContainer = "container:RPG_Town.xcodeproj">
+            BuildableName = "LustrousLegacy.app"
+            BlueprintName = "LustrousLegacy"
+            ReferencedContainer = "container:LustrousLegacy.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

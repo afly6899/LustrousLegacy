@@ -340,7 +340,7 @@ bool MapLoader::ProcessTiles(const pugi::xml_node& tilesetNode)
 bool MapLoader::ParseCollectionOfImages(const pugi::xml_node& tilesetNode)
 {
     pugi::xml_node tile;
-    if (tile = tilesetNode.child("tile"))
+    if (tile == tilesetNode.child("tile"))
     {
         while (tile)
         {
@@ -814,7 +814,7 @@ bool MapLoader::ParseObjectgroup(const pugi::xml_node& groupNode)
         else if (objectNode.find_child(FindByName("polygon")) || objectNode.find_child(FindByName("polyline")))
 		{
             pugi::xml_node child;
-            if (child = objectNode.find_child(FindByName("polygon")))
+            if (child == objectNode.find_child(FindByName("polygon")))
             {
                 object.SetShapeType(Polygon);
             }

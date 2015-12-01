@@ -33,9 +33,9 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "title.h"
 #include "pause.h"
 #include "fader.h"
-#include "TutorialEvent.h"
+#include "Event.h"
 #include "debug/debug.h"
-#include <ltbl/lighting/LightSystem.h>
+//#include <ltbl/lighting/LightSystem.h>
 #include <map>
 using namespace std;
 
@@ -107,7 +107,7 @@ int main(int argc, char** argv) {
 
 	bool debug = false;
 	bool textbox = false;
-	bool player_event = false;
+	bool player_event = true;
 	bool is_moving = false;
 	bool collision = false;
 	bool move_flag = false;
@@ -120,7 +120,7 @@ int main(int argc, char** argv) {
 							  // once true, should have the character move down 2 spaces
 							  //    int start_pos, end_pos; //once it reaches 2, stop event
 							  //    Direction event_move = Direction::South;
-	Event tutorial = { { Direction::South,128 } ,{ Direction::West,128 },{ Direction::North,128 },{ Direction::East,128 } };
+	Event tutorial = { { Direction::South,6 } ,{ Direction::East,1 } ,{ Direction::North,0 } };
 
 	/*********************************************************************
 	TEXTURES
@@ -134,7 +134,7 @@ int main(int argc, char** argv) {
 
 	// NPC TEXTURE
 	sf::Texture npcTexture;
-	if (!npcTexture.loadFromFile("resources/textures/tempSprite.png")) {
+	if (!npcTexture.loadFromFile("resources/textures/sprite_resdin.png")) {
 		cerr << "Texture Error" << endl;
 	}
 
@@ -260,7 +260,7 @@ int main(int argc, char** argv) {
 	Fader sysFader;
 	Textbox* introTextbox = nullptr;
 	NPC tempNPC(npcTexture);
-	tempNPC.setPosition(tile(9, 9));
+	tempNPC.setPosition(tile(11, 14));
 	NPC book(bookTexture);
 
 	/*********************************************************************
@@ -279,18 +279,18 @@ int main(int argc, char** argv) {
 	pointTexture.loadFromFile("resources/pointLightTexture.png");
 	pointTexture.setSmooth(true);
 
-	ltbl::LightSystem ls;
-	ls.create(sf::FloatRect(-1000.0f, -1000.0f, 1000.0f, 1000.0f), window.getSize(), penumbraTexture, unshadowShader, lightOverShapeShader);
-	
-	std::shared_ptr<ltbl::LightPointEmission> light = std::make_shared<ltbl::LightPointEmission>();
-
-	light->_emissionSprite.setOrigin(sf::Vector2f(pointTexture.getSize().x * 0.5f, pointTexture.getSize().y * 0.5f));
-	light->_emissionSprite.setTexture(pointTexture);
-	light->_emissionSprite.setScale(sf::Vector2f(20.0f, 20.0f));
-	light->_emissionSprite.setColor(sf::Color(255, 230, 200));
-	light->_emissionSprite.setPosition(sf::Vector2f(400, 300)); // This is where the shadows emanate from relative to the sprite
-
-	ls.addLight(light);
+//	ltbl::LightSystem ls;
+//	ls.create(sf::FloatRect(-1000.0f, -1000.0f, 1000.0f, 1000.0f), window.getSize(), penumbraTexture, unshadowShader, lightOverShapeShader);
+//	
+//	std::shared_ptr<ltbl::LightPointEmission> light = std::make_shared<ltbl::LightPointEmission>();
+//
+//	light->_emissionSprite.setOrigin(sf::Vector2f(pointTexture.getSize().x * 0.5f, pointTexture.getSize().y * 0.5f));
+//	light->_emissionSprite.setTexture(pointTexture);
+//	light->_emissionSprite.setScale(sf::Vector2f(20.0f, 20.0f));
+//	light->_emissionSprite.setColor(sf::Color(255, 230, 200));
+//	light->_emissionSprite.setPosition(sf::Vector2f(400, 300)); // This is where the shadows emanate from relative to the sprite
+//
+//	ls.addLight(light);
 	
 	/*********************************************************************
 	BEGIN GAME LOOP:
@@ -358,10 +358,10 @@ int main(int argc, char** argv) {
 		// END debug information
 
 		// LIGHTING SYSTEM TEST
-		ls.render(window.getDefaultView(), unshadowShader, lightOverShapeShader);
+//		ls.render(window.getDefaultView(), unshadowShader, lightOverShapeShader);
 		sf::Sprite sprite;
 		sprite.setOrigin(400, 300);
-		sprite.setTexture(ls.getLightingTexture());
+//		sprite.setTexture(ls.getLightingTexture());
 		sf::RenderStates lightRenderStates;
 		lightRenderStates.blendMode = sf::BlendMultiply;
 		// END LIGHTING SYSTEM TEST
@@ -384,34 +384,13 @@ int main(int argc, char** argv) {
 		{
 			// START - PLAYER MOVEMENT (manual or automatic)
 			if (event_start) {
+                // Automatic Movement
 				tutorial.runEvent(event_start, actorPlayer, elapsedTime);
-				if (!event_start)
-					player_event = false;
-				//                actorPlayer.move(player_speed, elapsedTime, collision, move_flag, event_move);
-				//                if (event_move == Direction::West || event_move == Direction::East)
-				//                    end_pos = actorPlayer.getPosition().x;
-				//                else
-				//                    end_pos = actorPlayer.getPosition().y;
-				//                
-				//                if (end_pos - start_pos == 128 && event_move == Direction::South) {
-				//                    event_move = Direction::West;
-				//                    start_pos = actorPlayer.getPosition().x;
-				//                } else if (end_pos - start_pos == -128 && event_move == Direction::West) {
-				//                    event_move = Direction::North;
-				//                    start_pos = actorPlayer.getPosition().y;
-				//                } else if (end_pos - start_pos == -128 && event_move == Direction::North) {
-				//                    event_move = Direction::East;
-				//                    start_pos = actorPlayer.getPosition().x;
-				//                } else if (end_pos - start_pos == 128 && event_move == Direction::East) {
-				//                    std::cout << "Event has ended" << std::endl;
-				//                    event_start = false;
-				//                    event_move = Direction::South;
-				//                }
 			}
 			else {
-				// START - PLAYER MOVEMENT (manual or automatic)
+				// Manual Movement
 				actorPlayer.move(player_speed, elapsedTime, collision, move_flag);
-				// END
+
 			}
 			// END 
 
@@ -452,6 +431,7 @@ int main(int argc, char** argv) {
 
 		// draw player
 		window.draw(actorPlayer);
+        window.draw(tempNPC);
 
 		// draw top layer of map
 		ml.Draw(window, Layer::Overlay);
@@ -570,13 +550,14 @@ void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& pl
 			}
 		}
 		if (layer->name == "Events")
-		{
+        {
 			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
 			{
 				if ((object->GetName() == "Start"))
-				{
-					if (sf::Vector2f(object->GetPosition().x + 32, object->GetPosition().y + 32) == player.getPosition())
+                {
+                    if (sf::Vector2f(object->GetPosition().x + 32, object->GetPosition().y + 32) == player.getPosition()) {
 						player_event = true;
+                    }
 					else
 						player_event = false;
 				}

@@ -6,17 +6,17 @@ System:The world was a desolate place of destruction and despair. Eight beings h
 
 Scene1
 Warren:Hey Resdin.
-Resdin:Hi! I've got a letter for you, Warren.
-Resdin:Are you excited? Today is your initiation, isn't it?
-Warren:Yeah. By the end of today, I'll officially be Captain of the Guard.
-Resdin:You'll be awesome! I mean, you've been in training for, like, a year.
+Resdin:You've got one letter Warren.
+Resdin:Are you excited!? Today is your initiation isn't it?
+Warren:Yeah, by the end of today I'm officially Captain of the Guard.
+Resdin:You'll be awesome! I mean, you've been in training for like a year.
 Resdin:Are you nervous?
-Warren:Not really. Luke is a great Captain. After all he's taught me, I should be ready for anything.
-Resdin:Hey, Warren...? Do... Do you think you could train me one day? I've always wanted to be a guard.
-Warren:Sure, when you get older. I'm sure you'll make a great officer. I remember when I dreamed of just being in the guard; I never thought I would get to be Captain!
-Warren:But here I am. You'll get there, Resdin. Just stay strong.
+Warren:Luke is a great Captain. After all of his teachings I should be ready for anything.
+Resdin:Hey... Do... Do you think you could train me one day? I've always wanted to be a guard.
+Warren:Sure, when you get older I'm sure you'll make a great officer. I remember when I dreamed of just being in the guard, I never thought I would get to be Captain!
+Warren:But here I am, you'll get there Resdin just stay strong.
 Resdin:Really!?
-Warren:If I can do it, you can too, no problem!
+Warren:If I can do it you can too, no problem!
 Resdin:Thanks Warren, you always have faith in me. Good luck today!
 
 Misc

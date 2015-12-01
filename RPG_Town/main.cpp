@@ -382,7 +382,6 @@ int main(int argc, char** argv) {
 
 			// START - COLLISION AND EVENT DETECTION
 			sysCollision(actorPlayer, ml, collision, player_trigger, player_event);
-            std::cout << "player event after sysCollision is " << player_event << std::endl;
 			// END
 
 			// adjust the camera to be viewing player

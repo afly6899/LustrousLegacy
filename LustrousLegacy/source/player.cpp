@@ -104,6 +104,15 @@ void Player::move(int speed, float elapsedTime, bool& collision, bool& move_flag
 }
 
 /*********************************************************************
+ \brief Has the character face a direction, but not move.
+ *********************************************************************/
+void Player::faceDirection(int direction) { // only use in the Event for now
+    playerDirection = direction;
+    mSource.y = playerDirection;
+    mSprite.setTextureRect(sf::IntRect(mSource.x * 64, mSource.y * 64, 64, 64));
+}
+
+/*********************************************************************
 \brief Forces the player texture at the idle stance.
 *********************************************************************/
 void Player::idle() {

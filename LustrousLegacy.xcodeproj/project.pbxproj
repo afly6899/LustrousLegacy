@@ -1,0 +1,586 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BC3B14C71BFAC7C800F8A9C9 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BC3B14C61BFAC7C800F8A9C9 /* libz.dylib */; };
+		BC8A940B1C0D622B00793586 /* cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A93E81C0D622B00793586 /* cursor.cpp */; };
+		BC8A940C1C0D622B00793586 /* debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A93EB1C0D622B00793586 /* debug.cpp */; };
+		BC8A940D1C0D622B00793586 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A93EE1C0D622B00793586 /* Event.cpp */; };
+		BC8A940E1C0D622B00793586 /* fader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A93F01C0D622B00793586 /* fader.cpp */; };
+		BC8A94101C0D622B00793586 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A93F31C0D622B00793586 /* main.cpp */; };
+		BC8A94111C0D622B00793586 /* NPC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A93F41C0D622B00793586 /* NPC.cpp */; };
+		BC8A94121C0D622B00793586 /* pause.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A93F61C0D622B00793586 /* pause.cpp */; };
+		BC8A94131C0D622B00793586 /* player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A93F81C0D622B00793586 /* player.cpp */; };
+		BC8A94141C0D622B00793586 /* SceneReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A93FA1C0D622B00793586 /* SceneReader.cpp */; };
+		BC8A94151C0D622B00793586 /* SceneUtility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A93FC1C0D622B00793586 /* SceneUtility.cpp */; };
+		BC8A94161C0D622B00793586 /* Textbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A93FE1C0D622B00793586 /* Textbox.cpp */; };
+		BC8A94171C0D622B00793586 /* title.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A94001C0D622B00793586 /* title.cpp */; };
+		BC8A94181C0D622B00793586 /* DebugShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A94031C0D622B00793586 /* DebugShape.cpp */; };
+		BC8A94191C0D622B00793586 /* MapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A94041C0D622B00793586 /* MapLayer.cpp */; };
+		BC8A941A1C0D622B00793586 /* MapLoaderPrivate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A94051C0D622B00793586 /* MapLoaderPrivate.cpp */; };
+		BC8A941B1C0D622B00793586 /* MapLoaderPublic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A94061C0D622B00793586 /* MapLoaderPublic.cpp */; };
+		BC8A941C1C0D622B00793586 /* MapObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A94071C0D622B00793586 /* MapObject.cpp */; };
+		BC8A941D1C0D622B00793586 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A94091C0D622B00793586 /* pugixml.cpp */; };
+		BC8A941E1C0D622B00793586 /* QuadTreeNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8A940A1C0D622B00793586 /* QuadTreeNode.cpp */; };
+		BC96A0831C0D6CE500BC4F07 /* DynamicQuadtree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC96A07A1C0D6CE500BC4F07 /* DynamicQuadtree.cpp */; };
+		BC96A0841C0D6CE500BC4F07 /* Quadtree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC96A07B1C0D6CE500BC4F07 /* Quadtree.cpp */; };
+		BC96A0851C0D6CE500BC4F07 /* QuadtreeN.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC96A07C1C0D6CE500BC4F07 /* QuadtreeN.cpp */; };
+		BC96A0861C0D6CE500BC4F07 /* QuadtreeOccupant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC96A07D1C0D6CE500BC4F07 /* QuadtreeOccupant.cpp */; };
+		BC96A0871C0D6CE500BC4F07 /* StaticQuadtree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC96A07E1C0D6CE500BC4F07 /* StaticQuadtree.cpp */; };
+		BC96A0881C0D6CE500BC4F07 /* LightDirectionEmission.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC96A07F1C0D6CE500BC4F07 /* LightDirectionEmission.cpp */; };
+		BC96A0891C0D6CE500BC4F07 /* LightPointEmission.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC96A0801C0D6CE500BC4F07 /* LightPointEmission.cpp */; };
+		BC96A08A1C0D6CE500BC4F07 /* LightShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC96A0811C0D6CE500BC4F07 /* LightShape.cpp */; };
+		BC96A08B1C0D6CE500BC4F07 /* LightSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC96A0821C0D6CE500BC4F07 /* LightSystem.cpp */; };
+		BC96A0941C0D738500BC4F07 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC96A0931C0D738500BC4F07 /* OpenGL.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		BC3B14681BFAC74F00F8A9C9 /* LustrousLegacy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LustrousLegacy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC3B14C61BFAC7C800F8A9C9 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		BC8A93E81C0D622B00793586 /* cursor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cursor.cpp; sourceTree = "<group>"; };
+		BC8A93E91C0D622B00793586 /* cursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cursor.h; sourceTree = "<group>"; };
+		BC8A93EB1C0D622B00793586 /* debug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = debug.cpp; sourceTree = "<group>"; };
+		BC8A93EC1C0D622B00793586 /* debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
+		BC8A93ED1C0D622B00793586 /* Enums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Enums.h; sourceTree = "<group>"; };
+		BC8A93EE1C0D622B00793586 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
+		BC8A93EF1C0D622B00793586 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		BC8A93F01C0D622B00793586 /* fader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fader.cpp; sourceTree = "<group>"; };
+		BC8A93F11C0D622B00793586 /* fader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fader.h; sourceTree = "<group>"; };
+		BC8A93F21C0D622B00793586 /* LustrousLegacy-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "LustrousLegacy-Info.plist"; path = "source/LustrousLegacy-Info.plist"; sourceTree = "<group>"; };
+		BC8A93F31C0D622B00793586 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		BC8A93F41C0D622B00793586 /* NPC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NPC.cpp; sourceTree = "<group>"; };
+		BC8A93F51C0D622B00793586 /* NPC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NPC.h; sourceTree = "<group>"; };
+		BC8A93F61C0D622B00793586 /* pause.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pause.cpp; sourceTree = "<group>"; };
+		BC8A93F71C0D622B00793586 /* pause.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pause.h; sourceTree = "<group>"; };
+		BC8A93F81C0D622B00793586 /* player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = player.cpp; sourceTree = "<group>"; };
+		BC8A93F91C0D622B00793586 /* player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = player.h; sourceTree = "<group>"; };
+		BC8A93FA1C0D622B00793586 /* SceneReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneReader.cpp; sourceTree = "<group>"; };
+		BC8A93FB1C0D622B00793586 /* SceneReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneReader.h; sourceTree = "<group>"; };
+		BC8A93FC1C0D622B00793586 /* SceneUtility.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneUtility.cpp; sourceTree = "<group>"; };
+		BC8A93FD1C0D622B00793586 /* SceneUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneUtility.h; sourceTree = "<group>"; };
+		BC8A93FE1C0D622B00793586 /* Textbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Textbox.cpp; sourceTree = "<group>"; };
+		BC8A93FF1C0D622B00793586 /* textbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = textbox.h; sourceTree = "<group>"; };
+		BC8A94001C0D622B00793586 /* title.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = title.cpp; sourceTree = "<group>"; };
+		BC8A94011C0D622B00793586 /* title.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = title.h; sourceTree = "<group>"; };
+		BC8A94031C0D622B00793586 /* DebugShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugShape.cpp; sourceTree = "<group>"; };
+		BC8A94041C0D622B00793586 /* MapLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapLayer.cpp; sourceTree = "<group>"; };
+		BC8A94051C0D622B00793586 /* MapLoaderPrivate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapLoaderPrivate.cpp; sourceTree = "<group>"; };
+		BC8A94061C0D622B00793586 /* MapLoaderPublic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapLoaderPublic.cpp; sourceTree = "<group>"; };
+		BC8A94071C0D622B00793586 /* MapObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapObject.cpp; sourceTree = "<group>"; };
+		BC8A94091C0D622B00793586 /* pugixml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pugixml.cpp; sourceTree = "<group>"; };
+		BC8A940A1C0D622B00793586 /* QuadTreeNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QuadTreeNode.cpp; sourceTree = "<group>"; };
+		BC96A07A1C0D6CE500BC4F07 /* DynamicQuadtree.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DynamicQuadtree.cpp; path = ltbl/quadtree/DynamicQuadtree.cpp; sourceTree = "<group>"; };
+		BC96A07B1C0D6CE500BC4F07 /* Quadtree.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Quadtree.cpp; path = ltbl/quadtree/Quadtree.cpp; sourceTree = "<group>"; };
+		BC96A07C1C0D6CE500BC4F07 /* QuadtreeN.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = QuadtreeN.cpp; path = ltbl/quadtree/QuadtreeN.cpp; sourceTree = "<group>"; };
+		BC96A07D1C0D6CE500BC4F07 /* QuadtreeOccupant.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = QuadtreeOccupant.cpp; path = ltbl/quadtree/QuadtreeOccupant.cpp; sourceTree = "<group>"; };
+		BC96A07E1C0D6CE500BC4F07 /* StaticQuadtree.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = StaticQuadtree.cpp; path = ltbl/quadtree/StaticQuadtree.cpp; sourceTree = "<group>"; };
+		BC96A07F1C0D6CE500BC4F07 /* LightDirectionEmission.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = LightDirectionEmission.cpp; path = ltbl/lighting/LightDirectionEmission.cpp; sourceTree = "<group>"; };
+		BC96A0801C0D6CE500BC4F07 /* LightPointEmission.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = LightPointEmission.cpp; path = ltbl/lighting/LightPointEmission.cpp; sourceTree = "<group>"; };
+		BC96A0811C0D6CE500BC4F07 /* LightShape.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = LightShape.cpp; path = ltbl/lighting/LightShape.cpp; sourceTree = "<group>"; };
+		BC96A0821C0D6CE500BC4F07 /* LightSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = LightSystem.cpp; path = ltbl/lighting/LightSystem.cpp; sourceTree = "<group>"; };
+		BC96A0931C0D738500BC4F07 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		BC96A0971C0D766700BC4F07 /* select_blip.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = select_blip.wav; sourceTree = "<group>"; };
+		BC96A0981C0D766700BC4F07 /* test.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.ogg; sourceTree = "<group>"; };
+		BC96A0991C0D766700BC4F07 /* test_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = test_sound.wav; sourceTree = "<group>"; };
+		BC96A09A1C0D766700BC4F07 /* text_blip.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = text_blip.wav; sourceTree = "<group>"; };
+		BC96A09B1C0D766700BC4F07 /* text_blip2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = text_blip2.wav; sourceTree = "<group>"; };
+		BC96A09C1C0D766700BC4F07 /* text_blip3.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = text_blip3.wav; sourceTree = "<group>"; };
+		BC96A09D1C0D766700BC4F07 /* directionLightTexture.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = directionLightTexture.png; sourceTree = "<group>"; };
+		BC96A09F1C0D766700BC4F07 /* Vera.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Vera.ttf; sourceTree = "<group>"; };
+		BC96A0A01C0D766700BC4F07 /* lightOverShapeShader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = lightOverShapeShader.frag; sourceTree = "<group>"; };
+		BC96A0A11C0D766700BC4F07 /* lightOverShapeShader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = lightOverShapeShader.vert; sourceTree = "<group>"; };
+		BC96A0A31C0D766700BC4F07 /* 64_forest_tileset.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 64_forest_tileset.png; sourceTree = "<group>"; };
+		BC96A0A41C0D766700BC4F07 /* start.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = start.tmx; sourceTree = "<group>"; };
+		BC96A0A51C0D766700BC4F07 /* penumbraTexture.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = penumbraTexture.png; sourceTree = "<group>"; };
+		BC96A0A61C0D766700BC4F07 /* pointLightTexture.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pointLightTexture.png; sourceTree = "<group>"; };
+		BC96A0A81C0D766700BC4F07 /* scenes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = scenes.txt; sourceTree = "<group>"; };
+		BC96A0A91C0D766700BC4F07 /* temp.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = temp.txt; sourceTree = "<group>"; };
+		BC96A0AB1C0D766700BC4F07 /* book.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = book.png; sourceTree = "<group>"; };
+		BC96A0AC1C0D766700BC4F07 /* cursor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cursor.png; sourceTree = "<group>"; };
+		BC96A0AD1C0D766700BC4F07 /* face_luke.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = face_luke.png; sourceTree = "<group>"; };
+		BC96A0AE1C0D766700BC4F07 /* face_resdin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = face_resdin.png; sourceTree = "<group>"; };
+		BC96A0AF1C0D766700BC4F07 /* face_temp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = face_temp.png; sourceTree = "<group>"; };
+		BC96A0B01C0D766700BC4F07 /* face_warren.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = face_warren.png; sourceTree = "<group>"; };
+		BC96A0B11C0D766700BC4F07 /* house1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = house1.png; sourceTree = "<group>"; };
+		BC96A0B21C0D766700BC4F07 /* LustrousLegacyLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LustrousLegacyLogo.png; sourceTree = "<group>"; };
+		BC96A0B31C0D766700BC4F07 /* playerSprite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerSprite.png; sourceTree = "<group>"; };
+		BC96A0B41C0D766700BC4F07 /* sprite_luke.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sprite_luke.png; sourceTree = "<group>"; };
+		BC96A0B51C0D766700BC4F07 /* sprite_npc1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sprite_npc1.png; sourceTree = "<group>"; };
+		BC96A0B61C0D766700BC4F07 /* sprite_resdin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sprite_resdin.png; sourceTree = "<group>"; };
+		BC96A0B71C0D766700BC4F07 /* tempSprite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tempSprite.png; sourceTree = "<group>"; };
+		BC96A0B81C0D766700BC4F07 /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
+		BC96A0B91C0D766700BC4F07 /* warren_house.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = warren_house.png; sourceTree = "<group>"; };
+		BC96A0BA1C0D766700BC4F07 /* unshadowShader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = unshadowShader.frag; sourceTree = "<group>"; };
+		BC96A0BB1C0D766700BC4F07 /* unshadowShader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = unshadowShader.vert; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BC3B14641BFAC74F00F8A9C9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BC96A0941C0D738500BC4F07 /* OpenGL.framework in Frameworks */,
+				BC3B14C71BFAC7C800F8A9C9 /* libz.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		BC3B145E1BFAC74F00F8A9C9 = {
+			isa = PBXGroup;
+			children = (
+				BC96A0931C0D738500BC4F07 /* OpenGL.framework */,
+				BC3B14C61BFAC7C800F8A9C9 /* libz.dylib */,
+				BC3B146A1BFAC74F00F8A9C9 /* LustrousLegacy */,
+				BC3B14691BFAC74F00F8A9C9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BC3B14691BFAC74F00F8A9C9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BC3B14681BFAC74F00F8A9C9 /* LustrousLegacy.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BC3B146A1BFAC74F00F8A9C9 /* LustrousLegacy */ = {
+			isa = PBXGroup;
+			children = (
+				BC8A93E71C0D622B00793586 /* source */,
+				BC96A0951C0D766700BC4F07 /* Resources */,
+				BC3B146B1BFAC74F00F8A9C9 /* Supporting Files */,
+			);
+			path = LustrousLegacy;
+			sourceTree = "<group>";
+		};
+		BC3B146B1BFAC74F00F8A9C9 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				BC8A93F21C0D622B00793586 /* LustrousLegacy-Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BC8A93E71C0D622B00793586 /* source */ = {
+			isa = PBXGroup;
+			children = (
+				BC8A93E81C0D622B00793586 /* cursor.cpp */,
+				BC8A93E91C0D622B00793586 /* cursor.h */,
+				BC8A93ED1C0D622B00793586 /* Enums.h */,
+				BC8A93EE1C0D622B00793586 /* Event.cpp */,
+				BC8A93EF1C0D622B00793586 /* Event.h */,
+				BC8A93F01C0D622B00793586 /* fader.cpp */,
+				BC8A93F11C0D622B00793586 /* fader.h */,
+				BC8A93F31C0D622B00793586 /* main.cpp */,
+				BC8A93F41C0D622B00793586 /* NPC.cpp */,
+				BC8A93F51C0D622B00793586 /* NPC.h */,
+				BC8A93F61C0D622B00793586 /* pause.cpp */,
+				BC8A93F71C0D622B00793586 /* pause.h */,
+				BC8A93F81C0D622B00793586 /* player.cpp */,
+				BC8A93F91C0D622B00793586 /* player.h */,
+				BC8A93FA1C0D622B00793586 /* SceneReader.cpp */,
+				BC8A93FB1C0D622B00793586 /* SceneReader.h */,
+				BC8A93FC1C0D622B00793586 /* SceneUtility.cpp */,
+				BC8A93FD1C0D622B00793586 /* SceneUtility.h */,
+				BC8A93FE1C0D622B00793586 /* Textbox.cpp */,
+				BC8A93FF1C0D622B00793586 /* textbox.h */,
+				BC8A94001C0D622B00793586 /* title.cpp */,
+				BC8A94011C0D622B00793586 /* title.h */,
+				BC8A93EA1C0D622B00793586 /* debug */,
+				BC96A08C1C0D6D6E00BC4F07 /* LTBL */,
+				BC8A94021C0D622B00793586 /* TMXloader */,
+			);
+			path = source;
+			sourceTree = "<group>";
+		};
+		BC8A93EA1C0D622B00793586 /* debug */ = {
+			isa = PBXGroup;
+			children = (
+				BC8A93EB1C0D622B00793586 /* debug.cpp */,
+				BC8A93EC1C0D622B00793586 /* debug.h */,
+			);
+			path = debug;
+			sourceTree = "<group>";
+		};
+		BC8A94021C0D622B00793586 /* TMXloader */ = {
+			isa = PBXGroup;
+			children = (
+				BC8A94031C0D622B00793586 /* DebugShape.cpp */,
+				BC8A94041C0D622B00793586 /* MapLayer.cpp */,
+				BC8A94051C0D622B00793586 /* MapLoaderPrivate.cpp */,
+				BC8A94061C0D622B00793586 /* MapLoaderPublic.cpp */,
+				BC8A94071C0D622B00793586 /* MapObject.cpp */,
+				BC8A94081C0D622B00793586 /* pugixml */,
+				BC8A940A1C0D622B00793586 /* QuadTreeNode.cpp */,
+			);
+			path = TMXloader;
+			sourceTree = "<group>";
+		};
+		BC8A94081C0D622B00793586 /* pugixml */ = {
+			isa = PBXGroup;
+			children = (
+				BC8A94091C0D622B00793586 /* pugixml.cpp */,
+			);
+			path = pugixml;
+			sourceTree = "<group>";
+		};
+		BC96A08C1C0D6D6E00BC4F07 /* LTBL */ = {
+			isa = PBXGroup;
+			children = (
+				BC96A07A1C0D6CE500BC4F07 /* DynamicQuadtree.cpp */,
+				BC96A07B1C0D6CE500BC4F07 /* Quadtree.cpp */,
+				BC96A07C1C0D6CE500BC4F07 /* QuadtreeN.cpp */,
+				BC96A07D1C0D6CE500BC4F07 /* QuadtreeOccupant.cpp */,
+				BC96A07E1C0D6CE500BC4F07 /* StaticQuadtree.cpp */,
+				BC96A07F1C0D6CE500BC4F07 /* LightDirectionEmission.cpp */,
+				BC96A0801C0D6CE500BC4F07 /* LightPointEmission.cpp */,
+				BC96A0811C0D6CE500BC4F07 /* LightShape.cpp */,
+				BC96A0821C0D6CE500BC4F07 /* LightSystem.cpp */,
+			);
+			name = LTBL;
+			sourceTree = "<group>";
+		};
+		BC96A0951C0D766700BC4F07 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				BC96A0961C0D766700BC4F07 /* audio */,
+				BC96A09D1C0D766700BC4F07 /* directionLightTexture.png */,
+				BC96A09E1C0D766700BC4F07 /* font */,
+				BC96A0A01C0D766700BC4F07 /* lightOverShapeShader.frag */,
+				BC96A0A11C0D766700BC4F07 /* lightOverShapeShader.vert */,
+				BC96A0A21C0D766700BC4F07 /* maps */,
+				BC96A0A51C0D766700BC4F07 /* penumbraTexture.png */,
+				BC96A0A61C0D766700BC4F07 /* pointLightTexture.png */,
+				BC96A0A71C0D766700BC4F07 /* script */,
+				BC96A0AA1C0D766700BC4F07 /* textures */,
+				BC96A0BA1C0D766700BC4F07 /* unshadowShader.frag */,
+				BC96A0BB1C0D766700BC4F07 /* unshadowShader.vert */,
+			);
+			name = Resources;
+			path = resources;
+			sourceTree = "<group>";
+		};
+		BC96A0961C0D766700BC4F07 /* audio */ = {
+			isa = PBXGroup;
+			children = (
+				BC96A0971C0D766700BC4F07 /* select_blip.wav */,
+				BC96A0981C0D766700BC4F07 /* test.ogg */,
+				BC96A0991C0D766700BC4F07 /* test_sound.wav */,
+				BC96A09A1C0D766700BC4F07 /* text_blip.wav */,
+				BC96A09B1C0D766700BC4F07 /* text_blip2.wav */,
+				BC96A09C1C0D766700BC4F07 /* text_blip3.wav */,
+			);
+			path = audio;
+			sourceTree = "<group>";
+		};
+		BC96A09E1C0D766700BC4F07 /* font */ = {
+			isa = PBXGroup;
+			children = (
+				BC96A09F1C0D766700BC4F07 /* Vera.ttf */,
+			);
+			path = font;
+			sourceTree = "<group>";
+		};
+		BC96A0A21C0D766700BC4F07 /* maps */ = {
+			isa = PBXGroup;
+			children = (
+				BC96A0A31C0D766700BC4F07 /* 64_forest_tileset.png */,
+				BC96A0A41C0D766700BC4F07 /* start.tmx */,
+			);
+			path = maps;
+			sourceTree = "<group>";
+		};
+		BC96A0A71C0D766700BC4F07 /* script */ = {
+			isa = PBXGroup;
+			children = (
+				BC96A0A81C0D766700BC4F07 /* scenes.txt */,
+				BC96A0A91C0D766700BC4F07 /* temp.txt */,
+			);
+			path = script;
+			sourceTree = "<group>";
+		};
+		BC96A0AA1C0D766700BC4F07 /* textures */ = {
+			isa = PBXGroup;
+			children = (
+				BC96A0AB1C0D766700BC4F07 /* book.png */,
+				BC96A0AC1C0D766700BC4F07 /* cursor.png */,
+				BC96A0AD1C0D766700BC4F07 /* face_luke.png */,
+				BC96A0AE1C0D766700BC4F07 /* face_resdin.png */,
+				BC96A0AF1C0D766700BC4F07 /* face_temp.png */,
+				BC96A0B01C0D766700BC4F07 /* face_warren.png */,
+				BC96A0B11C0D766700BC4F07 /* house1.png */,
+				BC96A0B21C0D766700BC4F07 /* LustrousLegacyLogo.png */,
+				BC96A0B31C0D766700BC4F07 /* playerSprite.png */,
+				BC96A0B41C0D766700BC4F07 /* sprite_luke.png */,
+				BC96A0B51C0D766700BC4F07 /* sprite_npc1.png */,
+				BC96A0B61C0D766700BC4F07 /* sprite_resdin.png */,
+				BC96A0B71C0D766700BC4F07 /* tempSprite.png */,
+				BC96A0B81C0D766700BC4F07 /* title.png */,
+				BC96A0B91C0D766700BC4F07 /* warren_house.png */,
+			);
+			path = textures;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BC3B14671BFAC74F00F8A9C9 /* LustrousLegacy */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BC3B147D1BFAC74F00F8A9C9 /* Build configuration list for PBXNativeTarget "LustrousLegacy" */;
+			buildPhases = (
+				BC3B14631BFAC74F00F8A9C9 /* Sources */,
+				BC3B14641BFAC74F00F8A9C9 /* Frameworks */,
+				BC3B14651BFAC74F00F8A9C9 /* Resources */,
+				BC3B14661BFAC74F00F8A9C9 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LustrousLegacy;
+			productName = RPG_Town;
+			productReference = BC3B14681BFAC74F00F8A9C9 /* LustrousLegacy.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BC3B145F1BFAC74F00F8A9C9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0620;
+				ORGANIZATIONNAME = "Audrey Lai";
+				TargetAttributes = {
+					BC3B14671BFAC74F00F8A9C9 = {
+						CreatedOnToolsVersion = 6.2;
+					};
+				};
+			};
+			buildConfigurationList = BC3B14621BFAC74F00F8A9C9 /* Build configuration list for PBXProject "LustrousLegacy" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = BC3B145E1BFAC74F00F8A9C9;
+			productRefGroup = BC3B14691BFAC74F00F8A9C9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BC3B14671BFAC74F00F8A9C9 /* LustrousLegacy */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BC3B14651BFAC74F00F8A9C9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		BC3B14661BFAC74F00F8A9C9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This shell script simply copies required SFML dylibs/frameworks into the application bundle frameworks folder.\n# If you're using static libraries (which is not recommended) you should remove this script from your project.\n\n# SETTINGS\nCMAKE_INSTALL_FRAMEWORK_PREFIX=\"/Library/Frameworks\"\nCMAKE_INSTALL_LIB_PREFIX=\"/usr/local/lib\"\nFRAMEWORKS_FULL_PATH=\"$BUILT_PRODUCTS_DIR/$FRAMEWORKS_FOLDER_PATH/\"\n\n# Are we building a project that uses frameworks or dylibs?\ncase \"$SFML_BINARY_TYPE\" in\n    DYLIBS)\n        frameworks=\"false\"\n        ;;\n    *)\n        frameworks=\"true\"\n        ;;\nesac\n\n# Echoes to stderr\nerror () # $* message to display\n{\n    echo $* 1>&2\n    exit 2\n}\n\nassert () # $1 is a boolean, $2...N is an error message\n{\n    if [ $# -lt 2 ]\n    then\n        error \"Internal error in assert: not enough args\"\n    fi\n\n    if [ $1 -ne 0 ]\n    then\n        shift\n        error \"$*\"\n    fi\n}\n\nforce_remove () # $@ is some paths\n{\n    test $# -ge 1\n    assert $? \"force_remove() requires at least one parameter\"\n    rm -fr $@\n    assert $? \"couldn't remove $@\"\n}\n\ncopy () # $1 is a source, $2 is a destination\n{\n    test $# -eq 2\n    assert $? \"copy() requires two parameters\"\n    ditto \"$1\" \"$2\"\n    assert $? \"couldn't copy $1 to $2\"\n}\n\nrequire () # $1 is a SFML module like 'system' or 'audio'\n{\n    dest=\"$BUILT_PRODUCTS_DIR/$FRAMEWORKS_FOLDER_PATH/\"\n\n    if [ -z \"$1\" ]\n    then\n        error \"require() requires one parameter!\"\n    else\n        # clean potentially old stuff\n        force_remove \"$dest/libsfml-$1\"*\n        force_remove \"$dest/sfml-$1.framework\"\n\n        # copy SFML libraries\n        if [ \"$frameworks\" = \"true\" ]\n        then\n            source=\"$CMAKE_INSTALL_FRAMEWORK_PREFIX/sfml-$1.framework\"\n            target=\"sfml-$1.framework\"\n        elif [ \"$SFML_LINK_DYLIBS_SUFFIX\" = \"-d\" ]\n        then\n            source=\"$CMAKE_INSTALL_LIB_PREFIX/libsfml-$1-d.dylib\"\n            target=\"`readlink $source`\"\n        else\n            source=\"$CMAKE_INSTALL_LIB_PREFIX/libsfml-$1.dylib\"\n            target=\"`readlink $source`\"\n        fi\n\n        copy \"$source\" \"$dest/$target\"\n\n        # copy extra dependencies\n        if [ \"$1\" = \"audio\" ]\n        then\n            # copy \"FLAC\" \"ogg\" \"vorbis\" \"vorbisenc\" \"vorbisfile\" \"OpenAL\" frameworks too\n            for f in \"FLAC\" \"ogg\" \"vorbis\" \"vorbisenc\" \"vorbisfile\" \"OpenAL\"\n            do\n                copy \"$CMAKE_INSTALL_FRAMEWORK_PREFIX/$f.framework\" \"$dest/$f.framework\"\n            done\n        elif [ \"$1\" = \"graphics\" ]\n        then\n            copy \"$CMAKE_INSTALL_FRAMEWORK_PREFIX/freetype.framework\" \"$dest/freetype.framework\"\n        fi\n    fi\n}\n\nif [ -n \"$SFML_SYSTEM\" ]\nthen\n    require \"system\"\nfi\n\nif [ -n \"$SFML_AUDIO\" ]\nthen\n    require \"audio\"\nfi\n\nif [ -n \"$SFML_NETWORK\" ]\nthen\n    require \"network\"\nfi\n\nif [ -n \"$SFML_WINDOW\" ]\nthen\n    require \"window\"\nfi\n\nif [ -n \"$SFML_GRAPHICS\" ]\nthen\n    require \"graphics\"\nfi\n\n                ";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BC3B14631BFAC74F00F8A9C9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BC96A0831C0D6CE500BC4F07 /* DynamicQuadtree.cpp in Sources */,
+				BC96A0841C0D6CE500BC4F07 /* Quadtree.cpp in Sources */,
+				BC96A0851C0D6CE500BC4F07 /* QuadtreeN.cpp in Sources */,
+				BC96A0861C0D6CE500BC4F07 /* QuadtreeOccupant.cpp in Sources */,
+				BC96A0871C0D6CE500BC4F07 /* StaticQuadtree.cpp in Sources */,
+				BC96A0881C0D6CE500BC4F07 /* LightDirectionEmission.cpp in Sources */,
+				BC96A0891C0D6CE500BC4F07 /* LightPointEmission.cpp in Sources */,
+				BC96A08A1C0D6CE500BC4F07 /* LightShape.cpp in Sources */,
+				BC96A08B1C0D6CE500BC4F07 /* LightSystem.cpp in Sources */,
+				BC8A941C1C0D622B00793586 /* MapObject.cpp in Sources */,
+				BC8A94141C0D622B00793586 /* SceneReader.cpp in Sources */,
+				BC8A940B1C0D622B00793586 /* cursor.cpp in Sources */,
+				BC8A940C1C0D622B00793586 /* debug.cpp in Sources */,
+				BC8A94151C0D622B00793586 /* SceneUtility.cpp in Sources */,
+				BC8A941A1C0D622B00793586 /* MapLoaderPrivate.cpp in Sources */,
+				BC8A940D1C0D622B00793586 /* Event.cpp in Sources */,
+				BC8A94101C0D622B00793586 /* main.cpp in Sources */,
+				BC8A94191C0D622B00793586 /* MapLayer.cpp in Sources */,
+				BC8A941E1C0D622B00793586 /* QuadTreeNode.cpp in Sources */,
+				BC8A94171C0D622B00793586 /* title.cpp in Sources */,
+				BC8A94131C0D622B00793586 /* player.cpp in Sources */,
+				BC8A94121C0D622B00793586 /* pause.cpp in Sources */,
+				BC8A94181C0D622B00793586 /* DebugShape.cpp in Sources */,
+				BC8A940E1C0D622B00793586 /* fader.cpp in Sources */,
+				BC8A941B1C0D622B00793586 /* MapLoaderPublic.cpp in Sources */,
+				BC8A941D1C0D622B00793586 /* pugixml.cpp in Sources */,
+				BC8A94161C0D622B00793586 /* Textbox.cpp in Sources */,
+				BC8A94111C0D622B00793586 /* NPC.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		BC3B147B1BFAC74F00F8A9C9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					i386,
+					x86_64,
+				);
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks/,
+					"$(inherited)",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include/,
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib/,
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"$(SFML_SYSTEM)",
+					"$(SFML_WINDOW)",
+					"$(SFML_GRAPHICS)",
+					"$(SFML_AUDIO)",
+					"$(SFML_NETWORK)",
+				);
+				SFML_AUDIO = "$(SFML_LINK_PREFIX) sfml-audio$(SFML_LINK_SUFFIX)";
+				SFML_BINARY_TYPE = FRAMEWORKS;
+				SFML_GRAPHICS = "$(SFML_LINK_PREFIX) sfml-graphics$(SFML_LINK_SUFFIX)";
+				SFML_LINK_DYLIBS_PREFIX = "-l";
+				SFML_LINK_DYLIBS_SUFFIX = "";
+				SFML_LINK_FRAMEWORKS_PREFIX = "-framework";
+				SFML_LINK_FRAMEWORKS_SUFFIX = "";
+				SFML_LINK_PREFIX = "$(SFML_LINK_$(SFML_BINARY_TYPE)_PREFIX)";
+				SFML_LINK_SUFFIX = "$(SFML_LINK_$(SFML_BINARY_TYPE)_SUFFIX)";
+				SFML_NETWORK = "$(SFML_LINK_PREFIX) sfml-network$(SFML_LINK_SUFFIX)";
+				SFML_SYSTEM = "$(SFML_LINK_PREFIX) sfml-system$(SFML_LINK_SUFFIX)";
+				SFML_WINDOW = "$(SFML_LINK_PREFIX) sfml-window$(SFML_LINK_SUFFIX)";
+				SUPPORTED_PLATFORMS = macosx;
+				USER_HEADER_SEARCH_PATHS = "/Users/audreylai/XcodeTutorials/LustrousLegacy/LustrousLegacy/source /Users/audreylai/Desktop/sfml-tmxloader-master/include/";
+			};
+			name = Debug;
+		};
+		BC3B147C1BFAC74F00F8A9C9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					i386,
+					x86_64,
+				);
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks/,
+					"$(inherited)",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include/,
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib/,
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"$(SFML_SYSTEM)",
+					"$(SFML_WINDOW)",
+					"$(SFML_GRAPHICS)",
+					"$(SFML_AUDIO)",
+					"$(SFML_NETWORK)",
+				);
+				SFML_AUDIO = "$(SFML_LINK_PREFIX) sfml-audio$(SFML_LINK_SUFFIX)";
+				SFML_BINARY_TYPE = FRAMEWORKS;
+				SFML_GRAPHICS = "$(SFML_LINK_PREFIX) sfml-graphics$(SFML_LINK_SUFFIX)";
+				SFML_LINK_DYLIBS_PREFIX = "-l";
+				SFML_LINK_DYLIBS_SUFFIX = "";
+				SFML_LINK_FRAMEWORKS_PREFIX = "-framework";
+				SFML_LINK_FRAMEWORKS_SUFFIX = "";
+				SFML_LINK_PREFIX = "$(SFML_LINK_$(SFML_BINARY_TYPE)_PREFIX)";
+				SFML_LINK_SUFFIX = "$(SFML_LINK_$(SFML_BINARY_TYPE)_SUFFIX)";
+				SFML_NETWORK = "$(SFML_LINK_PREFIX) sfml-network$(SFML_LINK_SUFFIX)";
+				SFML_SYSTEM = "$(SFML_LINK_PREFIX) sfml-system$(SFML_LINK_SUFFIX)";
+				SFML_WINDOW = "$(SFML_LINK_PREFIX) sfml-window$(SFML_LINK_SUFFIX)";
+				SUPPORTED_PLATFORMS = macosx;
+				USER_HEADER_SEARCH_PATHS = "/Users/audreylai/XcodeTutorials/LustrousLegacy/LustrousLegacy/source /Users/audreylai/Desktop/sfml-tmxloader-master/include/";
+			};
+			name = Release;
+		};
+		BC3B147E1BFAC74F00F8A9C9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "RPG_Town/LustrousLegacy-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				PRODUCT_NAME = LustrousLegacy;
+			};
+			name = Debug;
+		};
+		BC3B147F1BFAC74F00F8A9C9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "RPG_Town/LustrousLegacy-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				PRODUCT_NAME = LustrousLegacy;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BC3B14621BFAC74F00F8A9C9 /* Build configuration list for PBXProject "LustrousLegacy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BC3B147B1BFAC74F00F8A9C9 /* Debug */,
+				BC3B147C1BFAC74F00F8A9C9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BC3B147D1BFAC74F00F8A9C9 /* Build configuration list for PBXNativeTarget "LustrousLegacy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BC3B147E1BFAC74F00F8A9C9 /* Debug */,
+				BC3B147F1BFAC74F00F8A9C9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BC3B145F1BFAC74F00F8A9C9 /* Project object */;
+}

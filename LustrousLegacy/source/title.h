@@ -22,7 +22,7 @@ namespace sf {
 		void change_selection(int num_of_selections, int up_or_down);
 		int getSelection();
 		void setPosition(sf::Vector2f pos);
-		sf::Vector2f Title::getPosition();
+		sf::Vector2f getPosition();
 		void animate(float elapsedTime);
 
 	private:
