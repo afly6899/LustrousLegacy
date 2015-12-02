@@ -70,6 +70,12 @@
 		BCA748321C0EB27000FB3F01 /* unshadowShader.vert in Resources */ = {isa = PBXBuildFile; fileRef = BCA747F51C0EB27000FB3F01 /* unshadowShader.vert */; };
 		BCA748341C0EB28800FB3F01 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA748331C0EB28800FB3F01 /* libz.dylib */; };
 		BCA748361C0EC90300FB3F01 /* Math.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BCA748351C0EC90300FB3F01 /* Math.cpp */; };
+		BCA7483C1C0ED34400FB3F01 /* start.tmx.bv3076 in Resources */ = {isa = PBXBuildFile; fileRef = BCA748371C0ED34400FB3F01 /* start.tmx.bv3076 */; };
+		BCA7483D1C0ED34400FB3F01 /* start.tmx.Hp1020 in Resources */ = {isa = PBXBuildFile; fileRef = BCA748381C0ED34400FB3F01 /* start.tmx.Hp1020 */; };
+		BCA7483E1C0ED34400FB3F01 /* start.tmx.JI3076 in Resources */ = {isa = PBXBuildFile; fileRef = BCA748391C0ED34400FB3F01 /* start.tmx.JI3076 */; };
+		BCA7483F1C0ED34400FB3F01 /* start.tmx.MD3076 in Resources */ = {isa = PBXBuildFile; fileRef = BCA7483A1C0ED34400FB3F01 /* start.tmx.MD3076 */; };
+		BCA748401C0ED34400FB3F01 /* start.tmx.zF3076 in Resources */ = {isa = PBXBuildFile; fileRef = BCA7483B1C0ED34400FB3F01 /* start.tmx.zF3076 */; };
+		BCA748421C0ED41200FB3F01 /* LL_Town_Theme.wav in Resources */ = {isa = PBXBuildFile; fileRef = BCA748411C0ED41200FB3F01 /* LL_Town_Theme.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -159,6 +165,12 @@
 		BCA747F51C0EB27000FB3F01 /* unshadowShader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = unshadowShader.vert; sourceTree = "<group>"; };
 		BCA748331C0EB28800FB3F01 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		BCA748351C0EC90300FB3F01 /* Math.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Math.cpp; path = LustrousLegacy/source/ltbl/Math.cpp; sourceTree = SOURCE_ROOT; };
+		BCA748371C0ED34400FB3F01 /* start.tmx.bv3076 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = start.tmx.bv3076; sourceTree = "<group>"; };
+		BCA748381C0ED34400FB3F01 /* start.tmx.Hp1020 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = start.tmx.Hp1020; sourceTree = "<group>"; };
+		BCA748391C0ED34400FB3F01 /* start.tmx.JI3076 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = start.tmx.JI3076; sourceTree = "<group>"; };
+		BCA7483A1C0ED34400FB3F01 /* start.tmx.MD3076 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = start.tmx.MD3076; sourceTree = "<group>"; };
+		BCA7483B1C0ED34400FB3F01 /* start.tmx.zF3076 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = start.tmx.zF3076; sourceTree = "<group>"; };
+		BCA748411C0ED41200FB3F01 /* LL_Town_Theme.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = LL_Town_Theme.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -335,6 +347,7 @@
 		BCA747D01C0EB27000FB3F01 /* audio */ = {
 			isa = PBXGroup;
 			children = (
+				BCA748411C0ED41200FB3F01 /* LL_Town_Theme.wav */,
 				BCA747D11C0EB27000FB3F01 /* select_blip.wav */,
 				BCA747D21C0EB27000FB3F01 /* test.ogg */,
 				BCA747D31C0EB27000FB3F01 /* test_sound.wav */,
@@ -356,6 +369,11 @@
 		BCA747DC1C0EB27000FB3F01 /* maps */ = {
 			isa = PBXGroup;
 			children = (
+				BCA748371C0ED34400FB3F01 /* start.tmx.bv3076 */,
+				BCA748381C0ED34400FB3F01 /* start.tmx.Hp1020 */,
+				BCA748391C0ED34400FB3F01 /* start.tmx.JI3076 */,
+				BCA7483A1C0ED34400FB3F01 /* start.tmx.MD3076 */,
+				BCA7483B1C0ED34400FB3F01 /* start.tmx.zF3076 */,
 				BCA747DD1C0EB27000FB3F01 /* 64_forest_tileset.png */,
 				BCA747DE1C0EB27000FB3F01 /* start.tmx */,
 			);
@@ -457,12 +475,15 @@
 				BCA7482D1C0EB27000FB3F01 /* sprite_resdin.png in Resources */,
 				BCA748271C0EB27000FB3F01 /* face_warren.png in Resources */,
 				BCA748201C0EB27000FB3F01 /* scenes.txt in Resources */,
+				BCA7483F1C0ED34400FB3F01 /* start.tmx.MD3076 in Resources */,
 				BCA748121C0EB27000FB3F01 /* select_blip.wav in Resources */,
 				BCA748191C0EB27000FB3F01 /* Vera.ttf in Resources */,
 				BCA748301C0EB27000FB3F01 /* warren_house.png in Resources */,
+				BCA7483E1C0ED34400FB3F01 /* start.tmx.JI3076 in Resources */,
 				BCA748221C0EB27000FB3F01 /* book.png in Resources */,
 				BCA748141C0EB27000FB3F01 /* test_sound.wav in Resources */,
 				BCA748321C0EB27000FB3F01 /* unshadowShader.vert in Resources */,
+				BCA748401C0ED34400FB3F01 /* start.tmx.zF3076 in Resources */,
 				BCA748161C0EB27000FB3F01 /* text_blip2.wav in Resources */,
 				BCA7482E1C0EB27000FB3F01 /* tempSprite.png in Resources */,
 				BCA748171C0EB27000FB3F01 /* text_blip3.wav in Resources */,
@@ -480,7 +501,10 @@
 				BCA748231C0EB27000FB3F01 /* cursor.png in Resources */,
 				BCA748211C0EB27000FB3F01 /* temp.txt in Resources */,
 				BCA7481D1C0EB27000FB3F01 /* start.tmx in Resources */,
+				BCA748421C0ED41200FB3F01 /* LL_Town_Theme.wav in Resources */,
 				BCA748251C0EB27000FB3F01 /* face_resdin.png in Resources */,
+				BCA7483D1C0ED34400FB3F01 /* start.tmx.Hp1020 in Resources */,
+				BCA7483C1C0ED34400FB3F01 /* start.tmx.bv3076 in Resources */,
 				BCA7481E1C0EB27000FB3F01 /* penumbraTexture.png in Resources */,
 				BCA748131C0EB27000FB3F01 /* test.ogg in Resources */,
 			);
