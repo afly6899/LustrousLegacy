@@ -54,7 +54,12 @@ enum Source {
 };
 
 enum Fade {
+<<<<<<< HEAD
     In = 0,
     Out = 1
+=======
+	In = 0,
+	Out = 1
+>>>>>>> origin/Prototype_For_VGDC_Presentation
 };
 #endif

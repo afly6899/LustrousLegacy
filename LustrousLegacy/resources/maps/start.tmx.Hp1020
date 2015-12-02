@@ -5459,7 +5459,7 @@
  <objectgroup name="Events">
   <object id="24" name="Start" x="704" y="960" width="64" height="64"/>
   <object id="86" name="Luke1" x="2176" y="1216" width="64" height="64"/>
-  <object id="88" name="Luke2" x="2240" y="1280" width="64" height="64"/>
+  <object id="88" x="2240" y="1280" width="64" height="64"/>
  </objectgroup>
  <layer name="Overlay" width="45" height="30">
   <data>
