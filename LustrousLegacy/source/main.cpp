@@ -186,10 +186,10 @@ int main(int argc, char** argv) {
 	*********************************************************************/
 
 	sf::Music music;
-	if (!music.openFromFile("resources/audio/test.ogg"))
+	if (!music.openFromFile("resources/audio/test.wav"))
 		return -1; // error
 
-	music.setVolume(10);
+	music.setVolume(50);
 
 	/*********************************************************************
 	SOUNDS
@@ -347,6 +347,10 @@ int main(int argc, char** argv) {
 			}
 		}
 	}
+
+		if ((music.getStatus() == sf::Music::Stopped) && !title && !pause) {
+			music.play();
+		}
 
 		// START Get debug information:
 		textDebug.setString("FPS: " + to_string(1 / gameClock.getElapsedTime().asSeconds()).substr(0, 5) +
