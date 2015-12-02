@@ -10,3 +10,5 @@ Lustrous Legacy is a game project being developed for the Video Game and Develop
 - Diego Guzman _(Designer)_
 - Mark Pareja _(Artist)_
 - Kristina Wong _(Sound Engineer)_
+
+Video demonstration of Fall Quarter prototype: https://www.youtube.com/watch?v=X5nR9fbxPGw
