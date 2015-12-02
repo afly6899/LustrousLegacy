@@ -588,7 +588,7 @@
 				SFML_SYSTEM = "$(SFML_LINK_PREFIX) sfml-system$(SFML_LINK_SUFFIX)";
 				SFML_WINDOW = "$(SFML_LINK_PREFIX) sfml-window$(SFML_LINK_SUFFIX)";
 				SUPPORTED_PLATFORMS = macosx;
-				USER_HEADER_SEARCH_PATHS = "/Users/audreylai/Desktop/sfml-tmxloader-master/include /usr/include";
+				USER_HEADER_SEARCH_PATHS = /usr/include;
 			};
 			name = Debug;
 		};
@@ -636,7 +636,7 @@
 				SFML_SYSTEM = "$(SFML_LINK_PREFIX) sfml-system$(SFML_LINK_SUFFIX)";
 				SFML_WINDOW = "$(SFML_LINK_PREFIX) sfml-window$(SFML_LINK_SUFFIX)";
 				SUPPORTED_PLATFORMS = macosx;
-				USER_HEADER_SEARCH_PATHS = "/Users/audreylai/Desktop/sfml-tmxloader-master/include /usr/include";
+				USER_HEADER_SEARCH_PATHS = /usr/include;
 			};
 			name = Release;
 		};
