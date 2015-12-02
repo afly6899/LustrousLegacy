@@ -17,6 +17,7 @@ enum Direction {
 	West, 
 	East, 
 	North,
+//    NPC, // so Event knows that we're going to an NPC
 	Null
 };
 

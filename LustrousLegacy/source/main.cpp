@@ -35,7 +35,7 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "fader.h"
 #include "Event.h"
 #include "debug/debug.h"
-//#include <ltbl/lighting/LightSystem.h>
+#include <ltbl/lighting/LightSystem.h>
 #include <map>
 using namespace std;
 
@@ -107,7 +107,7 @@ int main(int argc, char** argv) {
 
 	bool debug = false;
 	bool textbox = false;
-	bool player_event = true;
+	bool player_event = false;
 	bool is_moving = false;
 	bool collision = false;
 	bool move_flag = false;
@@ -116,11 +116,25 @@ int main(int argc, char** argv) {
 	bool intro = false;
 
 	// Audrey's trying to do game event stuff
+    bool starting_movement = true; // DELETE LATER - just testing the start movement!!!
 	bool event_start = false; // only turns true if press Enter at that start box thing
-							  // once true, should have the character move down 2 spaces
-							  //    int start_pos, end_pos; //once it reaches 2, stop event
-							  //    Direction event_move = Direction::South;
-	Event tutorial = { { Direction::South,6 } ,{ Direction::East,1 } ,{ Direction::North,0 } };
+    Event tutorial = { { Direction::South,4 } ,{ Direction::West,1 } ,{ Direction::North,0 } };
+	Event start = { { Direction::South,2 } ,{ Direction::East,2 } ,{ Direction::North,0 } };
+    
+    sf::Texture resdinTexture;
+    if (!resdinTexture.loadFromFile("resources/textures/sprite_resdin.png")) {
+        cerr << "Texture Error" << endl;
+    }
+    sf::Texture lukeTexture;
+    if (!lukeTexture.loadFromFile("resources/textures/sprite_luke.png")) {
+        cerr << "Texture Error" << endl;
+    }
+    
+    NPC resdinNPC(resdinTexture);
+    resdinNPC.setPosition(tile(12, 10));
+    
+    NPC lukeNPC(lukeTexture);
+    lukeNPC.setPosition(tile(11, 14));
 
 	/*********************************************************************
 	TEXTURES
@@ -133,10 +147,10 @@ int main(int argc, char** argv) {
 	}
 
 	// NPC TEXTURE
-	sf::Texture npcTexture;
-	if (!npcTexture.loadFromFile("resources/textures/sprite_resdin.png")) {
-		cerr << "Texture Error" << endl;
-	}
+//	sf::Texture npcTexture;
+//	if (!npcTexture.loadFromFile("resources/textures/sprite_resdin.png")) {
+//		cerr << "Texture Error" << endl;
+//	}
 
 	// WARREN FACE TEXTURE
 	sf::Texture pfTexture;
@@ -259,8 +273,8 @@ int main(int argc, char** argv) {
 	SceneReader* reader = new SceneReader("resources/script/scenes.txt", "Intro");
 	Fader sysFader;
 	Textbox* introTextbox = nullptr;
-	NPC tempNPC(npcTexture);
-	tempNPC.setPosition(tile(11, 14));
+//	NPC tempNPC(npcTexture);
+//	tempNPC.setPosition(tile(11, 14));
 	NPC book(bookTexture);
 
 	/*********************************************************************
@@ -279,18 +293,18 @@ int main(int argc, char** argv) {
 	pointTexture.loadFromFile("resources/pointLightTexture.png");
 	pointTexture.setSmooth(true);
 
-//	ltbl::LightSystem ls;
-//	ls.create(sf::FloatRect(-1000.0f, -1000.0f, 1000.0f, 1000.0f), window.getSize(), penumbraTexture, unshadowShader, lightOverShapeShader);
-//	
-//	std::shared_ptr<ltbl::LightPointEmission> light = std::make_shared<ltbl::LightPointEmission>();
-//
-//	light->_emissionSprite.setOrigin(sf::Vector2f(pointTexture.getSize().x * 0.5f, pointTexture.getSize().y * 0.5f));
-//	light->_emissionSprite.setTexture(pointTexture);
-//	light->_emissionSprite.setScale(sf::Vector2f(20.0f, 20.0f));
-//	light->_emissionSprite.setColor(sf::Color(255, 230, 200));
-//	light->_emissionSprite.setPosition(sf::Vector2f(400, 300)); // This is where the shadows emanate from relative to the sprite
-//
-//	ls.addLight(light);
+	ltbl::LightSystem ls;
+	ls.create(sf::FloatRect(-1000.0f, -1000.0f, 1000.0f, 1000.0f), window.getSize(), penumbraTexture, unshadowShader, lightOverShapeShader);
+	
+	std::shared_ptr<ltbl::LightPointEmission> light = std::make_shared<ltbl::LightPointEmission>();
+
+	light->_emissionSprite.setOrigin(sf::Vector2f(pointTexture.getSize().x * 0.5f, pointTexture.getSize().y * 0.5f));
+	light->_emissionSprite.setTexture(pointTexture);
+	light->_emissionSprite.setScale(sf::Vector2f(20.0f, 20.0f));
+	light->_emissionSprite.setColor(sf::Color(255, 230, 200));
+	light->_emissionSprite.setPosition(sf::Vector2f(400, 300)); // This is where the shadows emanate from relative to the sprite
+
+	ls.addLight(light);
 	
 	/*********************************************************************
 	BEGIN GAME LOOP:
@@ -322,7 +336,8 @@ int main(int argc, char** argv) {
 					music.stop();
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && player_event) {
-					event_start = true; // this will start the event!!
+                    textbox = true;
+//					event_start = true; // this will start the event!!
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && title) {
 					screenTitle.change_selection(4, Cursor_Direction::Down);
@@ -358,10 +373,10 @@ int main(int argc, char** argv) {
 		// END debug information
 
 		// LIGHTING SYSTEM TEST
-//		ls.render(window.getDefaultView(), unshadowShader, lightOverShapeShader);
+		ls.render(window.getDefaultView(), unshadowShader, lightOverShapeShader);
 		sf::Sprite sprite;
 		sprite.setOrigin(400, 300);
-//		sprite.setTexture(ls.getLightingTexture());
+		sprite.setTexture(ls.getLightingTexture());
 		sf::RenderStates lightRenderStates;
 		lightRenderStates.blendMode = sf::BlendMultiply;
 		// END LIGHTING SYSTEM TEST
@@ -386,8 +401,11 @@ int main(int argc, char** argv) {
 			if (event_start) {
                 // Automatic Movement
 				tutorial.runEvent(event_start, actorPlayer, elapsedTime);
-			}
-			else {
+            }
+            else if (starting_movement) { // TAKE THIS OUT - TESTING START MOVEMENT
+                start.runEvent(starting_movement, actorPlayer, elapsedTime);
+            }
+            else {
 				// Manual Movement
 				actorPlayer.move(player_speed, elapsedTime, collision, move_flag);
 
@@ -396,7 +414,10 @@ int main(int argc, char** argv) {
 
 			// START - COLLISION AND EVENT DETECTION
 			sysCollision(actorPlayer, ml, collision, player_event);
-			// END 
+            if (player_event) {
+                std::cout << "It actually changed!" << std::endl;
+            }
+			// END
 
 			// adjust the camera to be viewing player
 			playerView.setCenter(actorPlayer.getPosition());
@@ -431,7 +452,10 @@ int main(int argc, char** argv) {
 
 		// draw player
 		window.draw(actorPlayer);
-        window.draw(tempNPC);
+//        window.draw(tempNPC);
+        
+        window.draw(resdinNPC);
+        window.draw(lukeNPC);
 
 		// draw top layer of map
 		ml.Draw(window, Layer::Overlay);
@@ -447,22 +471,30 @@ int main(int argc, char** argv) {
 			{
 				textBox.setPosition(playerView.getCenter());
 				textBox.setFontSize(Font_Size::Large);
-				if (!textBox.if_endMessage())
+                if (!textBox.if_endMessage()) {
 					textBox.message(reader->currentMessage().second, reader->currentMessage().first, elapsedTime);
+                    window.draw(textBox);
+                }
 				else
 					{
 						textBox.reset();
-						if (!reader->isEmpty())
+                        if (!reader->isEmpty()) {
 							reader->nextMessage();
+                            window.draw(textBox);
+                        }
 						if (reader->isEmpty()) {
+                            textbox = false;
+                            player_event = true;
+                            event_start = true;
 							delete reader;
-							reader = new SceneReader("resources/script/scenes.txt", "Scene1");
+							reader = new SceneReader("resources/script/scenes.txt", "TalkingToLuke");
 						}
 							
 					}
 			}
-			window.draw(textBox);
+//			window.draw(textBox);
 		}
+        
 		if (pause)
 		{
 			screenPause.setPosition(playerView.getCenter());
@@ -553,7 +585,7 @@ void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& pl
         {
 			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
 			{
-				if ((object->GetName() == "Start"))
+				if ((object->GetName() == "Resdin") || (object->GetName() == "Luke"))
                 {
                     if (sf::Vector2f(object->GetPosition().x + 32, object->GetPosition().y + 32) == player.getPosition()) {
 						player_event = true;

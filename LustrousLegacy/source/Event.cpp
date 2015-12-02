@@ -3,6 +3,8 @@
 #include <iostream>
 #include "Enums.h"
 #include "Event.h"
+#include "player.h"
+#include "NPC.h"
 
 // Defining methods for Event
 
@@ -35,7 +37,6 @@ bool Event::fullEventIsDone() {
 
 bool Event::currentEventIsDone(Player& player) {
     if (current_event.stop_distance == 0) {
-        std::cout << "What is this returning: " << (player.getDirection() == current_event.direction) << std::endl;
         return player.getDirection() == current_event.direction;
     }
     
@@ -51,7 +52,6 @@ bool Event::currentEventIsDone(Player& player) {
 
 void Event::doEvent(Player& player, float elapsedTime) {
     if (current_event.stop_distance == 0) {
-        std::cout << "player's direction is changed to " << current_event.direction << std::endl;
         player.faceDirection(current_event.direction);
     } else {
     player.move(speed, elapsedTime, collision, auto_move, current_event.direction);
@@ -87,3 +87,8 @@ void Event::nextEvent() {
     event_keeper.push(event_chain.front());
     event_chain.pop();
 }
+
+
+//void Event::goToNPC(NPC npc) {
+//    
+//}
