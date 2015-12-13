@@ -39,8 +39,7 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "debug/debug.h"
 using namespace std;
 
-void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_event, bool& event_2_complete);
-void sysPause(bool& pause, bool& intro, bool& title, sf::Music& music, Fader& sysFader);
+void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_event);
 sf::Vector2f tile(int tile_row, int tile_column);
 
 int main() {
@@ -248,9 +247,9 @@ int main() {
 
 	Title screenTitle(titleTexture, bgtitleTexture, cursorTexture, sysFont, soundBleep, window_width, window_height);
 	Pause screenPause(sysFont, window_width, window_width);
-	SceneReader* reader = new SceneReader("resources/script/scenes.txt", "Intro");
+	SceneReader* reader = new SceneReader("resources/script/scenes.txt", "Scene1");
 	Fader sysFader;
-	Textbox* _Textbox = nullptr;
+	Textbox* _Textbox = new Textbox(faceMap, sysFont, soundBleep, window_width, window_height);
 	NPC tempNPC(npcTexture);
 	tempNPC.setPosition(tile(9, 9));
 	NPC book(bookTexture);
@@ -264,14 +263,7 @@ int main() {
 							  //    int start_pos, end_pos; //once it reaches 2, stop event
 							  //    Direction event_move = Direction::South;
 	Event tutorial = { { Direction::South, System::Tilesize * 7} ,{ Direction::East, System::Tilesize * 3 },{ Direction::North,System::Tilesize } };
-	bool fade_out = false;
-	bool fade_in = false;
-	bool scene1_complete = false;
-	bool scene2_complete = false;
-	bool eventmessage1 = false;
-	bool eventmessage2 = false;
-	std::string scene_name;
-
+	std::string scene_name = "Scene1";
 
 	/*********************************************************************
 	LIGHTING SYSTEM TEST
@@ -319,37 +311,36 @@ int main() {
 				window.setSize(sf::Vector2u(800, 600));
 			}
 			else if (event.type == sf::Event::KeyPressed) {
-				sysPause(pause, intro, title, music, sysFader);
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1))
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) &&!title) {
+					pause = !pause;
+					if (pause)
+						music.pause();
+					else
+						music.play();
+				}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1))
 					debug = !debug;
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && title) {
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && title) {
 					screenTitle.change_selection(4, Cursor_Direction::Down);
 				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2))
-					_Textbox->setSpeed(0);
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F3))
-					_Textbox->setSpeed(25);
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F4))
-					_Textbox->setSpeed(50);
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && title) {
-				screenTitle.change_selection(4, Cursor_Direction::Up);
-			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && screenTitle.getSelection() == Selection::Play_Game) {
-				sysFader.resetFader();
-				actorPlayer.setPosition(tile(10, 9));
-				actorPlayer.setDirection(Direction::South);
-				title = false;
-				intro = true;
-				pause = false;
-				_Textbox = new Textbox(faceMap, sysFont, soundBleep, window_width, window_height, true);
-				_Textbox->setPosition(actorPlayer.getPosition());
-				if (!pause) {
-					music.play();
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && title) {
+					screenTitle.change_selection(4, Cursor_Direction::Up);
 				}
-			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && screenTitle.getSelection() == Selection::Exit) {
-				window.close();
-			}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && screenTitle.getSelection() == Selection::Play_Game) {
+					sysFader.resetFader();
+					actorPlayer.setPosition(tile(10, 9));
+					actorPlayer.setDirection(Direction::South);
+					title = false;
+					intro = false;
+					if (!pause) {
+						music.play();
+					}
+				}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && screenTitle.getSelection() == Selection::Exit) {
+					window.close();
+				}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2) && !pause && !title)
+					textbox = !textbox;
 		}
 	}
 
@@ -387,58 +378,36 @@ int main() {
 			aniCounter += elapsedTime;
 		}
 
-		if (fade_in && !sysFader.isComplete() && scene1_complete)
-		{
-			sysFader.setPosition(playerView.getCenter());
-			sysFader.performFade(Fade::In, Speed::Slow);
-
-		}
-		else if (fade_in && sysFader.isComplete()) {
-
-		}
-		if (fade_out && !sysFader.isComplete())
-		{
-			sysFader.performFade(Fade::Out, Speed::Slow);
-			if (sysFader.isComplete()) {
-				sysFader.setPosition(playerView.getCenter());
-				actorPlayer.setPosition(tile(32, 20));
-				fade_out = false;
-				fade_in = true;
-				sysFader.resetFader();
-				event_start = true;
-				tutorial = Event({ {Direction::South, System::Tilesize}, { Direction::East,System::Tilesize * 3 }, { Direction::North, System::Tilesize * 1 } });
-			}
-		}
 		// if the game is not paused, perform normal game actions
-		if (!pause && !title && window.hasFocus() && sysFader.isComplete() && !eventmessage1 && !eventmessage2)
+		if (!pause && !title && window.hasFocus())
 		{
 			// START - PLAYER MOVEMENT (manual or automatic)
-			if (event_start) {
-				tutorial.runEvent(event_start, actorPlayer, elapsedTime);
-				if (!event_start) {
-					if (fade_in != true) {
-						eventmessage1 = true;
-					}
-					if (scene1_complete && !scene2_complete) {
-						eventmessage2 = true;
-					}
-				}
-			}
-			else {
-				// START - PLAYER MOVEMENT (manual or automatic)
-				actorPlayer.move(player_speed, elapsedTime, collision, move_flag);
-				// END
-			}
+			actorPlayer.move(player_speed, elapsedTime, collision, move_flag);
 			// END 
 
 			// START - COLLISION AND EVENT DETECTION (remove scene2_complete when redoing intro)
-			sysCollision(actorPlayer, ml, collision, player_event, scene2_complete);
+			sysCollision(actorPlayer, ml, collision, player_event);
 			// END 
 
 			// adjust the camera to be viewing player
 			playerView.setCenter(actorPlayer.getPosition());
+
+			if (!_Textbox->if_endMessage())
+				_Textbox->message(reader->currentMessage().second, reader->currentMessage().first, elapsedTime);
+			else
+			{
+				_Textbox->reset();
+				if (!reader->isEmpty())
+					reader->nextMessage();
+				if (reader->isEmpty()) {
+					_Textbox->reset();
+					delete reader;
+					reader = new SceneReader("resources/script/scenes.txt", scene_name);
+				}
+			}
 		}
 
+		
 		// prepare to update screen
 		window.clear();
 
@@ -462,9 +431,6 @@ int main() {
 		// draw walkable and collidable tiles
 		ml.Draw(window, Layer::Field);
 		ml.Draw(window, Layer::Collision_Objects);
-
-		if (eventmessage1 || eventmessage2)
-			actorPlayer.idle();
 			
 		// draw player
 		window.draw(actorPlayer);
@@ -477,76 +443,17 @@ int main() {
 		window.draw(sprite, lightRenderStates);
 		// LIGHTING TEST
 
-		if (fade_in)
-		{
-			window.draw(sysFader);
-		}
-
-		if (fade_out) {
-			sysFader.setPosition(actorPlayer.getPosition());
-			window.draw(sysFader);
-		}
-
 		if (title) {
 			screenTitle.animate(elapsedTime);
 			window.draw(screenTitle);
 
 		}
-		else if (!title && !intro && event_start) {
-			sysFader.setPosition(playerView.getCenter());
-			sysFader.performFade(Fade::In, Speed::Slow);
-			window.draw(sysFader);
-		}
-		else if (intro || (eventmessage1) || (eventmessage2))
+		if (textbox)
 		{
 			_Textbox->setPosition(playerView.getCenter());
-			if (intro) {
-				book.setPosition(playerView.getCenter());
-				sysFader.setPosition(playerView.getCenter());
-				window.draw(sysFader.blackScreen());
-				book.hover(elapsedTime);
-				window.draw(book);
-			}
-			if (!pause && window.hasFocus()) {
-				if (!_Textbox->if_endMessage())
-					_Textbox->message(reader->currentMessage().second, reader->currentMessage().first, elapsedTime);
-				else
-				{
-					_Textbox->reset();
-					if (!reader->isEmpty())
-						reader->nextMessage();
-					if (reader->isEmpty()) {
-						if (!intro) {
-							scene1_complete = true;
-						}
-						if (scene1_complete && eventmessage1) {
-							sysFader.resetFader();
-							fade_out = true;
-							eventmessage1 = false;
-						}
-						if (scene1_complete && eventmessage2) {
-							eventmessage2 = false;
-							scene2_complete = true;
-						}
-						if (intro)
-							scene_name = "Scene1";
-						if (scene1_complete)
-							scene_name = "TalkingToLuke";
-						intro = false;
-						pause = false;
-						delete _Textbox;
-						_Textbox = new Textbox(faceMap, sysFont, soundBleep, window_width, window_height);
-						delete reader;
-						reader = new SceneReader("resources/script/scenes.txt", scene_name);
-					}
-				}
-			}
-		}
-
-		if (intro || (!fade_out && sysFader.isComplete()))
 			window.draw(*_Textbox);
-		// END HARD-CODED ALPHA PREVIEW
-
+		}
+			
 		if (pause)
 		{
 			screenPause.setPosition(playerView.getCenter());
@@ -571,7 +478,7 @@ int main() {
 
 \param Player, Map, Collision Switch, Player Use Switch, Player Event Switch
 *********************************************************************/
-void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_event, bool& event2done)
+void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_event)
 {
 	bool test_collision = false;
 	
@@ -599,14 +506,7 @@ void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& pl
 		{
 			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
 			{
-				if ((object->GetName() == "Luke1") && player.getDirection() == Direction::East)
-				{
-					if (sf::Vector2f(object->GetPosition().x + 32, object->GetPosition().y + 32) == player.getPosition())
-						player_event = true;
-					else
-						player_event = false;
-				}
-				else if ((object->GetName() == "Luke2") && player.getDirection() == Direction::North && event2done)
+				if ((object->GetName() == "Temp") && player.getDirection() == Direction::East)
 				{
 					if (sf::Vector2f(object->GetPosition().x + 32, object->GetPosition().y + 32) == player.getPosition())
 						player_event = true;
@@ -614,30 +514,6 @@ void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& pl
 						player_event = false;
 				}
 			}
-		}
-	}
-}
-
-/*********************************************************************
-\brief Determines if player has pressed esc.
-Checks if the player wishes to pause the game. The game will pause if 'esc' is pressed and the game is not paused. 
-The game will resume if 'esc' is pressed and the game is paused.
-\param Pause Switch, Intro Switch, Title Switch, Music, Fader
-*********************************************************************/
-
-void sysPause(bool& pause, bool& intro, bool& title, sf::Music& music, Fader& sysFader)
-{
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && !intro &&!title && sysFader.isComplete()) {
-		pause = !pause;
-		if (pause)
-		{
-			console_message("Game is paused.");
-			music.pause();
-		}
-		else
-		{
-			console_message("Game has resumed.");
-			music.play();
 		}
 	}
 }
