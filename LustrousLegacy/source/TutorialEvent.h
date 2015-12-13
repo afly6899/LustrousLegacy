@@ -1,10 +1,12 @@
 #ifndef __RPG_Town__TutorialEvent__
 #define __RPG_Town__TutorialEvent__
 
+#include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <cmath>
 #include <queue>
 #include <initializer_list>
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
 #include "player.h"
 #include "Enums.h"
 

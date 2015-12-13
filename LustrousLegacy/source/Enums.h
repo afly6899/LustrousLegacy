@@ -53,4 +53,8 @@ enum Source {
 	Idle = 1
 };
 
+enum Fade {
+	In = 0,
+	Out = 1
+};
 #endif

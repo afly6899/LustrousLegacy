@@ -11,10 +11,6 @@
 		bleep.setPitch(2);
 		if (!block_draw)
 		{
-			faceSprite.setTextureRect(sf::IntRect(0, 0, faceSprite.getLocalBounds().width, faceSprite.getLocalBounds().height));
-			faceSprite.setOrigin(faceSprite.getLocalBounds().width*.5, faceSprite.getLocalBounds().height*.5);
-			faceSprite2.setTextureRect(sf::IntRect(0, 0, faceSprite2.getLocalBounds().width, faceSprite2.getLocalBounds().height));
-			faceSprite2.setOrigin(faceSprite2.getLocalBounds().width*.5, faceSprite2.getLocalBounds().height*.5);
 			rectText.setSize(sf::Vector2f(width - padding, height*.3));
 			rectText.setOrigin((width - padding)*.5, height*.5);
 			rectText.setFillColor(sf::Color::Black);
@@ -57,25 +53,17 @@
 		}
 		else {
 			displayText.setPosition(position.x - 350, position.y + 135);
-		}
-		
+		}	
 	}
 
 	void Textbox::message(std::string to_display, std::string name, float elapsedTime)
 	{
-		if (!displayingText && !end_message) {
+		if (!processingText && !end_message) {
 			end_length = to_display.length();
 			actorName.setString(name);
-			displayingText = true;
-			if (previous_name == "")
-				previous_name = actorName.getString();
-
-			if (previous_name != actorName.getString()) {
-				newActor = !newActor;
-				previous_name = actorName.getString();
-			}
+			processingText = true;
 		}
-		if (displayingText)
+		if (processingText)
 		{
 			aniCounter += elapsedTime;
 
@@ -119,7 +107,7 @@
 					end_length = 0;
 					lines = 0;
 					length_counter = 0;
-					displayingText = false;
+					processingText = false;
 					end_message = true;
 				}
 			}
