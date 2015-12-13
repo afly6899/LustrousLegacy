@@ -23,6 +23,8 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 // Include libraries
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <map>
+#include <ltbl/lighting/LightSystem.h>
 #include "tmx/MapLoader.h"
 // Class definitions
 #include "SceneReader.h"
@@ -35,15 +37,13 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "fader.h"
 #include "TutorialEvent.h"
 #include "debug/debug.h"
-#include <ltbl/lighting/LightSystem.h>
-#include <map>
 using namespace std;
 
 void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_event, bool& event_2_complete);
 void sysPause(bool& pause, bool& intro, bool& title, sf::Music& music, Fader& sysFader);
 sf::Vector2f tile(int tile_row, int tile_column);
 
-int main(int argc, char** argv) {
+int main() {
 
 	/*********************************************************************
 	GAME WINDOW PARAMETERS:
@@ -51,7 +51,6 @@ int main(int argc, char** argv) {
 	window_height - defines the height of the window
 	window_name	- defines the name of the window
 	*********************************************************************/
-
 
 	int window_width = 800;
 	int window_height = 600;
@@ -323,9 +322,15 @@ int main(int argc, char** argv) {
 				sysPause(pause, intro, title, music, sysFader);
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1))
 					debug = !debug;
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && title) {
-				screenTitle.change_selection(4, Cursor_Direction::Down);
-			}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && title) {
+					screenTitle.change_selection(4, Cursor_Direction::Down);
+				}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2))
+					_Textbox->setSpeed(0);
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F3))
+					_Textbox->setSpeed(25);
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F4))
+					_Textbox->setSpeed(50);
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && title) {
 				screenTitle.change_selection(4, Cursor_Direction::Up);
 			}
@@ -405,7 +410,7 @@ int main(int argc, char** argv) {
 			}
 		}
 		// if the game is not paused, perform normal game actions
-		if (!pause && !title && window.hasFocus() && sysFader.isComplete() && !textbox)
+		if (!pause && !title && window.hasFocus() && sysFader.isComplete() && !eventmessage1 && !eventmessage2)
 		{
 			// START - PLAYER MOVEMENT (manual or automatic)
 			if (event_start) {
@@ -458,6 +463,9 @@ int main(int argc, char** argv) {
 		ml.Draw(window, Layer::Field);
 		ml.Draw(window, Layer::Collision_Objects);
 
+		if (eventmessage1 || eventmessage2)
+			actorPlayer.idle();
+			
 		// draw player
 		window.draw(actorPlayer);
 
