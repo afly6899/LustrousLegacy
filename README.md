@@ -13,4 +13,3 @@ Lustrous Legacy is a game project being developed for the Video Game and Develop
 
 Video demonstration of Fall Quarter prototype: https://www.youtube.com/watch?v=X5nR9fbxPGw
 
-Test out the current prototype: https://www.dropbox.com/s/wop7e4fj5ynyxri/LL_Fall_Prototype.zip?dl=0
