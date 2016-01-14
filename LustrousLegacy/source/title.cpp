@@ -9,7 +9,7 @@ Title::Title(const sf::Font& font, const sf::Vector2u window_size, const sf::Tex
 
 		play_game.setFont(font);
 		play_game.setString("Play Game");
-		play_game.setColor(sf::Color::Blue);
+		play_game.setColor(sf::Color::Yellow);
 		play_game.setStyle(sf::Text::Italic);
 		play_game.setCharacterSize(Font_Size::Default);
 		play_game.setOrigin(play_game.getLocalBounds().width*.5, play_game.getLocalBounds().height*.5);
@@ -70,7 +70,7 @@ Title::Title(const sf::Font& font, const sf::Vector2u window_size, const sf::Tex
 		}
 
 		if (selection == Selection::Play_Game) {
-			play_game.setColor(sf::Color::Blue);
+			play_game.setColor(sf::Color::Yellow);
 			play_game.setStyle(sf::Text::Italic);
 		}
 		else {
@@ -79,7 +79,7 @@ Title::Title(const sf::Font& font, const sf::Vector2u window_size, const sf::Tex
 		}
 
 		if (selection == Selection::Load_Game) {
-			load_game.setColor(sf::Color::Blue);
+			load_game.setColor(sf::Color::Yellow);
 			load_game.setStyle(sf::Text::Italic);
 		}
 		else {
@@ -88,7 +88,7 @@ Title::Title(const sf::Font& font, const sf::Vector2u window_size, const sf::Tex
 		}
 
 		if (selection == Selection::Settings) {
-			settings.setColor(sf::Color::Blue);
+			settings.setColor(sf::Color::Yellow);
 			settings.setStyle(sf::Text::Italic);
 		}
 		else {
@@ -97,7 +97,7 @@ Title::Title(const sf::Font& font, const sf::Vector2u window_size, const sf::Tex
 		}
 
 		if (selection == Selection::Exit) {
-			exit_game.setColor(sf::Color::Blue);
+			exit_game.setColor(sf::Color::Yellow);
 			exit_game.setStyle(sf::Text::Italic);
 		}
 		else {

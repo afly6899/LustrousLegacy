@@ -242,7 +242,12 @@ int main() {
 	ENTITY LIST
 	*********************************************************************/
 	Actor test_actor(pTexture);
+	Actor test_actor1(pTexture);
+	Actor test_actor2(pTexture);
+
 	test_actor.setPosition(tile(10, 15));
+	test_actor1.setPosition(tile(10, 14));
+	test_actor2.setPosition(tile(10, 16));
 
 	std::vector<Actor*> actors;
 	std::vector<Pawn*> entities;
@@ -254,6 +259,10 @@ int main() {
 	actorPtr = &player;
 	actors.push_back(actorPtr);
 	actorPtr = &test_actor;
+	actors.push_back(actorPtr);
+	actorPtr = &test_actor1;
+	actors.push_back(actorPtr);
+	actorPtr = &test_actor2;
 	actors.push_back(actorPtr);
 	
 	for (int i = actors.size(); i != 0; i--) {
@@ -324,17 +333,37 @@ int main() {
 		if (!pause && !title && window.hasFocus())
 		{
 			player.move(elapsedTime, player.getPlayerController().get_input());
-			test_actor.move(elapsedTime, Direction::East);
+			test_actor.move(elapsedTime, Direction::North);
+			test_actor1.move(elapsedTime, Direction::North);
+			test_actor2.move(elapsedTime, Direction::North);
+
 			window.setView(playerView);
 
 			// START - COLLISION AND EVENT DETECTION (remove scene2_complete when redoing intro)
 			sysCollision(actors, ml);
 			// END 
 
+			for (auto actor = actors.begin(); actor != actors.end(); actor++) {
+				for (auto actor_check = actors.begin(); actor_check != actors.end(); actor_check++) {
+					(*actor)->setCollisionBox(32, 32);
+					(*actor_check)->setCollisionBox(32, 32);
+					if ((*actor)->getCollisionBox().intersects((*actor_check)->getCollisionBox())) {
+						if ((*actor)->getPosition() != (*actor_check)->getPosition()) {
+							(*actor)->setPosition((*actor)->getPastPosition());
+							(*actor_check)->setPosition((*actor_check)->getPastPosition());
+						}
+
+					}
+				}
+			}
+
 			// adjust the camera to be viewing player
 			playerView.setCenter(player.getPosition());
 		}
 
+		
+
+		
 		// prepare to update screen
 		window.clear();
 
@@ -401,12 +430,14 @@ void sysCollision(std::vector<Actor*> actors, tmx::MapLoader& map)
 		{
 			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
 			{
-				for (auto actor = actors.begin(); actor != actors.end(); actor++)
-				if (object->Contains((*actor)->getPosition())) {
-					(*actor)->setPosition((*actor)->getPastPosition());
+				for (auto actor = actors.begin(); actor != actors.end(); actor++) {
+					if (object->Contains((*actor)->getPosition())) {
+						(*actor)->setPosition((*actor)->getPastPosition());
+					}
 				}
 			}
 		}
+
 		if (layer->name == "Events")
 		{
 			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)

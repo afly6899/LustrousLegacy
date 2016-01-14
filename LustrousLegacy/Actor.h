@@ -20,7 +20,6 @@ public:
 	void setSpeed(int speed);
 	void setCollision(bool collision);
 	void setCollisionBox(int x, int y);
-	void updateActor();
 
 	sf::FloatRect getCollisionBox();
 	sf::Vector2f getPastPosition();
