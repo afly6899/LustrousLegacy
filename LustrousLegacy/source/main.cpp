@@ -24,23 +24,25 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <map>
+#include <math.h>
 #include <ltbl/lighting/LightSystem.h>
 #include "tmx/MapLoader.h"
 // Class definitions
 #include "SceneReader.h"
 #include "Enums.h"
-#include "player.h"
-#include "NPC.h"
 #include "textbox.h"
 #include "title.h"
 #include "pause.h"
 #include "fader.h"
 #include "TutorialEvent.h"
 #include "debug/debug.h"
+#include "Actor.h"
+#include "Character.h"
 using namespace std;
 
-void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_event);
+void sysCollision(Character& player, Actor& test, tmx::MapLoader& map, bool& collision, bool& player_event);
 sf::Vector2f tile(int tile_row, int tile_column);
+sf::Vector2f Normalize2f(sf::Vector2f pos);
 
 int main() {
 
@@ -60,7 +62,7 @@ int main() {
 	*********************************************************************/
 
 	sf::RenderWindow window(sf::VideoMode(window_width, window_height), window_name);
-	window.setVerticalSyncEnabled(false);
+	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
 
 	/*********************************************************************
@@ -231,8 +233,6 @@ int main() {
 	*********************************************************************/
 
 	// SET PLAYER TEXTURE AND POSITION
-	Player actorPlayer(pTexture);
-	actorPlayer.setPosition(tile(10, 9));
 
 	/*********************************************************************
 	PREPARE TEXTBOX
@@ -250,9 +250,6 @@ int main() {
 	SceneReader* reader = new SceneReader("resources/script/scenes.txt", "Scene1");
 	Fader sysFader;
 	Textbox* _Textbox = new Textbox(faceMap, sysFont, soundBleep, window_width, window_height);
-	NPC tempNPC(npcTexture);
-	tempNPC.setPosition(tile(9, 9));
-	NPC book(bookTexture);
 
 	/*********************************************************************
 	HARD CODED PROTOTYPE PREVIEW
@@ -269,30 +266,19 @@ int main() {
 	LIGHTING SYSTEM TEST
 	*********************************************************************/
 
-	sf::Shader unshadowShader;
-	sf::Shader lightOverShapeShader;
-	unshadowShader.loadFromFile("resources/unshadowShader.vert", "resources/unshadowShader.frag");
-	lightOverShapeShader.loadFromFile("resources/lightOverShapeShader.vert", "resources/lightOverShapeShader.frag");
+	// OTHER TEST
 
-	sf::Texture penumbraTexture;
-	penumbraTexture.loadFromFile("resources/penumbraTexture.png");
-	penumbraTexture.setSmooth(true);
-	sf::Texture pointTexture;
-	pointTexture.loadFromFile("resources/pointLightTexture.png");
-	pointTexture.setSmooth(true);
-
-	ltbl::LightSystem ls;
-	ls.create(sf::FloatRect(-1000.0f, -1000.0f, 1000.0f, 1000.0f), window.getSize(), penumbraTexture, unshadowShader, lightOverShapeShader);
-
-	std::shared_ptr<ltbl::LightPointEmission> light = std::make_shared<ltbl::LightPointEmission>();
-
-	light->_emissionSprite.setOrigin(sf::Vector2f(pointTexture.getSize().x * 0.5f, pointTexture.getSize().y * 0.5f));
-	light->_emissionSprite.setTexture(pointTexture);
-	light->_emissionSprite.setScale(sf::Vector2f(20.0f, 20.0f));
-	light->_emissionSprite.setColor(sf::Color(255, 230, 200));
-	light->_emissionSprite.setPosition(sf::Vector2f(400, 300)); // This is where the shadows emanate from relative to the sprite
-
-	ls.addLight(light);
+	Character player(pTexture);
+	Actor test_follow(pTexture);
+	Actor test_follow1(pTexture);
+	Actor test_follow2(pTexture);
+	Actor test_follow3(pTexture);
+	player.setPosition(tile(10,10));
+	test_follow.setPosition(tile(10,15));
+	test_follow1.setPosition(tile(9, 16));
+	test_follow2.setPosition(tile(11, 14));
+	test_follow3.setPosition(tile(11, 13));
+	bool stop = false;
 
 	/*********************************************************************
 	BEGIN GAME LOOP:
@@ -328,8 +314,6 @@ int main() {
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && screenTitle.getSelection() == Selection::Play_Game) {
 					sysFader.resetFader();
-					actorPlayer.setPosition(tile(10, 9));
-					actorPlayer.setDirection(Direction::South);
 					title = false;
 					intro = false;
 					if (!pause) {
@@ -348,32 +332,56 @@ int main() {
 			music.play();
 		}
 
-		// START Get debug information:
-		textDebug.setString("FPS: " + to_string(1 / gameClock.getElapsedTime().asSeconds()).substr(0, 5) +
-			"\nCoordinates: (" + to_string(actorPlayer.getPosition().x).substr(0, 5) + ", " +
-			to_string(actorPlayer.getPosition().y).substr(0, 5) + ")\nTile Map: (" +
-			to_string(actorPlayer.getPosition().x / Tilesize).substr(0, 5) + ", " +
-			to_string(actorPlayer.getPosition().y / Tilesize).substr(0, 5) + ")");
-		// END debug information
-
-		// LIGHTING SYSTEM TEST
-		ls.render(window.getDefaultView(), unshadowShader, lightOverShapeShader);
-		sf::Sprite sprite;
-		sprite.setOrigin(400, 300);
-		sprite.setTexture(ls.getLightingTexture());
-		sf::RenderStates lightRenderStates;
-		lightRenderStates.blendMode = sf::BlendMultiply;
-		// END LIGHTING SYSTEM TEST
-
 		// prime the camera
 		if (!title)
 		{
-			playerView.setCenter(actorPlayer.getPosition());
+			player.move(elapsedTime, player.getPlayerController().get_input());
 			window.setView(playerView);
+			// test //
+			sf::Vector2f player_direction = Normalize2f(player.getPosition() - test_follow.getPosition());
+			int direction;
+			test_follow.setSpeed(2);
+
+			if (player_direction.y == 1) {
+				if (player_direction.x == 0) {
+					direction = Direction::South;
+				}
+				if (player_direction.x == 1)
+					direction = Direction::SouthEast;
+				if (player_direction.x == -1)
+					direction = Direction::SouthWest;
+			}
+			else if (player_direction.y == -1) {
+				if (player_direction.x == 0) {
+					direction = Direction::North;
+				}
+				else if (player_direction.x == 1)
+					direction = Direction::NorthEast;
+				else if (player_direction.x == -1)
+					direction = Direction::NorthWest;
+			}
+			else if (player_direction.x == 0) {
+				if (player_direction.y == 1)
+					direction = Direction::South;
+				else if (player_direction.y == -1)
+					direction = Direction::North;
+			}
+			else if (player_direction.y == 0) {
+				if (player_direction.x == 1)
+					direction = Direction::East;
+				else if (player_direction.x == -1)
+					direction = Direction::West;
+			}
+
+			test_follow.move(elapsedTime, direction);
+
+
+			// test end //
 		}
 
 		// get the elapsed time from the game clock
 		elapsedTime = gameClock.restart().asMilliseconds();
+
 		if (!pause) {
 			aniCounter += elapsedTime;
 		}
@@ -381,16 +389,13 @@ int main() {
 		// if the game is not paused, perform normal game actions
 		if (!pause && !title && window.hasFocus())
 		{
-			// START - PLAYER MOVEMENT (manual or automatic)
-			actorPlayer.move(player_speed, elapsedTime, collision, move_flag);
-			// END 
 
 			// START - COLLISION AND EVENT DETECTION (remove scene2_complete when redoing intro)
-			sysCollision(actorPlayer, ml, collision, player_event);
+			sysCollision(player, test_follow, ml, collision, player_event);
 			// END 
 
 			// adjust the camera to be viewing player
-			playerView.setCenter(actorPlayer.getPosition());
+			playerView.setCenter(player.getPosition());
 
 			if (!_Textbox->if_endMessage())
 				_Textbox->message(reader->currentMessage().second, reader->currentMessage().first, elapsedTime);
@@ -407,7 +412,8 @@ int main() {
 			}
 		}
 
-		
+
+
 		// prepare to update screen
 		window.clear();
 
@@ -433,15 +439,25 @@ int main() {
 		ml.Draw(window, Layer::Collision_Objects);
 			
 		// draw player
-		window.draw(actorPlayer);
+		if (player.getDepth() > test_follow.getDepth()) {
+			window.draw(player);
+			window.draw(test_follow);
+			window.draw(test_follow1);
+			window.draw(test_follow2);
+			window.draw(test_follow3);
+		}
+		else {
+
+			window.draw(test_follow);
+			window.draw(test_follow1);
+			window.draw(test_follow2);
+			window.draw(test_follow3);
+			window.draw(player);
+			
+		}
 
 		// draw top layer of map
 		ml.Draw(window, Layer::Overlay);
-
-		// LIGHTING TEST
-		sprite.setPosition(actorPlayer.getPosition());
-		window.draw(sprite, lightRenderStates);
-		// LIGHTING TEST
 
 		if (title) {
 			screenTitle.animate(elapsedTime);
@@ -464,7 +480,7 @@ int main() {
 			textDebug.setPosition(playerView.getCenter().x - window_width*.5, playerView.getCenter().y - window_height*.5);
 			window.draw(textDebug);
 		}
-		
+
 		// update screen with changes
 		window.display();
 	}
@@ -478,7 +494,7 @@ int main() {
 
 \param Player, Map, Collision Switch, Player Use Switch, Player Event Switch
 *********************************************************************/
-void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& player_event)
+void sysCollision(Character& character, Actor& test, tmx::MapLoader& map, bool& collision, bool& player_event)
 {
 	bool test_collision = false;
 	
@@ -488,17 +504,21 @@ void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& pl
 		{
 			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
 			{
-				sf::Vector2f left = sf::Vector2f(player.getPosition().x - 32, player.getPosition().y);
-				sf::Vector2f right = sf::Vector2f(player.getPosition().x + 31, player.getPosition().y);
-				sf::Vector2f bottom = sf::Vector2f(player.getPosition().x, player.getPosition().y + 31);
-				sf::Vector2f top = sf::Vector2f(player.getPosition().x, player.getPosition().y - 32);
+				if (object->Contains(character.getSprite().getPosition())) {
+					character.setPosition(character.getPastPosition());
+				}
 
-				test_collision = object->Contains(left) || object->Contains(right) || object->Contains(bottom) || object->Contains(top);
-				if (test_collision)
-				{
-					console_message("Player has collided with object.");		
-					player.setPosition(player.getPastPosition());
-					collision = true;
+				if (object->Contains(test.getSprite().getPosition())) {
+					test.setPosition(test.getPastPosition());
+					test.setCollision(true);
+				}
+
+				character.setCollisionBox(32, 32);
+				test.setCollisionBox(32, 32);
+
+				if (character.getCollisionBox().intersects(test.getCollisionBox())) {
+					character.setPosition(character.getPastPosition());
+					test.setPosition(test.getPastPosition());
 				}
 			}
 		}
@@ -506,13 +526,7 @@ void sysCollision(Player& player, tmx::MapLoader& map, bool& collision, bool& pl
 		{
 			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
 			{
-				if ((object->GetName() == "Temp") && player.getDirection() == Direction::East)
-				{
-					if (sf::Vector2f(object->GetPosition().x + 32, object->GetPosition().y + 32) == player.getPosition())
-						player_event = true;
-					else
-						player_event = false;
-				}
+				
 			}
 		}
 	}
@@ -525,4 +539,26 @@ Returns the center position of a tile based on the row and column provided.
 *********************************************************************/
 sf::Vector2f tile(int tile_row, int tile_column) {
 	return sf::Vector2f(System::Tilesize*tile_row + System::Tilesize*.5, System::Tilesize*tile_column + System::Tilesize*.5);
+}
+
+/*********************************************************************
+\Returns the center position of a specific tile.
+Returns the center position of a tile based on the row and column provided.
+\param row, column
+*********************************************************************/
+sf::Vector2f Normalize2f(sf::Vector2f vector) {
+	int x = vector.x;
+	int y = vector.y;
+	
+	if (x < 0)
+		x = -1;
+	else if (x > 0)
+		x = 1;
+
+	if (y < 0)
+		y = -1;
+	else if (x > 0)
+		y = 1;
+	
+	return sf::Vector2f(x, y);
 }

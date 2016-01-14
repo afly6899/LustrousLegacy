@@ -40,7 +40,7 @@
 		exit_game.setPosition(settings.getPosition().x, settings.getPosition().y + seperation);
 		
 		titleCursor.setPosition(sf::Vector2f(play_game.getPosition().x, play_game.getPosition().y + seperation*.5));
-		originalPos = titleCursor.getPosition();
+		originalPos = sf::Vector2f(titleCursor.getPosition().x, titleCursor.getPosition().y);
 	}
 
 	Title::~Title() {
@@ -136,10 +136,10 @@
 		exit_game.setPosition(settings.getPosition().x, settings.getPosition().y + seperation);
 
 		titleCursor.setPosition(sf::Vector2f(play_game.getPosition().x, play_game.getPosition().y + seperation*.5));
-		originalPos = titleCursor.getPosition();
+		originalPos = sf::Vector2f(titleCursor.getPosition().x, titleCursor.getPosition().y);
 	}
 
 	void Title::animate(float elapsedTime) {
 
-		titleCursor.animate(elapsedTime);
+		titleCursor.spriteAnimate(elapsedTime);
 	}

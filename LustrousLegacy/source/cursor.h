@@ -2,13 +2,13 @@
 #define CURSOR_H_
 
 #include <SFML/Graphics.hpp>
-
+#include "Pawn.h"
 namespace sf {
 
 	class Texture;
 }
 
-class Cursor : public sf::Drawable {
+class Cursor : public Pawn {
 public:
 
 	Cursor(const sf::Texture& imagePath_cursor);

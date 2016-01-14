@@ -7,7 +7,7 @@
 #include <cmath>
 #include <queue>
 #include <initializer_list>
-#include "player.h"
+#include "Character.h"
 #include "Enums.h"
 
 
@@ -27,9 +27,9 @@ public:
     void addEvent(TutorialEvent); // override to account for getting either thing
     bool fullEventIsDone(); // returns true if there's nothing in the queue
     
-    bool currentEventIsDone(Player& player); // returns true if current event is done
-    void doEvent(Player& player, float elapsedTime);
-    void runEvent(bool& event_happening, Player& player, float elapsedTime);
+    bool currentEventIsDone(Character& player); // returns true if current event is done
+    void doEvent(Character& player, float elapsedTime);
+    void runEvent(bool& event_happening, Character& player, float elapsedTime);
     void nextEvent();
     
 private:

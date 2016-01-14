@@ -1,26 +1,30 @@
 #ifndef ENUMS_H_
 #define ENUMS_H_
 
-enum Speed{
+enum Speed {
 	Slow = 1,
-	Normal = 4,
+	Normal = 16,
 	Fast = 8,
 	Fastest = 16
 };
 
-enum System{
+enum System {
 	Tilesize = 64
 };
 
 enum Direction {
-	South, 
-	West, 
-	East, 
+	South,
+	West,
+	East,
 	North,
+	SouthWest,
+	SouthEast,
+	NorthWest,
+	NorthEast,
 	Null
 };
 
-enum Layer{
+enum Layer {
 	Background_1,
 	Background_2,
 	Field,
@@ -44,7 +48,7 @@ enum Cursor_Direction {
 
 enum Font_Size {
 	Small = 14,
-	Default = 18, 
+	Default = 18,
 	Large = 24,
 	Big = 32
 };

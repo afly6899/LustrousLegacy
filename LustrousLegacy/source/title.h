@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include "cursor.h"
+#include "Pawn.h"
 
 // Forward Declaration
 namespace sf {
@@ -31,7 +31,7 @@ namespace sf {
 		sf::Sprite titleSprite, bgtitleSprite;
 		sf::Sound& cursorBleep;
 		sf::Vector2f originalPos;
-		Cursor titleCursor;
+		Pawn titleCursor;
 		int window_width, window_height;
 		int selection = 1;
 		int aniCounter = 0;

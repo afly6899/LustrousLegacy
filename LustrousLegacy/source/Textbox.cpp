@@ -1,5 +1,4 @@
 #include "textbox.h"
-#include "player.h"
 
 	Textbox::Textbox(std::map<std::string, sf::Sprite>& faceMap, const sf::Font& font, sf::Sound& bleep, int width_box, int height_box, bool block, int font_size, int padding) :
 		faceMap(faceMap), width(width_box), height(height_box), bleep(bleep), block_draw(block), padding(padding) {

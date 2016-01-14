@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="45" height="30" tilewidth="64" tileheight="64" nextobjectid="89">
- <tileset firstgid="1" name="64_forest_tileset" tilewidth="64" tileheight="64" tilecount="144">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="45" height="30" tilewidth="64" tileheight="64" nextobjectid="107">
+ <tileset firstgid="1" name="64_forest_tileset" tilewidth="64" tileheight="64" tilecount="144" columns="16">
   <image source="64_forest_tileset.png" width="1024" height="576"/>
  </tileset>
  <layer name="Background_1" width="45" height="30">
@@ -6815,4 +6815,7 @@
    <tile gid="0"/>
   </data>
  </layer>
+ <objectgroup name="Path">
+  <object id="90" x="731" y="703" width="13"/>
+ </objectgroup>
 </map>
