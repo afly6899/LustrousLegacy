@@ -16,7 +16,6 @@ public:
 
 	Character(const sf::Texture& playerTexture);
 	virtual ~Character();
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	PlayerController& getPlayerController();
 private:
 	PlayerController movement;

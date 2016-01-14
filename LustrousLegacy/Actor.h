@@ -15,12 +15,12 @@ public:
 
 	Actor(const sf::Texture& playerTexture);
 	virtual ~Actor();
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	virtual void move(float elapsedTime, int direction);
 	void move_tile(float elapsedTime, unsigned int number_of_tiles, int direction);
 	void setSpeed(int speed);
 	void setCollision(bool collision);
 	void setCollisionBox(int x, int y);
+	void updateActor();
 
 	sf::FloatRect getCollisionBox();
 	sf::Vector2f getPastPosition();

@@ -30,9 +30,9 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 // Class definitions
 #include "SceneReader.h"
 #include "Enums.h"
-#include "textbox.h"
-#include "title.h"
-#include "pause.h"
+#include "Textbox.h"
+#include "Title.h"
+#include "Pause.h"
 #include "fader.h"
 #include "TutorialEvent.h"
 #include "debug/debug.h"
@@ -40,28 +40,34 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "Character.h"
 using namespace std;
 
-void sysCollision(Character& player, Actor& test, tmx::MapLoader& map, bool& collision, bool& player_event);
+void sysCollision(std::vector<Actor*> actors, tmx::MapLoader& map);
 sf::Vector2f tile(int tile_row, int tile_column);
 sf::Vector2f Normalize2f(sf::Vector2f pos);
+
+struct byDepth
+{
+
+	inline bool operator() (Pawn* pawn1, Pawn* pawn2)
+	{
+		return (pawn1->getDepth() < pawn2->getDepth());
+	}
+
+};
 
 int main() {
 
 	/*********************************************************************
 	GAME WINDOW PARAMETERS:
-	window_width	- defines the width of the window
-	window_height - defines the height of the window
-	window_name	- defines the name of the window
 	*********************************************************************/
 
-	int window_width = 800;
-	int window_height = 600;
+	sf::Vector2u window_size(800, 600);
 	string window_name = "Lustrous Legacy (Prototype)";
 
 	/*********************************************************************
 	GAME WINDOW
 	*********************************************************************/
 
-	sf::RenderWindow window(sf::VideoMode(window_width, window_height), window_name);
+	sf::RenderWindow window(sf::VideoMode(window_size.x, window_size.y), window_name);
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
 
@@ -69,16 +75,11 @@ int main() {
 	GAME CAMERA AND CLOCK
 	*********************************************************************/
 
-	sf::View playerView(sf::FloatRect(0, 0, (float)window_width, (float)window_height));
+	sf::View playerView(sf::FloatRect(0, 0, window_size.x, window_size.y));
 	sf::Clock gameClock;
 
 	/*********************************************************************
 	SYSTEM PARAMETERS:
-	sysFont - is used to set the font used for text in the game.
-	textDebug - is used to store and display the frames per second of the game as well as other debug information.
-	player_speed - controls the movement speed of the player
-	distance_moved - is used to keep track of the distance the player has moved in order to align player to movement grid
-	elapsedTime - is used to get the amount of time that has passed after every game loop iteration; elapsed time is used for managing the speed of all animations
 	*********************************************************************/
 
 	sf::Font sysFont;
@@ -86,23 +87,10 @@ int main() {
 		cerr << "Font Error" << endl;
 	}
 
-	sf::Text textDebug;
-	textDebug.setFont(sysFont);
-	textDebug.setCharacterSize(Font_Size::Large);
-
-	int player_speed = Speed::Normal;
 	float elapsedTime = 0;
 
 	/*********************************************************************
 	SYSTEM SWITCHES:
-	debug - toggle to display debug information (F1)
-	textbox - toggle to display textbox (F2)
-	pause - toggle to pause game (esc)
-	player_trigger - is used to notify system to when a player presses ENTER
-	player_event - is used to notify system when player is inside an event tile
-	is_moving - is used to notify the system when a player is moving
-	collision -  is used to stop the player from taking note of tiles travelled if colliding with object
-	move_flag - to determine manual or automatic movement
 	*********************************************************************/
 
 	bool debug = false;
@@ -179,7 +167,7 @@ int main() {
 	faceMap["Resdin"] = sf::Sprite(resdinfTexture);
 	faceMap["Resdin"].setOrigin(faceMap["Resdin"].getLocalBounds().width*.5, faceMap["Resdin"].getLocalBounds().height*.5);
 	faceMap["Luke"] = sf::Sprite(lukefTexture);
-	faceMap["Luke"].setOrigin(faceMap["Luke"].getLocalBounds().width*.5, faceMap["Luke"].getLocalBounds().height*.5);
+	faceMap["Luke"].setOrigin(faceMap["Luke"].getLocalBounds().width*.5, faceMap["Luke"].getLocalBounds().height*.5);	
 
 	/*********************************************************************
 	MUSIC
@@ -188,31 +176,28 @@ int main() {
 	sf::Music music;
 	if (!music.openFromFile("resources/audio/test.wav"))
 		return -1; // error
-
-	music.setVolume(50);
-
+	
 	/*********************************************************************
 	SOUNDS
 	*********************************************************************/
 
-	sf::SoundBuffer bleep;
-	if (!bleep.loadFromFile("resources/audio/text_blip.wav"))
+	sf::Sound sfx_blip1;
+	sf::Sound sfx_blip2;
+
+	sf::SoundBuffer bleep1;
+	if (!bleep1.loadFromFile("resources/audio/text_blip.wav"))
 		return -1; // error
 
 	sf::SoundBuffer bleep2;
 	if (!bleep2.loadFromFile("resources/audio/text_blip2.wav"))
 		return -1; // error
 
-	sf::Sound soundBleep;
-	sf::Sound soundBleep2;
-	soundBleep.setBuffer(bleep);
-	soundBleep2.setBuffer(bleep2);
+
+	sfx_blip1.setBuffer(bleep1);
+	sfx_blip2.setBuffer(bleep2);
 
 	/*********************************************************************
 	WORLD PARAMETERS:
-	aniCounter - used as a decrementer to perform animation
-	aniFrameDuration - used to determine animation speed
-	layer - to keep track of layer to draw
 	*********************************************************************/
 
 	float aniCounter = 0;
@@ -232,53 +217,49 @@ int main() {
 	Create the player and assign the player texture and set starting position.
 	*********************************************************************/
 
-	// SET PLAYER TEXTURE AND POSITION
+	Character player(pTexture);
+	player.setPosition(tile(10, 10));
 
 	/*********************************************************************
 	PREPARE TEXTBOX
 	Create the textbox object and set position based on character.
 	*********************************************************************/
 
-	Textbox textBox(faceMap, sysFont, soundBleep, window_width, window_height);
+
 
 	/*********************************************************************
 	PREPARE SCREENS, ANIMATIONS, AND UTILITIES
 	*********************************************************************/
 
-	Title screenTitle(titleTexture, bgtitleTexture, cursorTexture, sysFont, soundBleep, window_width, window_height);
-	Pause screenPause(sysFont, window_width, window_width);
+	Title sysTitle(sysFont, window_size, titleTexture, sfx_blip1, music);
+	Pause sysPause(sysFont, window_size);
 	SceneReader* reader = new SceneReader("resources/script/scenes.txt", "Scene1");
 	Fader sysFader;
-	Textbox* _Textbox = new Textbox(faceMap, sysFont, soundBleep, window_width, window_height);
 
-	/*********************************************************************
-	HARD CODED PROTOTYPE PREVIEW
-	*********************************************************************/
-	// Audrey's trying to do game event stuff
-	bool event_start = true; // only turns true if press Enter at that start box thing
-							  // once true, should have the character move down 2 spaces
-							  //    int start_pos, end_pos; //once it reaches 2, stop event
-							  //    Direction event_move = Direction::South;
-	Event tutorial = { { Direction::South, System::Tilesize * 7} ,{ Direction::East, System::Tilesize * 3 },{ Direction::North,System::Tilesize } };
 	std::string scene_name = "Scene1";
 
 	/*********************************************************************
-	LIGHTING SYSTEM TEST
+	ENTITY LIST
 	*********************************************************************/
+	Actor test_actor(pTexture);
+	test_actor.setPosition(tile(10, 15));
 
-	// OTHER TEST
+	std::vector<Actor*> actors;
+	std::vector<Pawn*> entities;
 
-	Character player(pTexture);
-	Actor test_follow(pTexture);
-	Actor test_follow1(pTexture);
-	Actor test_follow2(pTexture);
-	Actor test_follow3(pTexture);
-	player.setPosition(tile(10,10));
-	test_follow.setPosition(tile(10,15));
-	test_follow1.setPosition(tile(9, 16));
-	test_follow2.setPosition(tile(11, 14));
-	test_follow3.setPosition(tile(11, 13));
-	bool stop = false;
+	Pawn* pawnPtr;
+	Actor* actorPtr;
+
+	pawnPtr = &player;
+	actorPtr = &player;
+	actors.push_back(actorPtr);
+	actorPtr = &test_actor;
+	actors.push_back(actorPtr);
+	
+	for (int i = actors.size(); i != 0; i--) {
+		entities.push_back(actors[i - 1]);
+	}
+
 
 	/*********************************************************************
 	BEGIN GAME LOOP:
@@ -292,9 +273,9 @@ int main() {
 			}
 			else if (event.type == sf::Event::Resized)
 			{
-				window_width = event.size.width;
-				window_height = event.size.height;
-				window.setSize(sf::Vector2u(800, 600));
+				window_size.x = event.size.width;
+				window_size.y = event.size.height;
+				window.setSize(window_size);
 			}
 			else if (event.type == sf::Event::KeyPressed) {
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) &&!title) {
@@ -307,12 +288,12 @@ int main() {
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1))
 					debug = !debug;
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && title) {
-					screenTitle.change_selection(4, Cursor_Direction::Down);
+					sysTitle.change_selection(4, Cursor_Direction::Down);
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && title) {
-					screenTitle.change_selection(4, Cursor_Direction::Up);
+					sysTitle.change_selection(4, Cursor_Direction::Up);
 				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && screenTitle.getSelection() == Selection::Play_Game) {
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && sysTitle.getSelection() == Selection::Play_Game) {
 					sysFader.resetFader();
 					title = false;
 					intro = false;
@@ -320,63 +301,16 @@ int main() {
 						music.play();
 					}
 				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && screenTitle.getSelection() == Selection::Exit) {
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && sysTitle.getSelection() == Selection::Exit) {
 					window.close();
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2) && !pause && !title)
 					textbox = !textbox;
+			}
 		}
-	}
 
 		if ((music.getStatus() == sf::Music::Stopped) && !title && !pause) {
 			music.play();
-		}
-
-		// prime the camera
-		if (!title)
-		{
-			player.move(elapsedTime, player.getPlayerController().get_input());
-			window.setView(playerView);
-			// test //
-			sf::Vector2f player_direction = Normalize2f(player.getPosition() - test_follow.getPosition());
-			int direction;
-			test_follow.setSpeed(2);
-
-			if (player_direction.y == 1) {
-				if (player_direction.x == 0) {
-					direction = Direction::South;
-				}
-				if (player_direction.x == 1)
-					direction = Direction::SouthEast;
-				if (player_direction.x == -1)
-					direction = Direction::SouthWest;
-			}
-			else if (player_direction.y == -1) {
-				if (player_direction.x == 0) {
-					direction = Direction::North;
-				}
-				else if (player_direction.x == 1)
-					direction = Direction::NorthEast;
-				else if (player_direction.x == -1)
-					direction = Direction::NorthWest;
-			}
-			else if (player_direction.x == 0) {
-				if (player_direction.y == 1)
-					direction = Direction::South;
-				else if (player_direction.y == -1)
-					direction = Direction::North;
-			}
-			else if (player_direction.y == 0) {
-				if (player_direction.x == 1)
-					direction = Direction::East;
-				else if (player_direction.x == -1)
-					direction = Direction::West;
-			}
-
-			test_follow.move(elapsedTime, direction);
-
-
-			// test end //
 		}
 
 		// get the elapsed time from the game clock
@@ -389,30 +323,17 @@ int main() {
 		// if the game is not paused, perform normal game actions
 		if (!pause && !title && window.hasFocus())
 		{
+			player.move(elapsedTime, player.getPlayerController().get_input());
+			test_actor.move(elapsedTime, Direction::East);
+			window.setView(playerView);
 
 			// START - COLLISION AND EVENT DETECTION (remove scene2_complete when redoing intro)
-			sysCollision(player, test_follow, ml, collision, player_event);
+			sysCollision(actors, ml);
 			// END 
 
 			// adjust the camera to be viewing player
 			playerView.setCenter(player.getPosition());
-
-			if (!_Textbox->if_endMessage())
-				_Textbox->message(reader->currentMessage().second, reader->currentMessage().first, elapsedTime);
-			else
-			{
-				_Textbox->reset();
-				if (!reader->isEmpty())
-					reader->nextMessage();
-				if (reader->isEmpty()) {
-					_Textbox->reset();
-					delete reader;
-					reader = new SceneReader("resources/script/scenes.txt", scene_name);
-				}
-			}
 		}
-
-
 
 		// prepare to update screen
 		window.clear();
@@ -437,48 +358,24 @@ int main() {
 		// draw walkable and collidable tiles
 		ml.Draw(window, Layer::Field);
 		ml.Draw(window, Layer::Collision_Objects);
-			
-		// draw player
-		if (player.getDepth() > test_follow.getDepth()) {
-			window.draw(player);
-			window.draw(test_follow);
-			window.draw(test_follow1);
-			window.draw(test_follow2);
-			window.draw(test_follow3);
-		}
-		else {
-
-			window.draw(test_follow);
-			window.draw(test_follow1);
-			window.draw(test_follow2);
-			window.draw(test_follow3);
-			window.draw(player);
-			
+		
+		std::sort(entities.begin(), entities.end(), byDepth());
+		// draw entities
+		for (int i = entities.size(); i != 0; i--) {
+			window.draw(*entities[i-1]);
 		}
 
 		// draw top layer of map
 		ml.Draw(window, Layer::Overlay);
 
 		if (title) {
-			screenTitle.animate(elapsedTime);
-			window.draw(screenTitle);
+			window.draw(sysTitle);
 
 		}
-		if (textbox)
-		{
-			_Textbox->setPosition(playerView.getCenter());
-			window.draw(*_Textbox);
-		}
-			
 		if (pause)
 		{
-			screenPause.setPosition(playerView.getCenter());
-			window.draw(screenPause);
-		}
-		
-		if (debug) {
-			textDebug.setPosition(playerView.getCenter().x - window_width*.5, playerView.getCenter().y - window_height*.5);
-			window.draw(textDebug);
+			sysPause.setPosition(playerView.getCenter());
+			window.draw(sysPause);
 		}
 
 		// update screen with changes
@@ -494,7 +391,7 @@ int main() {
 
 \param Player, Map, Collision Switch, Player Use Switch, Player Event Switch
 *********************************************************************/
-void sysCollision(Character& character, Actor& test, tmx::MapLoader& map, bool& collision, bool& player_event)
+void sysCollision(std::vector<Actor*> actors, tmx::MapLoader& map)
 {
 	bool test_collision = false;
 	
@@ -504,21 +401,9 @@ void sysCollision(Character& character, Actor& test, tmx::MapLoader& map, bool& 
 		{
 			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
 			{
-				if (object->Contains(character.getSprite().getPosition())) {
-					character.setPosition(character.getPastPosition());
-				}
-
-				if (object->Contains(test.getSprite().getPosition())) {
-					test.setPosition(test.getPastPosition());
-					test.setCollision(true);
-				}
-
-				character.setCollisionBox(32, 32);
-				test.setCollisionBox(32, 32);
-
-				if (character.getCollisionBox().intersects(test.getCollisionBox())) {
-					character.setPosition(character.getPastPosition());
-					test.setPosition(test.getPastPosition());
+				for (auto actor = actors.begin(); actor != actors.end(); actor++)
+				if (object->Contains((*actor)->getPosition())) {
+					(*actor)->setPosition((*actor)->getPastPosition());
 				}
 			}
 		}

@@ -1,11 +1,11 @@
-#include "pause.h"
+#include "Pause.h"
 
-Pause::Pause(const sf::Font& font, int window_width, int window_height, int font_size) {
+Pause::Pause(const sf::Font& font, sf::Vector2u window_size, int font_size) {
 	pauseText.setFont(font);
 	pauseText.setCharacterSize(font_size);
 	pauseText.setString("Game is paused. Press 'esc' to resume.");
 	pauseText.setOrigin(pauseText.getLocalBounds().width*.5, pauseText.getLocalBounds().height*.5);
-	rectOverlay.setSize(sf::Vector2f(window_width, window_height));
+	rectOverlay.setSize(sf::Vector2f(window_size.x, window_size.y));
 	rectOverlay.setOrigin(rectOverlay.getLocalBounds().width*.5, rectOverlay.getLocalBounds().height*.5);
 	rectOverlay.setFillColor(sf::Color(0, 0, 0, 150));
 }
@@ -27,6 +27,17 @@ void Pause::setSize(sf::Vector2f pos)
 }
 
 void Pause::setPosition(sf::Vector2f pos) {
-	rectOverlay.setPosition(pos);
-	pauseText.setPosition(pos);
+	sf::Vector2f temp = pos;
+}
+
+void Pause::setVisible(bool visibility) {
+	is_visible = visibility;
+}
+
+bool Pause::isVisible() {
+	return is_visible;
+}
+
+sf::Vector2f Pause::getPosition() {
+	return sf::Vector2f(100, 100);
 }

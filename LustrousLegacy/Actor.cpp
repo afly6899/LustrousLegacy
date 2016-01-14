@@ -15,14 +15,6 @@ Actor::~Actor() {
 }
 
 /*********************************************************************
-draw; inherited from class drawable.
-\brief Allows drawable class members to be drawn to the screen.
-*********************************************************************/
-void Actor::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	target.draw(Pawn(*this), states);
-}
-
-/*********************************************************************
 \brief Moves the player based on provided speed and direction.
 \param Elapsed Time, Direction
 *********************************************************************/
