@@ -2,7 +2,7 @@
 
 Cursor::Cursor(const sf::Texture& imagePath_cursor) :
 	cursorSprite(imagePath_cursor),
-	cursorSource(0, 0){
+	cursorSource(sf::Vector2f()){
 	cursorSprite.setOrigin(8, 8);
 }
 

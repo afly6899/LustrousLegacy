@@ -30,9 +30,9 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 // Class definitions
 #include "SceneReader.h"
 #include "Enums.h"
-#include "Textbox.h"
-#include "Title.h"
-#include "Pause.h"
+#include "textbox.h"
+#include "title.h"
+#include "pause.h"
 #include "fader.h"
 #include "TutorialEvent.h"
 #include "debug/debug.h"

@@ -1,4 +1,4 @@
-#include "Pause.h"
+#include "pause.h"
 
 Pause::Pause(const sf::Font& font, sf::Vector2u window_size, int font_size) {
 	pauseText.setFont(font);
