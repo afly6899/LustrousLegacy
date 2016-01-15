@@ -20,7 +20,7 @@ public:
 	void reset_move();
 	void setPosition(sf::Vector2f pos);
 	void hover(float elapsedTime);
-	bool NPC::moveComplete();
+	bool moveComplete();
 
 private:
 

@@ -28,17 +28,12 @@ namespace sf {
 	private:
 
 		std::map<std::string, sf::Sprite>& faceMap;
-		sf::Sprite faceSprite;
-		sf::Sprite faceSprite2;
 		sf::Text actorName;
 		sf::Text displayText;
 		sf::RectangleShape rectText;
 		std::string temp_string = "";
-		std::string previous_name = "";
 		sf::Sound& bleep;
-		sf::Texture faceTemp;
-		bool displayingText = false;
-		bool newActor = false;
+		bool processingText = false;
 		bool end_message = false;
 		bool block_draw;
 		int width;

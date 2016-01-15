@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 **# Welcome to the Lustrous Legacy (formerly RPGTown) github page!**
 
 Lustrous Legacy is a game project being developed for the Video Game and Development Club at the University of California Irvine. Lustrous Legacy is a learning-oriented project with the goal of having every member of the team gain valuable experience in their respective roles.
@@ -13,3 +14,6 @@ Lustrous Legacy is a game project being developed for the Video Game and Develop
 
 Video demonstration of Fall Quarter prototype: https://www.youtube.com/watch?v=X5nR9fbxPGw
 
+=======
+This is a prototype rush job version of the game to demonstrate the developed systems in action.
+>>>>>>> 4bd5fecaffc31714c8cd47e3d291bfa3540d4950

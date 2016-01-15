@@ -1,8 +1,5 @@
-#include <cmath>
-#include <queue>
-#include <iostream>
-#include "Enums.h"
 #include "TutorialEvent.h"
+#include "Enums.h"
 
 // Defining methods for Event
 
@@ -17,26 +14,20 @@ Event::Event(const std::initializer_list<TutorialEvent> events) {
 //    event_chain = std::queue<TutorialEvent>(events);
 }
 
-
-// Mutators/Accessors
 void Event::addEvent(Direction dir, int stop_at) {
     TutorialEvent to_add = {dir, stop_at};
     event_chain.push(to_add);
 }
 
-
 void Event::addEvent(TutorialEvent to_add) {
     event_chain.push(to_add);
 }
-
 
 bool Event::fullEventIsDone() {
     return event_chain.empty();
 }
 
-
-
-bool Event::currentEventIsDone(Player& player) {
+bool Event::currentEventIsDone(Character& player) {
     int distance_traveled;
     if (current_event.direction == Direction::West || current_event.direction == Direction::East)
         distance_traveled = std::abs(player.getPosition().x - start_position.x);
@@ -46,16 +37,14 @@ bool Event::currentEventIsDone(Player& player) {
     return distance_traveled == current_event.stop_distance;
 }
 
-
-void Event::doEvent(Player& player, float elapsedTime) {
-    player.move(speed, elapsedTime, collision, auto_move, current_event.direction);
+void Event::doEvent(Character& player, float elapsedTime) {
+    player.move(elapsedTime, current_event.direction);
 }
 
-
-void Event::runEvent(bool& event_happening, Player& player, float elapsedTime) {
+void Event::runEvent(bool& event_happening, Character& player, float elapsedTime) {
     if (event_happening) {
         if (current_event.direction == Direction::Null) {
-            start_position = player.getPosition();
+            start_position = sf::Vector2f(player.getPosition().x, player.getPosition().y);
             nextEvent();
         } else if (currentEventIsDone(player)) {
             std::cout << "Part of event has finished, player stops moving this way: " << current_event.direction << std::endl;
@@ -65,7 +54,7 @@ void Event::runEvent(bool& event_happening, Player& player, float elapsedTime) {
                 current_event = {Direction::Null, -1};
                 event_happening = false;
             } else {
-                start_position = player.getPosition();
+				start_position = sf::Vector2f(player.getPosition().x, player.getPosition().y);
                 nextEvent();
             }
         }
@@ -75,7 +64,6 @@ void Event::runEvent(bool& event_happening, Player& player, float elapsedTime) {
     }
 }
 
-
 void Event::nextEvent() {
     std::cout << "currently going: " << current_event.direction << ", want to go: " << event_chain.front().direction << " -> ";
     current_event = event_chain.front();
@@ -83,12 +71,6 @@ void Event::nextEvent() {
     event_keeper.push(event_chain.front());
     event_chain.pop();
 }
-
-
-
-
-
-
 // Defining methods for Tutorial Event
 
 // Deconstructor/Constructors
