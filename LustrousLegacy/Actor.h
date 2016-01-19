@@ -25,6 +25,13 @@ public:
 	sf::Vector2f getPastPosition();
 	bool getCollision();
 	bool is_moving();
+////////////////////////////////////TESTINGGGGGGGGGGGGGGGGGGGGGGGGGG///////////////////////////////////////
+	void collided();
+	bool allowMovement(float elapsedTime);
+	bool stop = false;
+	int time_counter = 0;
+	int stop_counter = 3000;
+////////////////////////////////////TESTINGGGGGGGGGGGGGGGGGGGGGGGGGG///////////////////////////////////////
 
 private:
 	int pastDirection;

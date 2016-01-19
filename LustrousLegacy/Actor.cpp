@@ -1,3 +1,4 @@
+#include <iostream> //for debugging
 #include "Actor.h"
 
 /*********************************************************************
@@ -19,38 +20,39 @@ Actor::~Actor() {
 \param Elapsed Time, Direction
 *********************************************************************/
 void Actor::move(float elapsedTime, int direction) {
+	if (!stop || allowMovement(elapsedTime)) {
+		pastPosition = getPosition();
+		pastDirection = getDirection();
 
-	pastPosition = getPosition();
-	pastDirection = getDirection();
+		if (direction != Direction::Null)
+			setDirection(direction);
 
-	if (direction != Direction::Null)
-		setDirection(direction);
+		switch (direction) {
+		case Direction::South: getSprite().move(0, actorSpeed);
+			break;
+		case Direction::East: getSprite().move(actorSpeed, 0);
+			break;
+		case Direction::West: getSprite().move(-actorSpeed, 0);
+			break;
+		case Direction::North: getSprite().move(0, -actorSpeed);
+			break;
+		case Direction::SouthEast: getSprite().move(actorSpeed, actorSpeed);
+			break;
+		case Direction::NorthEast: getSprite().move(actorSpeed, -actorSpeed);
+			break;
+		case Direction::SouthWest: getSprite().move(-actorSpeed, actorSpeed);
+			break;
+		case Direction::NorthWest: getSprite().move(-actorSpeed, -actorSpeed);
+			break;
+		case Direction::Null:
+			break;
+		}
 
-	switch (direction) {
-	case Direction::South: getSprite().move(0, actorSpeed);
-		break;
-	case Direction::East: getSprite().move(actorSpeed, 0);
-		break;
-	case Direction::West: getSprite().move(-actorSpeed, 0);
-		break;
-	case Direction::North: getSprite().move(0, -actorSpeed);
-		break;
-	case Direction::SouthEast: getSprite().move(actorSpeed, actorSpeed);
-		break;
-	case Direction::NorthEast: getSprite().move(actorSpeed, -actorSpeed);
-		break;
-	case Direction::SouthWest: getSprite().move(-actorSpeed, actorSpeed);
-		break;
-	case Direction::NorthWest: getSprite().move(-actorSpeed, -actorSpeed);
-		break;
-	case Direction::Null: 
-		break;
+		if (direction != Direction::Null)
+			spriteAnimate(elapsedTime);
+		else
+			resetTextureRect();
 	}
-
-	if (direction != Direction::Null)
-		spriteAnimate(elapsedTime);
-	else
-		resetTextureRect();
 }
 
 /*********************************************************************
@@ -120,3 +122,22 @@ void Actor::setCollisionBox(int x, int y) {
 sf::FloatRect Actor::getCollisionBox() {
 	return collision_box;
 }
+
+
+
+////////////////////////////////////TESTINGGGGGGGGGGGGGGGGGGGGGGGGGG///////////////////////////////////////
+void Actor::collided() {
+	std::cout << "Collided!" << std::endl;
+	setPosition(pastPosition);
+	stop = true;
+	time_counter = 0;
+}
+
+bool Actor::allowMovement(float elapsedTime) {
+	time_counter += elapsedTime;
+	if (time_counter >= stop_counter) {
+		stop = false;
+	}
+	return !stop;
+}
+////////////////////////////////////TESTINGGGGGGGGGGGGGGGGGGGGGGGGGG///////////////////////////////////////

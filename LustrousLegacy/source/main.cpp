@@ -35,12 +35,12 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "Pause.h"
 #include "fader.h"
 #include "TutorialEvent.h"
-#include "debug/debug.h"
 #include "Actor.h"
 #include "Character.h"
 using namespace std;
 
-void sysCollision(std::vector<Actor*> actors, tmx::MapLoader& map);
+////////////////////////////////////TESTINGGGGGGGGGGGGGGGGGGGGGGGGGG///////////////////////////////////////
+void sysCollision(std::vector<Actor*> actors, tmx::MapLoader& map, tmx::MapLayer* layer);
 sf::Vector2f tile(int tile_row, int tile_column);
 sf::Vector2f Normalize2f(sf::Vector2f pos);
 
@@ -167,7 +167,7 @@ int main() {
 	faceMap["Resdin"] = sf::Sprite(resdinfTexture);
 	faceMap["Resdin"].setOrigin(faceMap["Resdin"].getLocalBounds().width*.5, faceMap["Resdin"].getLocalBounds().height*.5);
 	faceMap["Luke"] = sf::Sprite(lukefTexture);
-	faceMap["Luke"].setOrigin(faceMap["Luke"].getLocalBounds().width*.5, faceMap["Luke"].getLocalBounds().height*.5);	
+	faceMap["Luke"].setOrigin(faceMap["Luke"].getLocalBounds().width*.5, faceMap["Luke"].getLocalBounds().height*.5);
 
 	/*********************************************************************
 	MUSIC
@@ -176,10 +176,10 @@ int main() {
 	sf::Music music;
 	if (!music.openFromFile("resources/audio/test.wav"))
 		return -1; // error
-	
-	/*********************************************************************
-	SOUNDS
-	*********************************************************************/
+
+				   /*********************************************************************
+				   SOUNDS
+				   *********************************************************************/
 
 	sf::Sound sfx_blip1;
 	sf::Sound sfx_blip2;
@@ -211,6 +211,16 @@ int main() {
 
 	tmx::MapLoader ml("resources/maps");
 	ml.Load("start.tmx");
+
+	////////////////////////////////////TESTINGGGGGGGGGGGGGGGGGGGGGGGGGG///////////////////////////////////////
+	tmx::MapLayer collisionLayer(tmx::MapLayerType::ObjectGroup);
+	for (auto layer = ml.GetLayers().begin(); layer != ml.GetLayers().end(); ++layer)
+	{
+		if (layer->name == "Collision") {
+			collisionLayer = tmx::MapLayer(*layer);
+		}
+	}
+	////////////////////////////////////TESTINGGGGGGGGGGGGGGGGGGGGGGGGGG///////////////////////////////////////
 
 	/*********************************************************************
 	PREPARE CHARACTER
@@ -264,7 +274,7 @@ int main() {
 	actors.push_back(actorPtr);
 	actorPtr = &test_actor2;
 	actors.push_back(actorPtr);
-	
+
 	for (int i = actors.size(); i != 0; i--) {
 		entities.push_back(actors[i - 1]);
 	}
@@ -287,7 +297,7 @@ int main() {
 				window.setSize(window_size);
 			}
 			else if (event.type == sf::Event::KeyPressed) {
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) &&!title) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && !title) {
 					pause = !pause;
 					if (pause)
 						music.pause();
@@ -340,7 +350,7 @@ int main() {
 			window.setView(playerView);
 
 			// START - COLLISION AND EVENT DETECTION (remove scene2_complete when redoing intro)
-			sysCollision(actors, ml);
+			sysCollision(actors, ml, &collisionLayer);
 			// END 
 
 			for (auto actor = actors.begin(); actor != actors.end(); actor++) {
@@ -349,8 +359,10 @@ int main() {
 					(*actor_check)->setCollisionBox(32, 32);
 					if ((*actor)->getCollisionBox().intersects((*actor_check)->getCollisionBox())) {
 						if ((*actor)->getPosition() != (*actor_check)->getPosition()) {
-							(*actor)->setPosition((*actor)->getPastPosition());
-							(*actor_check)->setPosition((*actor_check)->getPastPosition());
+							(*actor)->collided();
+							(*actor_check)->collided();
+							/*(*actor)->setPosition((*actor)->getPastPosition());
+							(*actor_check)->setPosition((*actor_check)->getPastPosition());*/
 						}
 
 					}
@@ -361,9 +373,9 @@ int main() {
 			playerView.setCenter(player.getPosition());
 		}
 
-		
 
-		
+
+
 		// prepare to update screen
 		window.clear();
 
@@ -387,11 +399,11 @@ int main() {
 		// draw walkable and collidable tiles
 		ml.Draw(window, Layer::Field);
 		ml.Draw(window, Layer::Collision_Objects);
-		
+
 		std::sort(entities.begin(), entities.end(), byDepth());
 		// draw entities
 		for (int i = entities.size(); i != 0; i--) {
-			window.draw(*entities[i-1]);
+			window.draw(*entities[i - 1]);
 		}
 
 		// draw top layer of map
@@ -410,7 +422,7 @@ int main() {
 		// update screen with changes
 		window.display();
 	}
-		return 0;
+	return 0;
 }
 
 /*********************************************************************
@@ -420,30 +432,29 @@ int main() {
 
 \param Player, Map, Collision Switch, Player Use Switch, Player Event Switch
 *********************************************************************/
-void sysCollision(std::vector<Actor*> actors, tmx::MapLoader& map)
+void sysCollision(std::vector<Actor*> actors, tmx::MapLoader& map, tmx::MapLayer* layer)
 {
 	bool test_collision = false;
-	
-	for (auto layer = map.GetLayers().begin(); layer != map.GetLayers().end(); ++layer)
+	////////////////////////////////////TESTINGGGGGGGGGGGGGGGGGGGGGGGGGG///////////////////////////////////////
+	//for (auto layer = map.GetLayers().begin(); layer != map.GetLayers().end(); ++layer)
+	//{
+	//	if (layer->name == "Collision")
+	//	{
+	for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
 	{
-		if (layer->name == "Collision")
-		{
-			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
-			{
-				for (auto actor = actors.begin(); actor != actors.end(); actor++) {
-					if (object->Contains((*actor)->getPosition())) {
-						(*actor)->setPosition((*actor)->getPastPosition());
-					}
-				}
+		for (auto actor = actors.begin(); actor != actors.end(); actor++) {
+			if (object->Contains((*actor)->getPosition())) {
+				//(*actor)->setPosition((*actor)->getPastPosition());
+				(*actor)->collided();
 			}
 		}
+	}
 
-		if (layer->name == "Events")
+	if (layer->name == "Events")
+	{
+		for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
 		{
-			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
-			{
-				
-			}
+
 		}
 	}
 }
@@ -465,7 +476,7 @@ Returns the center position of a tile based on the row and column provided.
 sf::Vector2f Normalize2f(sf::Vector2f vector) {
 	int x = vector.x;
 	int y = vector.y;
-	
+
 	if (x < 0)
 		x = -1;
 	else if (x > 0)
@@ -475,6 +486,6 @@ sf::Vector2f Normalize2f(sf::Vector2f vector) {
 		y = -1;
 	else if (x > 0)
 		y = 1;
-	
+
 	return sf::Vector2f(x, y);
 }
