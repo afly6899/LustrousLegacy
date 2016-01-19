@@ -33,26 +33,29 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "Textbox.h"
 #include "Title.h"
 #include "Pause.h"
-#include "fader.h"
+#include "Fader.h"
 #include "TutorialEvent.h"
-#include "debug/debug.h"
 #include "Actor.h"
 #include "Character.h"
 using namespace std;
 
 void sysCollision(std::vector<Actor*> actors, tmx::MapLoader& map);
+void actorCollision(std::vector<Actor*>);
+
 sf::Vector2f tile(int tile_row, int tile_column);
 sf::Vector2f Normalize2f(sf::Vector2f pos);
 
-struct byDepth
+class byDepth
 {
-
+public:
 	inline bool operator() (Pawn* pawn1, Pawn* pawn2)
 	{
 		return (pawn1->getDepth() < pawn2->getDepth());
 	}
 
 };
+
+
 
 int main() {
 
@@ -110,6 +113,11 @@ int main() {
 	// PLAYER TEXTURE
 	sf::Texture pTexture;
 	if (!pTexture.loadFromFile("resources/textures/playerSprite.png")) {
+		cerr << "Texture Error" << endl;
+	}
+
+	sf::Texture lukeTexture;
+	if (!lukeTexture.loadFromFile("resources/textures/lukeSprite.png")) {
 		cerr << "Texture Error" << endl;
 	}
 
@@ -241,28 +249,17 @@ int main() {
 	/*********************************************************************
 	ENTITY LIST
 	*********************************************************************/
-	Actor test_actor(pTexture);
-	Actor test_actor1(pTexture);
-	Actor test_actor2(pTexture);
-
+	Actor test_actor(lukeTexture);
 	test_actor.setPosition(tile(10, 15));
-	test_actor1.setPosition(tile(10, 14));
-	test_actor2.setPosition(tile(10, 16));
 
 	std::vector<Actor*> actors;
 	std::vector<Pawn*> entities;
 
-	Pawn* pawnPtr;
 	Actor* actorPtr;
 
-	pawnPtr = &player;
 	actorPtr = &player;
 	actors.push_back(actorPtr);
 	actorPtr = &test_actor;
-	actors.push_back(actorPtr);
-	actorPtr = &test_actor1;
-	actors.push_back(actorPtr);
-	actorPtr = &test_actor2;
 	actors.push_back(actorPtr);
 	
 	for (int i = actors.size(); i != 0; i--) {
@@ -333,36 +330,15 @@ int main() {
 		if (!pause && !title && window.hasFocus())
 		{
 			player.move(elapsedTime, player.getPlayerController().get_input());
-			test_actor.move(elapsedTime, Direction::North);
-			test_actor1.move(elapsedTime, Direction::North);
-			test_actor2.move(elapsedTime, Direction::North);
-
+			test_actor.move(elapsedTime, Direction::South);
 			window.setView(playerView);
-
-			// START - COLLISION AND EVENT DETECTION (remove scene2_complete when redoing intro)
+			
+			// world collision handling with quad trees
 			sysCollision(actors, ml);
-			// END 
-
-			for (auto actor = actors.begin(); actor != actors.end(); actor++) {
-				for (auto actor_check = actors.begin(); actor_check != actors.end(); actor_check++) {
-					(*actor)->setCollisionBox(32, 32);
-					(*actor_check)->setCollisionBox(32, 32);
-					if ((*actor)->getCollisionBox().intersects((*actor_check)->getCollisionBox())) {
-						if ((*actor)->getPosition() != (*actor_check)->getPosition()) {
-							(*actor)->setPosition((*actor)->getPastPosition());
-							(*actor_check)->setPosition((*actor_check)->getPastPosition());
-						}
-
-					}
-				}
-			}
 
 			// adjust the camera to be viewing player
 			playerView.setCenter(player.getPosition());
 		}
-
-		
-
 		
 		// prepare to update screen
 		window.clear();
@@ -414,6 +390,26 @@ int main() {
 }
 
 /*********************************************************************
+/brief temp
+*********************************************************************/
+void actorCollision(std::vector<Actor*> actors)
+{
+	for (auto actor = actors.begin(); actor != actors.end(); actor++) {
+		for (auto actor_check = actors.begin(); actor_check != actors.end(); actor_check++) {
+			(*actor)->setCollisionBox(32, 32);
+			(*actor_check)->setCollisionBox(32, 32);
+			if ((*actor)->getCollisionBox().intersects((*actor_check)->getCollisionBox())) {
+				if ((*actor)->getPosition() != (*actor_check)->getPosition()) {
+					(*actor)->setPosition((*actor)->getPastPosition());
+					(*actor_check)->setPosition((*actor_check)->getPastPosition());
+				}
+
+			}
+		}
+	}
+}
+
+/*********************************************************************
 \brief Performs collision and event handling.
 1. Determines if a player has collided with an object and returns the player to their previous position if true.
 2. Determines if a player has entered an event tile and has initiated event.
@@ -422,27 +418,17 @@ int main() {
 *********************************************************************/
 void sysCollision(std::vector<Actor*> actors, tmx::MapLoader& map)
 {
-	bool test_collision = false;
-	
-	for (auto layer = map.GetLayers().begin(); layer != map.GetLayers().end(); ++layer)
-	{
-		if (layer->name == "Collision")
-		{
-			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
-			{
-				for (auto actor = actors.begin(); actor != actors.end(); actor++) {
-					if (object->Contains((*actor)->getPosition())) {
-						(*actor)->setPosition((*actor)->getPastPosition());
-					}
-				}
-			}
-		}
+	// perform basic actor collision checking
+	actorCollision(actors);
 
-		if (layer->name == "Events")
-		{
-			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
-			{
-				
+	// perform actor/world collision detection
+	for (auto actor = actors.begin(); actor != actors.end(); actor++) {
+		map.UpdateQuadTree((*actor)->getSprite().getGlobalBounds());
+		std::vector<tmx::MapObject*> temp = map.QueryQuadTree((*actor)->getSprite().getGlobalBounds());
+		for (auto object = temp.begin(); object != temp.end(); object++) {
+			if ((*object)->GetParent() == "Collision" && (*object)->Contains((*actor)->getPosition())) {
+				(*actor)->setPosition((*actor)->getPastPosition());
+				break;
 			}
 		}
 	}
