@@ -20,28 +20,27 @@ public:
 	void setSpeed(int speed);
 	void setCollision(bool collision);
 	void setCollisionBox(int x, int y);
+	void setStopCounter(int new_counter);
 
 	sf::FloatRect getCollisionBox();
 	sf::Vector2f getPastPosition();
 	bool getCollision();
 	bool is_moving();
-////////////////////////////////////TESTINGGGGGGGGGGGGGGGGGGGGGGGGGG///////////////////////////////////////
 	void collided();
-	bool allowMovement(float elapsedTime);
-	bool stop = false;
-	int time_counter = 0;
-	int stop_counter = 3000;
-////////////////////////////////////TESTINGGGGGGGGGGGGGGGGGGGGGGGGGG///////////////////////////////////////
 
 private:
 	int pastDirection;
 	unsigned int tile_counter = 0;
 	int actorSpeed = 4;
+	int time_counter = 0;
+	int stop_counter = 300;
 	bool tile_move_set = false;
 	bool movement_complete = true;
 	bool collision = false;
+	bool stop = false;
 	sf::FloatRect collision_box;
 	sf::Vector2f pastPosition;
-
+	
+	bool allowMovement(float elapsedTime);
 };
 #endif

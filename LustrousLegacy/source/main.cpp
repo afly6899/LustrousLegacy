@@ -39,7 +39,7 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "Character.h"
 using namespace std;
 
-////////////////////////////////////TESTINGGGGGGGGGGGGGGGGGGGGGGGGGG///////////////////////////////////////
+tmx::MapLayer getLayer(tmx::MapLoader& map, std::string layerName);
 void sysCollision(std::vector<Actor*> actors, tmx::MapLoader& map, tmx::MapLayer* layer);
 sf::Vector2f tile(int tile_row, int tile_column);
 sf::Vector2f Normalize2f(sf::Vector2f pos);
@@ -177,9 +177,9 @@ int main() {
 	if (!music.openFromFile("resources/audio/test.wav"))
 		return -1; // error
 
-				   /*********************************************************************
-				   SOUNDS
-				   *********************************************************************/
+	/*********************************************************************
+	SOUNDS
+	*********************************************************************/
 
 	sf::Sound sfx_blip1;
 	sf::Sound sfx_blip2;
@@ -207,20 +207,12 @@ int main() {
 	/*********************************************************************
 	LOAD MAP
 	Create all maps and load the first map.
+	Find the collision layer.
 	*********************************************************************/
 
 	tmx::MapLoader ml("resources/maps");
 	ml.Load("start.tmx");
-
-	////////////////////////////////////TESTINGGGGGGGGGGGGGGGGGGGGGGGGGG///////////////////////////////////////
-	tmx::MapLayer collisionLayer(tmx::MapLayerType::ObjectGroup);
-	for (auto layer = ml.GetLayers().begin(); layer != ml.GetLayers().end(); ++layer)
-	{
-		if (layer->name == "Collision") {
-			collisionLayer = tmx::MapLayer(*layer);
-		}
-	}
-	////////////////////////////////////TESTINGGGGGGGGGGGGGGGGGGGGGGGGGG///////////////////////////////////////
+	tmx::MapLayer collisionLayer(getLayer(ml, "Collision"));
 
 	/*********************************************************************
 	PREPARE CHARACTER
@@ -252,12 +244,12 @@ int main() {
 	ENTITY LIST
 	*********************************************************************/
 	Actor test_actor(pTexture);
-	Actor test_actor1(pTexture);
-	Actor test_actor2(pTexture);
+	/*Actor test_actor1(pTexture);
+	Actor test_actor2(pTexture);*/
 
 	test_actor.setPosition(tile(10, 15));
-	test_actor1.setPosition(tile(10, 14));
-	test_actor2.setPosition(tile(10, 16));
+	//test_actor1.setPosition(tile(10, 14));
+	//test_actor2.setPosition(tile(10, 16));
 
 	std::vector<Actor*> actors;
 	std::vector<Pawn*> entities;
@@ -270,10 +262,10 @@ int main() {
 	actors.push_back(actorPtr);
 	actorPtr = &test_actor;
 	actors.push_back(actorPtr);
-	actorPtr = &test_actor1;
+	/*actorPtr = &test_actor1;
 	actors.push_back(actorPtr);
 	actorPtr = &test_actor2;
-	actors.push_back(actorPtr);
+	actors.push_back(actorPtr);*/
 
 	for (int i = actors.size(); i != 0; i--) {
 		entities.push_back(actors[i - 1]);
@@ -344,8 +336,8 @@ int main() {
 		{
 			player.move(elapsedTime, player.getPlayerController().get_input());
 			test_actor.move(elapsedTime, Direction::North);
-			test_actor1.move(elapsedTime, Direction::North);
-			test_actor2.move(elapsedTime, Direction::North);
+			/*test_actor1.move(elapsedTime, Direction::North);
+			test_actor2.move(elapsedTime, Direction::North);*/
 
 			window.setView(playerView);
 
@@ -361,8 +353,6 @@ int main() {
 						if ((*actor)->getPosition() != (*actor_check)->getPosition()) {
 							(*actor)->collided();
 							(*actor_check)->collided();
-							/*(*actor)->setPosition((*actor)->getPastPosition());
-							(*actor_check)->setPosition((*actor_check)->getPastPosition());*/
 						}
 
 					}
@@ -426,6 +416,22 @@ int main() {
 }
 
 /*********************************************************************
+\brief Gets the Collision map layer (with collision boxes)
+Iterates through the map layers and returns the Collision.
+\param Map
+*********************************************************************/
+
+tmx::MapLayer getLayer(tmx::MapLoader& map, std::string layerName) {
+	for (auto layer = map.GetLayers().begin(); layer != map.GetLayers().end(); ++layer)
+	{
+		if (layer->name == layerName) {
+			return *layer;
+		}
+	}
+}
+
+
+/*********************************************************************
 \brief Performs collision and event handling.
 1. Determines if a player has collided with an object and returns the player to their previous position if true.
 2. Determines if a player has entered an event tile and has initiated event.
@@ -435,16 +441,10 @@ int main() {
 void sysCollision(std::vector<Actor*> actors, tmx::MapLoader& map, tmx::MapLayer* layer)
 {
 	bool test_collision = false;
-	////////////////////////////////////TESTINGGGGGGGGGGGGGGGGGGGGGGGGGG///////////////////////////////////////
-	//for (auto layer = map.GetLayers().begin(); layer != map.GetLayers().end(); ++layer)
-	//{
-	//	if (layer->name == "Collision")
-	//	{
 	for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
 	{
 		for (auto actor = actors.begin(); actor != actors.end(); actor++) {
 			if (object->Contains((*actor)->getPosition())) {
-				//(*actor)->setPosition((*actor)->getPastPosition());
 				(*actor)->collided();
 			}
 		}

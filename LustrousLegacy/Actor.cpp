@@ -119,20 +119,29 @@ void Actor::setCollisionBox(int x, int y) {
 /*********************************************************************
 \brief temp
 *********************************************************************/
+void Actor::setStopCounter(int new_counter) {
+	stop_counter = new_counter;
+}
+
+/*********************************************************************
+\brief temp
+*********************************************************************/
 sf::FloatRect Actor::getCollisionBox() {
 	return collision_box;
 }
 
-
-
-////////////////////////////////////TESTINGGGGGGGGGGGGGGGGGGGGGGGGGG///////////////////////////////////////
+/*********************************************************************
+\brief temp
+*********************************************************************/
 void Actor::collided() {
-	std::cout << "Collided!" << std::endl;
 	setPosition(pastPosition);
 	stop = true;
 	time_counter = 0;
 }
 
+/*********************************************************************
+\brief temp
+*********************************************************************/
 bool Actor::allowMovement(float elapsedTime) {
 	time_counter += elapsedTime;
 	if (time_counter >= stop_counter) {
@@ -140,4 +149,3 @@ bool Actor::allowMovement(float elapsedTime) {
 	}
 	return !stop;
 }
-////////////////////////////////////TESTINGGGGGGGGGGGGGGGGGGGGGGGGGG///////////////////////////////////////

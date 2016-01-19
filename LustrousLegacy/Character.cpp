@@ -6,8 +6,7 @@ Player class default constructor.
 *********************************************************************/
 Character::Character(const sf::Texture& imagePath) :
 	Actor(imagePath) {
-	// TESTING
-	stop_counter = 0;
+	setStopCounter(0);
 }
 
 /*********************************************************************
