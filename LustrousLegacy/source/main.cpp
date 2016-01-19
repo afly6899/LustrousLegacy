@@ -55,8 +55,6 @@ public:
 
 };
 
-
-
 int main() {
 
 	/*********************************************************************
@@ -200,7 +198,6 @@ int main() {
 	if (!bleep2.loadFromFile("resources/audio/text_blip2.wav"))
 		return -1; // error
 
-
 	sfx_blip1.setBuffer(bleep1);
 	sfx_blip2.setBuffer(bleep2);
 
@@ -233,8 +230,6 @@ int main() {
 	Create the textbox object and set position based on character.
 	*********************************************************************/
 
-
-
 	/*********************************************************************
 	PREPARE SCREENS, ANIMATIONS, AND UTILITIES
 	*********************************************************************/
@@ -265,7 +260,6 @@ int main() {
 	for (int i = actors.size(); i != 0; i--) {
 		entities.push_back(actors[i - 1]);
 	}
-
 
 	/*********************************************************************
 	BEGIN GAME LOOP:
@@ -332,15 +326,25 @@ int main() {
 			player.move(elapsedTime, player.getPlayerController().get_input());
 			test_actor.move(elapsedTime, Direction::South);
 			window.setView(playerView);
-			
 			// world collision handling with quad trees
 			sysCollision(actors, ml);
+
+
+			if (test_actor.getSprite().getGlobalBounds().intersects(player.getSprite().getGlobalBounds())) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+					test_actor.setDirection(Direction::North);
+					std::cout << "IN EVENT ZONE" << std::endl;
+				}
+				else
+					test_actor.setDirection(Direction::South);
+			}
 
 			// adjust the camera to be viewing player
 			playerView.setCenter(player.getPosition());
 		}
 		
 		// prepare to update screen
+
 		window.clear();
 
 		// update camera
@@ -403,7 +407,6 @@ void actorCollision(std::vector<Actor*> actors)
 					(*actor)->setPosition((*actor)->getPastPosition());
 					(*actor_check)->setPosition((*actor_check)->getPastPosition());
 				}
-
 			}
 		}
 	}
