@@ -37,6 +37,7 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "TutorialEvent.h"
 #include "Actor.h"
 #include "Character.h"
+#include "sfMath.h"
 using namespace std;
 
 void sysCollision(std::vector<Actor*> actors, tmx::MapLoader& map);
@@ -324,19 +325,22 @@ int main() {
 		if (!pause && !title && window.hasFocus())
 		{
 			player.move(elapsedTime, player.getPlayerController().get_input());
-			test_actor.move(elapsedTime, Direction::South);
+
+			//test move to vector position
+			test_actor.setSpeed(2);
+			test_actor.move(elapsedTime, player.getPosition());
+
 			window.setView(playerView);
 			// world collision handling with quad trees
 			sysCollision(actors, ml);
 
-
+			// test interaction
 			if (test_actor.getSprite().getGlobalBounds().intersects(player.getSprite().getGlobalBounds())) {
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
-					test_actor.setDirection(Direction::North);
+					sf::Vector2f player_dir = sfmath::Normalize(player.getPosition() - test_actor.getPosition());
+					test_actor.setDirection(sfmath::vecDirection(player_dir));
 					std::cout << "IN EVENT ZONE" << std::endl;
 				}
-				else
-					test_actor.setDirection(Direction::South);
 			}
 
 			// adjust the camera to be viewing player
@@ -444,26 +448,4 @@ Returns the center position of a tile based on the row and column provided.
 *********************************************************************/
 sf::Vector2f tile(int tile_row, int tile_column) {
 	return sf::Vector2f(System::Tilesize*tile_row + System::Tilesize*.5, System::Tilesize*tile_column + System::Tilesize*.5);
-}
-
-/*********************************************************************
-\Returns the center position of a specific tile.
-Returns the center position of a tile based on the row and column provided.
-\param row, column
-*********************************************************************/
-sf::Vector2f Normalize2f(sf::Vector2f vector) {
-	int x = vector.x;
-	int y = vector.y;
-	
-	if (x < 0)
-		x = -1;
-	else if (x > 0)
-		x = 1;
-
-	if (y < 0)
-		y = -1;
-	else if (x > 0)
-		y = 1;
-	
-	return sf::Vector2f(x, y);
 }

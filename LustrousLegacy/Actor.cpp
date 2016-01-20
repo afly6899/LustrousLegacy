@@ -1,4 +1,5 @@
 #include "Actor.h"
+#include "sfMath.h"
 
 /*********************************************************************
 Actor class default constructor.
@@ -56,19 +57,25 @@ void Actor::move(float elapsedTime, int direction) {
 /*********************************************************************
 \brief temp
 *********************************************************************/
-void Actor::move_tile(float elapsedTime, unsigned int number_of_tiles, int direction) {
+void Actor::move(float elapsedTime, sf::Vector2f pos) {
 
-	if (movement_complete) {
-		tile_counter = number_of_tiles*Tilesize;
-		movement_complete = false;
-	}
-		
-	if (tile_counter != 0) {
-		move(elapsedTime, direction);
-		tile_counter--;
-	}
-	else if(tile_counter == 0)
-		movement_complete = true;
+	sf::Vector2f vec_dir = sfmath::Normalize(pos - getPosition());
+	unsigned int dir = sfmath::vecDirection(vec_dir);
+
+	pastPosition = getPosition();
+	pastDirection = getDirection();
+
+	if (dir != Direction::Null)
+		setDirection(dir);
+
+	std::cout << vec_dir.x << vec_dir.y << std::endl;
+	getSprite().move(vec_dir);
+
+	if (dir != Direction::Null)
+		spriteAnimate(elapsedTime);
+	else
+		resetTextureRect();
+	
 }
 
 /*********************************************************************

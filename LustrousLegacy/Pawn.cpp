@@ -71,6 +71,7 @@ void Pawn::setFrameDuration(unsigned int frame_duration) {
 	aniFrameDuration = frame_duration;
 }
 
+
 /*********************************************************************
 \brief Performs the animation of the Pawn's sprite. 
 \param elapsedTime
