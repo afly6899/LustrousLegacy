@@ -17,6 +17,9 @@ public:
 	Character(const sf::Texture& playerTexture);
 	virtual ~Character();
 	PlayerController& getPlayerController();
+	virtual std::string getClass();
+	void collided();
+
 private:
 	PlayerController movement;
 };

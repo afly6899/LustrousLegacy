@@ -22,11 +22,12 @@ public:
 	void setPosition(sf::Vector2f pos);
 	void setVisible(bool visibility);;
 	bool isVisible();
-	sf::Vector2f getPosition();
+	virtual void update(sf::Vector2f pos, float elapsedTime);
 
 private:
 
 	sf::RectangleShape rectOverlay;
+	sf::Vector2f originalPos;
 	sf::Text pauseText;
 	bool is_visible = false;
 };

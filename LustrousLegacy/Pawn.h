@@ -25,6 +25,7 @@ public:
 	void resetTextureRect();
 	sf::Sprite& getSprite();
 	sf::Vector2f getPosition();
+	virtual std::string getClass();
 
 private:
 

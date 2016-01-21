@@ -5,6 +5,7 @@
 #include <SFML/Audio.hpp>
 #include "Pawn.h"
 #include "UI.h"
+#include <map>
 
 // Forward Declaration
 namespace sf {
@@ -20,25 +21,24 @@ namespace sf {
 		Title(const sf::Font& font, const sf::Vector2u window_size, const sf::Texture& imagePath_title, sf::Sound& sfx, sf::Music& titleMusic);
 		virtual ~Title();
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-		void change_selection(int num_of_selections, int up_or_down);
+		void change_selection(int up_or_down);
 		int getSelection();
-		void setPosition(sf::Vector2f pos);
-		void setVisible(bool visibility);;
-		bool isVisible();
-		sf::Vector2f getPosition();
+		virtual void setPosition(sf::Vector2f pos);
+		virtual void update(sf::Vector2f pos, float elapsedTime);
 
 	private:
 
-		sf::Text play_game, load_game, settings, exit_game;
 		sf::Sound& cursorBleep;
 		sf::Vector2u window_size;
 		sf::Vector2f originalPos;
+		sf::Vector2f cursor_originalPos;
 		Pawn titleCursor;
 		Pawn titleLogo;
+		int num_of_selections;
 		int selection = 1;
 		int aniCounter = 0;
 		int aniFrameDuration = 300;
 		int seperation = 50;
-		bool is_visible = true;
+		std::map<int, sf::Text> title_options;
 	};
 #endif

@@ -1,10 +1,10 @@
 #include "Pause.h"
 
 Pause::Pause(const sf::Font& font, sf::Vector2u window_size, int font_size) {
-	pauseText.setFont(font);
+	
 	pauseText.setCharacterSize(font_size);
-	pauseText.setString("Game is paused. Press 'esc' to resume.");
-	pauseText.setOrigin(pauseText.getLocalBounds().width*.5, pauseText.getLocalBounds().height*.5);
+	pauseText = createOption("Game is paused. Press 'esc' to resume.", font);
+
 	rectOverlay.setSize(sf::Vector2f(window_size.x, window_size.y));
 	rectOverlay.setOrigin(rectOverlay.getLocalBounds().width*.5, rectOverlay.getLocalBounds().height*.5);
 	rectOverlay.setFillColor(sf::Color(0, 0, 0, 150));
@@ -27,7 +27,8 @@ void Pause::setSize(sf::Vector2f pos)
 }
 
 void Pause::setPosition(sf::Vector2f pos) {
-	sf::Vector2f temp = pos;
+	rectOverlay.setPosition(pos);
+	pauseText.setPosition(pos);
 }
 
 void Pause::setVisible(bool visibility) {
@@ -38,6 +39,9 @@ bool Pause::isVisible() {
 	return is_visible;
 }
 
-sf::Vector2f Pause::getPosition() {
-	return sf::Vector2f(100, 100);
+void Pause::update(sf::Vector2f pos, float elapsedTime) {
+	if (pos != originalPos) {
+		setPosition(pos);
+		originalPos = pos;
+	}
 }

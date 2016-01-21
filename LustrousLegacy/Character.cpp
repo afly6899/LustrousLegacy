@@ -17,3 +17,18 @@ Character::~Character() {
 PlayerController& Character::getPlayerController() {
 	return movement;
 }
+
+/*********************************************************************
+\brief temp
+*********************************************************************/
+std::string Character::getClass() {
+	return "Character";
+}
+
+/*********************************************************************
+\brief temp
+*********************************************************************/
+void Character::collided() {
+	resetTextureRect();
+	setPosition(getPastPosition());
+}

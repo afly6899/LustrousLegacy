@@ -39,4 +39,5 @@ namespace sfmath {
 
 		return Direction::Null;
 	}
+
 }

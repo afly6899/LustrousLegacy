@@ -27,6 +27,7 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include <math.h>
 #include <ltbl/lighting/LightSystem.h>
 #include "tmx/MapLoader.h"
+
 // Class definitions
 #include "SceneReader.h"
 #include "Enums.h"
@@ -38,13 +39,15 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "Actor.h"
 #include "Character.h"
 #include "sfMath.h"
+
 using namespace std;
 
-void sysCollision(std::vector<Actor*> actors, tmx::MapLoader& map);
-void actorCollision(std::vector<Actor*>);
+void sysCollision(std::vector<Actor*>& actors, tmx::MapLoader& map);
+void actorCollision(std::vector<Actor*>&);
+bool UI_visible(std::vector<UI*>& sysWindows);
+bool UI_visible_excluding(UI* sysWindow, std::vector<UI*> sysWindows);
 
 sf::Vector2f tile(int tile_row, int tile_column);
-sf::Vector2f Normalize2f(sf::Vector2f pos);
 
 class byDepth
 {
@@ -95,14 +98,6 @@ int main() {
 	SYSTEM SWITCHES:
 	*********************************************************************/
 
-	bool debug = false;
-	bool textbox = false;
-	bool player_event = false;
-	bool is_moving = false;
-	bool collision = false;
-	bool move_flag = false;
-	bool title = true;
-	bool pause = false;
 	bool intro = false;
 
 	/*********************************************************************
@@ -152,7 +147,7 @@ int main() {
 
 	// TITLE TEXTURE
 	sf::Texture titleTexture;
-	if (!titleTexture.loadFromFile("resources/textures/LustrousLegacyLogo.png")) {
+	if (!titleTexture.loadFromFile("resources/textures/cursor.png")) {
 		cerr << "Texture Error" << endl;
 	}
 
@@ -225,25 +220,32 @@ int main() {
 
 	Character player(pTexture);
 	player.setPosition(tile(10, 10));
+	playerView.setCenter(player.getPosition());
 
 	/*********************************************************************
-	PREPARE TEXTBOX
-	Create the textbox object and set position based on character.
+	OLD PROTOTYPE STUFF THAT HAS NOT BEEN REMOVED YET
 	*********************************************************************/
 
-	/*********************************************************************
-	PREPARE SCREENS, ANIMATIONS, AND UTILITIES
-	*********************************************************************/
-
-	Title sysTitle(sysFont, window_size, titleTexture, sfx_blip1, music);
-	Pause sysPause(sysFont, window_size);
 	SceneReader* reader = new SceneReader("resources/script/scenes.txt", "Scene1");
 	Fader sysFader;
-
 	std::string scene_name = "Scene1";
 
 	/*********************************************************************
-	ENTITY LIST
+	UI PROCESSING
+	*********************************************************************/
+
+	std::vector<UI*> sysWindows;
+
+	Title* titlePtr = new Title(sysFont, window_size, titleTexture, sfx_blip1, music);
+	Pause* pausePtr = new Pause(sysFont, window_size);
+
+	titlePtr->setVisible(true);
+
+	sysWindows.push_back(titlePtr);
+	sysWindows.push_back(pausePtr);
+
+	/*********************************************************************
+	ENTITY PROCESSING
 	*********************************************************************/
 	Actor test_actor(lukeTexture);
 	test_actor.setPosition(tile(10, 15));
@@ -274,63 +276,67 @@ int main() {
 			}
 			else if (event.type == sf::Event::Resized)
 			{
-				window_size.x = event.size.width;
-				window_size.y = event.size.height;
+				window_size = sf::Vector2u(event.size.width, event.size.height);
 				window.setSize(window_size);
 			}
 			else if (event.type == sf::Event::KeyPressed) {
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) &&!title) {
-					pause = !pause;
-					if (pause)
-						music.pause();
-					else
-						music.play();
-				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1))
-					debug = !debug;
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && title) {
-					sysTitle.change_selection(4, Cursor_Direction::Down);
-				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && title) {
-					sysTitle.change_selection(4, Cursor_Direction::Up);
-				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && sysTitle.getSelection() == Selection::Play_Game) {
-					sysFader.resetFader();
-					title = false;
-					intro = false;
-					if (!pause) {
-						music.play();
+				// TITLE-SCREEN KEY CHECKING
+				if (titlePtr->isVisible()) {
+					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+							titlePtr->change_selection(Cursor_Direction::Down);
+					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+							titlePtr->change_selection(Cursor_Direction::Up);
+					}
+					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+						switch (titlePtr->getSelection()) {
+						case(Selection::Play_Game) :
+							sysFader.resetFader();
+							titlePtr->setVisible(false);
+							intro = true;
+							break;
+						case(Selection::Exit) :
+							window.close();
+							break;
+						case(Selection::Load_Game) :
+							std::cout << "There is no implementation of this option yet." << std::endl;
+						case(Selection::Settings) :
+							std::cout << "There is no implementation of this option yet." << std::endl;
+						}
 					}
 				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && title && sysTitle.getSelection() == Selection::Exit) {
-					window.close();
+				// PAUSE-SCREEN CHECKING
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+					if (!UI_visible_excluding(pausePtr, sysWindows)) {
+						pausePtr->setVisible(!pausePtr->isVisible());
+						if (pausePtr->isVisible())
+							music.pause();
+						else
+							music.play();
+					}
 				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2) && !pause && !title)
-					textbox = !textbox;
 			}
-		}
-
-		if ((music.getStatus() == sf::Music::Stopped) && !title && !pause) {
-			music.play();
 		}
 
 		// get the elapsed time from the game clock
 		elapsedTime = gameClock.restart().asMilliseconds();
 
-		if (!pause) {
-			aniCounter += elapsedTime;
-		}
-
-		// if the game is not paused, perform normal game actions
-		if (!pause && !title && window.hasFocus())
+		// if there is no UI visible, perform normal game actions!
+		if (!UI_visible(sysWindows) && window.hasFocus())
 		{
+			aniCounter += elapsedTime;
+			if (music.getStatus() == sf::Music::Stopped)
+				music.play();
+
 			player.move(elapsedTime, player.getPlayerController().get_input());
 
 			//test move to vector position
 			test_actor.setSpeed(2);
-			test_actor.move(elapsedTime, player.getPosition());
+			if (test_actor.getPosition() != tile(10, 10))
+				test_actor.move(elapsedTime, tile(10, 10));
+			else
+				test_actor.setPosition(tile(10, 15));
+			// end test move for test_actor
 
-			window.setView(playerView);
 			// world collision handling with quad trees
 			sysCollision(actors, ml);
 
@@ -338,10 +344,11 @@ int main() {
 			if (test_actor.getSprite().getGlobalBounds().intersects(player.getSprite().getGlobalBounds())) {
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
 					sf::Vector2f player_dir = sfmath::Normalize(player.getPosition() - test_actor.getPosition());
-					test_actor.setDirection(sfmath::vecDirection(player_dir));
+					test_actor.faceActor(player);
 					std::cout << "IN EVENT ZONE" << std::endl;
 				}
 			}
+			// end test interaction
 
 			// adjust the camera to be viewing player
 			playerView.setCenter(player.getPosition());
@@ -380,15 +387,13 @@ int main() {
 
 		// draw top layer of map
 		ml.Draw(window, Layer::Overlay);
-
-		if (title) {
-			window.draw(sysTitle);
-
-		}
-		if (pause)
-		{
-			sysPause.setPosition(playerView.getCenter());
-			window.draw(sysPause);
+	
+		// draw UI
+		for (auto sys = sysWindows.begin(); sys != sysWindows.end(); sys++) {
+			if ((*sys)->isVisible()) {
+				(*sys)->update(player.getPosition(), elapsedTime);
+				window.draw(**sys);
+			}
 		}
 
 		// update screen with changes
@@ -400,7 +405,7 @@ int main() {
 /*********************************************************************
 /brief temp
 *********************************************************************/
-void actorCollision(std::vector<Actor*> actors)
+void actorCollision(std::vector<Actor*>& actors)
 {
 	for (auto actor = actors.begin(); actor != actors.end(); actor++) {
 		for (auto actor_check = actors.begin(); actor_check != actors.end(); actor_check++) {
@@ -408,8 +413,8 @@ void actorCollision(std::vector<Actor*> actors)
 			(*actor_check)->setCollisionBox(32, 32);
 			if ((*actor)->getCollisionBox().intersects((*actor_check)->getCollisionBox())) {
 				if ((*actor)->getPosition() != (*actor_check)->getPosition()) {
-					(*actor)->setPosition((*actor)->getPastPosition());
-					(*actor_check)->setPosition((*actor_check)->getPastPosition());
+					(*actor)->collided();
+					(*actor_check)->collided();
 				}
 			}
 		}
@@ -418,12 +423,8 @@ void actorCollision(std::vector<Actor*> actors)
 
 /*********************************************************************
 \brief Performs collision and event handling.
-1. Determines if a player has collided with an object and returns the player to their previous position if true.
-2. Determines if a player has entered an event tile and has initiated event.
-
-\param Player, Map, Collision Switch, Player Use Switch, Player Event Switch
 *********************************************************************/
-void sysCollision(std::vector<Actor*> actors, tmx::MapLoader& map)
+void sysCollision(std::vector<Actor*>& actors, tmx::MapLoader& map)
 {
 	// perform basic actor collision checking
 	actorCollision(actors);
@@ -448,4 +449,25 @@ Returns the center position of a tile based on the row and column provided.
 *********************************************************************/
 sf::Vector2f tile(int tile_row, int tile_column) {
 	return sf::Vector2f(System::Tilesize*tile_row + System::Tilesize*.5, System::Tilesize*tile_column + System::Tilesize*.5);
+}
+
+
+/*********************************************************************
+\brief temp
+*********************************************************************/
+bool UI_visible(std::vector<UI*>& sysWindows) {
+	for (auto sys = sysWindows.begin(); sys != sysWindows.end(); sys++) {
+		if ((*sys)->isVisible()) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/*********************************************************************
+\brief temp
+*********************************************************************/
+bool UI_visible_excluding(UI* sysWindow, std::vector<UI*> sysWindows) {
+	sysWindows.erase(std::find(sysWindows.begin(), sysWindows.end(), sysWindow));
+	return UI_visible(sysWindows);
 }

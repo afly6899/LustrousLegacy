@@ -62,3 +62,4 @@ enum Fade {
 	Out = 1
 };
 #endif
+
