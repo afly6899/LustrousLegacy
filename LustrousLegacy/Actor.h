@@ -5,6 +5,9 @@
 #include "Pawn.h"
 #include <SFML/Graphics.hpp>
 
+// For testing
+#include <queue>
+
 namespace sf {
 
 	class Texture;
@@ -44,6 +47,8 @@ private:
 	bool stop = false;
 	sf::FloatRect collision_box;
 	sf::Vector2f pastPosition;
+
+	std::queue<sf::Vector2f> targetPositions;
 
 };
 #endif

@@ -331,10 +331,9 @@ int main() {
 
 			//test move to vector position
 			test_actor.setSpeed(2);
-			if (test_actor.getPosition() != tile(10, 10))
-				test_actor.move(elapsedTime, tile(10, 10));
-			else
-				test_actor.setPosition(tile(10, 15));
+			test_actor.move(elapsedTime, tile(10, 12));
+			/*else
+				test_actor.setPosition(tile(10, 15));*/
 			// end test move for test_actor
 
 			// world collision handling with quad trees
