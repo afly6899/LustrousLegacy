@@ -32,3 +32,10 @@ void Character::collided() {
 	resetTextureRect();
 	setPosition(getPastPosition());
 }
+
+/*********************************************************************
+\brief temp
+*********************************************************************/
+sf::Vector2f Character::getViewArm() {
+	return sf::Vector2f(getPosition().x, getPosition().y - 32);
+}

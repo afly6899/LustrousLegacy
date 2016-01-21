@@ -220,7 +220,7 @@ int main() {
 
 	Character player(pTexture);
 	player.setPosition(tile(10, 10));
-	playerView.setCenter(player.getPosition());
+	playerView.setCenter(player.getViewArm());
 
 	/*********************************************************************
 	OLD PROTOTYPE STUFF THAT HAS NOT BEEN REMOVED YET
@@ -350,7 +350,7 @@ int main() {
 			// end test interaction
 
 			// adjust the camera to be viewing player
-			playerView.setCenter(player.getPosition());
+			playerView.setCenter(player.getViewArm());
 		}
 		
 		// prepare to update screen

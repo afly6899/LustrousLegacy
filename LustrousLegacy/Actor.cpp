@@ -199,7 +199,7 @@ void Actor::faceActor(Actor& other_actor) {
 }
 
 
-// Testing
+/* Testing
 void Actor::addTargetPosition(sf::Vector2f pos) {
 	targetPositions.push(pos);
 }
@@ -210,3 +210,4 @@ void Actor::addTargetPositions(std::queue<sf::Vector2f> pos) {
 		pos.pop();
 	}
 }
+*/
