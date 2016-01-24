@@ -25,7 +25,6 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include <SFML/Audio.hpp>
 #include <map>
 #include <math.h>
-#include <ltbl/lighting/LightSystem.h>
 #include "tmx/MapLoader.h"
 
 // Class definitions
@@ -226,7 +225,6 @@ int main() {
 	OLD PROTOTYPE STUFF THAT HAS NOT BEEN REMOVED YET
 	*********************************************************************/
 
-	SceneReader* reader = new SceneReader("resources/script/scenes.txt", "Scene1");
 	Fader sysFader;
 	std::string scene_name = "Scene1";
 
@@ -249,6 +247,10 @@ int main() {
 	*********************************************************************/
 	Actor test_actor(lukeTexture);
 	test_actor.setPosition(tile(10, 15));
+	test_actor.addTargetPosition(tile(12, 12));
+	test_actor.addTargetPosition(tile(12, 10));
+	test_actor.addTargetPosition(tile(10, 10));
+	test_actor.addTargetPosition(tile(10, 12));
 
 	std::vector<Actor*> actors;
 	std::vector<Pawn*> entities;
@@ -263,6 +265,9 @@ int main() {
 	for (int i = actors.size(); i != 0; i--) {
 		entities.push_back(actors[i - 1]);
 	}
+
+	Textbox* _Textbox = new Textbox(faceMap, sysFont, sfx_blip1, window_size.x, window_size.y);
+	SceneReader* reader = new SceneReader("resources/script/scenes.txt", "Intro");
 
 	/*********************************************************************
 	BEGIN GAME LOOP:
@@ -331,7 +336,7 @@ int main() {
 
 			//test move to vector position
 			test_actor.setSpeed(2);
-			test_actor.move(elapsedTime, tile(10, 12));
+			test_actor.cycleMovement(elapsedTime);
 			/*else
 				test_actor.setPosition(tile(10, 15));*/
 			// end test move for test_actor
@@ -344,7 +349,26 @@ int main() {
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
 					sf::Vector2f player_dir = sfmath::Normalize(player.getPosition() - test_actor.getPosition());
 					test_actor.faceActor(player);
+					test_actor.collided();
 					std::cout << "IN EVENT ZONE" << std::endl;
+					/*
+					_Textbox->setPosition(player.getViewArm());
+					if (!_Textbox->if_endMessage())
+						_Textbox->message(reader->currentMessage().second, reader->currentMessage().first, elapsedTime);
+					else
+					{
+						_Textbox->reset();
+						if (!reader->isEmpty())
+							reader->nextMessage();
+						if (reader->isEmpty()) {
+							delete _Textbox;
+							_Textbox = new Textbox(faceMap, sysFont, sfx_blip1, window_size.x, window_size.y);
+							delete reader;
+							reader = new SceneReader("resources/script/scenes.txt", scene_name);
+						}
+					}
+					*/
+
 				}
 			}
 			// end test interaction
@@ -394,6 +418,8 @@ int main() {
 				window.draw(**sys);
 			}
 		}
+		
+		window.draw(*_Textbox);
 
 		// update screen with changes
 		window.display();

@@ -3,10 +3,12 @@
 
 #include "Enums.h"
 #include "Pawn.h"
+#include "source\Textbox.h"
+#include "source\SceneReader.h"
 #include <SFML/Graphics.hpp>
 
 // For testing
-#include <queue>
+#include <vector>
 
 namespace sf {
 
@@ -29,10 +31,10 @@ public:
 	sf::Vector2f getPastPosition();
 	bool allowMovement(float elapsedTime);
 	bool getCollision();
-	bool is_moving();
 	virtual void collided();
-	void enableMovement();
 	void disableMovement();
+	void addTargetPosition(sf::Vector2f pos);
+	void cycleMovement(float elapsedTime);
 	virtual std::string getClass();
 
 private:
@@ -47,8 +49,7 @@ private:
 	bool stop = false;
 	sf::FloatRect collision_box;
 	sf::Vector2f pastPosition;
-
-	std::queue<sf::Vector2f> targetPositions;
+	std::vector<sf::Vector2f> targetPositions;
 
 };
 #endif

@@ -40,4 +40,8 @@ namespace sfmath {
 		return Direction::Null;
 	}
 
+	template<typename T>
+	T mul(int m, T vec) {
+		return T(vec.x*m, vec.y*m);
+	}
 }

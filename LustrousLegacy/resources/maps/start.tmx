@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="45" height="30" tilewidth="64" tileheight="64" nextobjectid="107">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="45" height="30" tilewidth="64" tileheight="64" nextobjectid="108">
  <tileset firstgid="1" name="64_forest_tileset" tilewidth="64" tileheight="64" tilecount="144" columns="16">
   <image source="64_forest_tileset.png" width="1024" height="576"/>
  </tileset>
@@ -4482,7 +4482,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="143"/>
+   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -4710,7 +4710,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="92"/>
+   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -5424,14 +5424,11 @@
   <object id="2" x="448" y="384" width="448" height="64"/>
   <object id="4" x="896" y="384" width="64" height="896"/>
   <object id="5" x="448" y="1216" width="448" height="64"/>
-  <object id="7" x="576" y="704" width="64" height="64"/>
-  <object id="8" x="832" y="832" width="64" height="64"/>
-  <object id="14" x="448" y="448" width="64" height="64"/>
-  <object id="15" x="832" y="448" width="64" height="64"/>
+  <object id="7" x="576" y="704" width="64" height="80"/>
+  <object id="8" x="832" y="832" width="64" height="80"/>
+  <object id="14" x="448" y="448" width="64" height="80"/>
+  <object id="15" x="832" y="448" width="64" height="80"/>
   <object id="29" x="448" y="832" width="128" height="64"/>
-  <object id="33" x="576" y="448" width="192" height="128"/>
-  <object id="37" x="576" y="576" width="64" height="64"/>
-  <object id="39" x="704" y="576" width="64" height="64"/>
   <object id="45" x="2112" y="1856" width="496" height="128"/>
   <object id="46" x="2368" y="1792" width="192" height="64"/>
   <object id="48" x="1856" y="1856" width="256" height="64"/>
@@ -5454,7 +5451,6 @@
   <object id="79" x="1856" y="1536" width="384" height="64"/>
   <object id="80" x="2240" y="1472" width="128" height="64"/>
   <object id="81" x="2368" y="1344" width="64" height="128"/>
-  <object id="82" x="832" y="896" width="64" height="64"/>
  </objectgroup>
  <objectgroup name="Events">
   <object id="24" name="Start" x="704" y="960" width="64" height="64"/>
@@ -5697,8 +5693,8 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="78"/>
-   <tile gid="79"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
    <tile gid="80"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -5742,9 +5738,9 @@
    <tile gid="0"/>
    <tile gid="65"/>
    <tile gid="0"/>
-   <tile gid="94"/>
-   <tile gid="95"/>
-   <tile gid="96"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="65"/>
    <tile gid="0"/>
@@ -5787,9 +5783,6 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="110"/>
-   <tile gid="111"/>
-   <tile gid="112"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -5832,9 +5825,6 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="126"/>
-   <tile gid="127"/>
-   <tile gid="128"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -5877,9 +5867,15 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="142"/>
    <tile gid="0"/>
-   <tile gid="144"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>

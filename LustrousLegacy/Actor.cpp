@@ -87,20 +87,13 @@ void Actor::move(float elapsedTime, sf::Vector2f pos) {
 		if (dir != Direction::Null)
 			setDirection(dir);
 
-		getSprite().move(vec_dir);
+		getSprite().move(sfmath::mul(actorSpeed, vec_dir));
 
 		if (dir != Direction::Null)
 			spriteAnimate(elapsedTime);
 		else
 			resetTextureRect();
 	}
-}
-
-/*********************************************************************
-\brief temp
-*********************************************************************/
-bool Actor::is_moving() {
-	return !movement_complete;
 }
 
 /*********************************************************************
@@ -168,13 +161,7 @@ std::string Actor::getClass() {
 *********************************************************************/
 void Actor::disableMovement() {
 	stop = true;
-}
-
-/*********************************************************************
-\brief temp
-*********************************************************************/
-void Actor::enableMovement() {
-	stop = false;
+	time_counter = 0;
 }
 
 /*********************************************************************
@@ -198,16 +185,23 @@ void Actor::faceActor(Actor& other_actor) {
 	resetTextureRect();
 }
 
-
-/* Testing
-void Actor::addTargetPosition(sf::Vector2f pos) {
-	targetPositions.push(pos);
-}
-
-void Actor::addTargetPositions(std::queue<sf::Vector2f> pos) {
-	while (!pos.empty()) {
-		targetPositions.push(pos.front);
-		pos.pop();
+/*********************************************************************
+\brief temp
+*********************************************************************/
+void Actor::cycleMovement(float elapsedTime) {
+	if (!targetPositions.empty()) {
+		move(elapsedTime, (targetPositions[0]));
+		if (getPosition() == targetPositions[0]) {
+			//collided();
+			sf::Vector2f temp = targetPositions[0];
+			targetPositions.erase(targetPositions.begin());
+			targetPositions.push_back(temp);
+		}
 	}
 }
-*/
+/*********************************************************************
+\brief temp
+*********************************************************************/
+void Actor::addTargetPosition(sf::Vector2f pos) {
+	targetPositions.push_back(pos);
+}
