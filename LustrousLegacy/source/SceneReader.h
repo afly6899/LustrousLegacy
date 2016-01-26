@@ -22,12 +22,13 @@ public:
     //
     // Constructors
     //
-    
+
     // Creates and enqueues all SpeechBubbles for a scene
     // Predefine: fileName is the file in which the desired scene is stored.
     // sceneID is the ID for the scene in which you wish to create.
     SceneReader(const FileName& fileName, const SceneID& sceneID);
-	SceneReader& operator=(const SceneReader& copy);
+    SceneReader& operator=(const SceneReader& copy);
+
     //
     // Queries
     //

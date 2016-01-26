@@ -52,7 +52,7 @@ bool SceneReader::isEmpty()
 // Returns current SpeechBubble.
 SpeechBubble SceneReader::currentMessage()
 {
-    if (size() > 0)
+    if (sceneLines.size() > 0)
     {
 	return sceneLines.front();
     }
