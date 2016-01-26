@@ -1,8 +1,7 @@
 #include "textbox.h"
 
 	Textbox::Textbox(std::map<std::string, sf::Sprite>& faceMap, const sf::Font& font, sf::Sound& bleep, sf::Vector2f window_size, bool block, int font_size, int padding) :
-		faceMap(faceMap), window_size(window_size), bleep(bleep), block_draw(block), padding(padding) {
-		
+	    faceMap(faceMap), window_size(window_size), bleep(bleep), block_draw(block), padding(padding), reader(nullptr) {
 		displayText.setFont(font);
 		displayText.setCharacterSize(font_size);
 		displayText.setColor(sf::Color::White);
