@@ -16,12 +16,10 @@ public:
 
 	Character(const sf::Texture& playerTexture);
 	virtual ~Character();
-	PlayerController& getPlayerController();
 	sf::Vector2f getViewArm();
 	virtual std::string getClass();
 	void collided();
 
-private:
-	PlayerController movement;
+	PlayerController controller;
 };
 #endif

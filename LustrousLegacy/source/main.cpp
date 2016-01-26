@@ -1,6 +1,6 @@
 /*********************************************************************
-Game: Lustrous Legacy (RPGTown)
-UC Irvine - Fall 2015 Quarter (VGDC Project)
+Game: Lustrous Legacy
+UC Irvine - Winter 2016 Quarter (VGDC Project)
 
 Team:
 - Hayden McFarland (Project Lead / Programmer)
@@ -41,6 +41,8 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 
 using namespace std;
 
+// main functions temporarily located here
+
 void sysCollision(std::vector<Actor*>& actors, tmx::MapLoader& map);
 void actorCollision(std::vector<Actor*>&);
 bool UI_visible(std::vector<UI*>& sysWindows);
@@ -48,6 +50,7 @@ bool UI_visible_excluding(UI* sysWindow, std::vector<UI*> sysWindows);
 
 sf::Vector2f tile(int tile_row, int tile_column);
 
+// used to sort a vector of pawns by depth
 class byDepth
 {
 public:
@@ -57,6 +60,8 @@ public:
 	}
 
 };
+
+// end main functions
 
 int main() {
 
@@ -98,6 +103,8 @@ int main() {
 	*********************************************************************/
 
 	bool intro = false;
+	bool textbox = false;
+	bool ENTER_KEY = false;
 
 	/*********************************************************************
 	TEXTURES
@@ -266,8 +273,7 @@ int main() {
 		entities.push_back(actors[i - 1]);
 	}
 
-	Textbox* _Textbox = new Textbox(faceMap, sysFont, sfx_blip1, window_size.x, window_size.y);
-	SceneReader* reader = new SceneReader("resources/script/scenes.txt", "Intro");
+	Textbox* _Textbox = new Textbox(faceMap, sysFont, sfx_blip1, sf::Vector2f(window_size.x, window_size.y));
 
 	/*********************************************************************
 	BEGIN GAME LOOP:
@@ -276,21 +282,20 @@ int main() {
 	while (window.isOpen()) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed) {
+			switch (event.type) {
+			case(sf::Event::Closed) :
 				window.close();
-			}
-			else if (event.type == sf::Event::Resized)
-			{
+				break;
+			case(sf::Event::Resized) :
 				window_size = sf::Vector2u(event.size.width, event.size.height);
 				window.setSize(window_size);
-			}
-			else if (event.type == sf::Event::KeyPressed) {
-				// TITLE-SCREEN KEY CHECKING
+				break;
+			case(sf::Event::KeyPressed) :					
 				if (titlePtr->isVisible()) {
 					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-							titlePtr->change_selection(Cursor_Direction::Down);
+						titlePtr->change_selection(Cursor_Direction::Down);
 					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-							titlePtr->change_selection(Cursor_Direction::Up);
+						titlePtr->change_selection(Cursor_Direction::Up);
 					}
 					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
 						switch (titlePtr->getSelection()) {
@@ -309,7 +314,6 @@ int main() {
 						}
 					}
 				}
-				// PAUSE-SCREEN CHECKING
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 					if (!UI_visible_excluding(pausePtr, sysWindows)) {
 						pausePtr->setVisible(!pausePtr->isVisible());
@@ -319,6 +323,7 @@ int main() {
 							music.play();
 					}
 				}
+				break;
 			}
 		}
 
@@ -326,13 +331,13 @@ int main() {
 		elapsedTime = gameClock.restart().asMilliseconds();
 
 		// if there is no UI visible, perform normal game actions!
-		if (!UI_visible(sysWindows) && window.hasFocus())
+		if (!UI_visible(sysWindows) && window.hasFocus() && !textbox)
 		{
 			aniCounter += elapsedTime;
 			if (music.getStatus() == sf::Music::Stopped)
 				music.play();
 
-			player.move(elapsedTime, player.getPlayerController().get_input());
+			player.move(elapsedTime, player.controller.get_input());
 
 			//test move to vector position
 			test_actor.setSpeed(2);
@@ -346,29 +351,19 @@ int main() {
 
 			// test interaction
 			if (test_actor.getSprite().getGlobalBounds().intersects(player.getSprite().getGlobalBounds())) {
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
-					sf::Vector2f player_dir = sfmath::Normalize(player.getPosition() - test_actor.getPosition());
-					test_actor.faceActor(player);
-					test_actor.collided();
-					std::cout << "IN EVENT ZONE" << std::endl;
-					/*
-					_Textbox->setPosition(player.getViewArm());
-					if (!_Textbox->if_endMessage())
-						_Textbox->message(reader->currentMessage().second, reader->currentMessage().first, elapsedTime);
-					else
-					{
-						_Textbox->reset();
-						if (!reader->isEmpty())
-							reader->nextMessage();
-						if (reader->isEmpty()) {
-							delete _Textbox;
-							_Textbox = new Textbox(faceMap, sysFont, sfx_blip1, window_size.x, window_size.y);
-							delete reader;
-							reader = new SceneReader("resources/script/scenes.txt", scene_name);
+
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+					unsigned int player_dir = sfmath::vecDirection(sfmath::Normalize(player.getPosition() - test_actor.getPosition()));
+					std::cout << player_dir << "(from test_actor)<------>(player facing)" << player.getDirection() << endl;
+
+					if (player_dir != player.getDirection()) {
+						// alot of the direction system needs to change for this to work properly
+						test_actor.faceActor(player);
+						test_actor.collided();
+						if (!textbox) {
+							textbox = !textbox;
 						}
 					}
-					*/
-
 				}
 			}
 			// end test interaction
@@ -376,7 +371,7 @@ int main() {
 			// adjust the camera to be viewing player
 			playerView.setCenter(player.getViewArm());
 		}
-		
+
 		// prepare to update screen
 
 		window.clear();
@@ -414,12 +409,20 @@ int main() {
 		// draw UI
 		for (auto sys = sysWindows.begin(); sys != sysWindows.end(); sys++) {
 			if ((*sys)->isVisible()) {
-				(*sys)->update(player.getPosition(), elapsedTime);
+				(*sys)->update(player.getViewArm(), elapsedTime);
 				window.draw(**sys);
 			}
 		}
-		
-		window.draw(*_Textbox);
+
+		if (textbox) {
+			std::string message[] = { "resources/script/scenes.txt", "LukeTEST" };
+			if (textbox) {
+				player.resetTextureRect();
+				textbox = _Textbox->display_message(message, player, elapsedTime);
+				if (textbox)
+					window.draw(*_Textbox);
+			}
+		}
 
 		// update screen with changes
 		window.display();
@@ -434,8 +437,6 @@ void actorCollision(std::vector<Actor*>& actors)
 {
 	for (auto actor = actors.begin(); actor != actors.end(); actor++) {
 		for (auto actor_check = actors.begin(); actor_check != actors.end(); actor_check++) {
-			(*actor)->setCollisionBox(32, 32);
-			(*actor_check)->setCollisionBox(32, 32);
 			if ((*actor)->getCollisionBox().intersects((*actor_check)->getCollisionBox())) {
 				if ((*actor)->getPosition() != (*actor_check)->getPosition()) {
 					(*actor)->collided();

@@ -3,8 +3,6 @@
 
 #include "Enums.h"
 #include "Pawn.h"
-#include "source\Textbox.h"
-#include "source\SceneReader.h"
 #include <SFML/Graphics.hpp>
 
 // For testing
@@ -23,14 +21,13 @@ public:
 	virtual void move(float elapsedTime, int direction);
 	virtual void move(float elapsedTime, sf::Vector2f pos);
 	void setSpeed(int speed);
-	void setCollision(bool collision);
-	void setCollisionBox(int x, int y);
 	void setStopCounter(int new_counter);
 	void faceActor(Actor& other_actor);
+	void setCollision(bool collision);
+	bool getCollision();
+	bool allowMovement(float elapsedTime);
 	sf::FloatRect getCollisionBox();
 	sf::Vector2f getPastPosition();
-	bool allowMovement(float elapsedTime);
-	bool getCollision();
 	virtual void collided();
 	void disableMovement();
 	void addTargetPosition(sf::Vector2f pos);
@@ -47,7 +44,6 @@ private:
 	bool movement_complete = true;
 	bool collision = false;
 	bool stop = false;
-	sf::FloatRect collision_box;
 	sf::Vector2f pastPosition;
 	std::vector<sf::Vector2f> targetPositions;
 

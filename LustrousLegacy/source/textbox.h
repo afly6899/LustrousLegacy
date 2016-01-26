@@ -3,6 +3,9 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include "SceneReader.h"
+#include "Character.h"
+#include "Enums.h"
 
 // Forward Declaration
 namespace sf {
@@ -15,15 +18,17 @@ namespace sf {
 	class Textbox : public sf::Drawable {
 	public:
 
-		Textbox(std::map<std::string, sf::Sprite>& faceMap, const sf::Font& font, sf::Sound& bleep, int width_box, int height_box, bool block = false, int font_size = 20, int padding = 25);
+		Textbox(std::map<std::string, sf::Sprite>& faceMap, const sf::Font& font, sf::Sound& bleep, sf::Vector2f window_size, bool block = false, int font_size = 20, int padding = 25);
 		virtual ~Textbox();
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 		void setPosition(const sf::Vector2f position);
 		void message(std::string to_display, std::string name = "", float elapsedTime = 0);
 		void setSpeed(int speed);
 		void setFontSize(int size);
+		void get_input(bool ENTER_KEY);
 		bool if_endMessage();
 		void reset();
+		bool display_message(std::string scene_arr[], Character& player, float elapsedTime);
 
 	private:
 
@@ -33,11 +38,11 @@ namespace sf {
 		sf::RectangleShape rectText;
 		std::string temp_string = "";
 		sf::Sound& bleep;
+		SceneReader* reader;
 		bool processingText = false;
 		bool end_message = false;
 		bool block_draw;
-		int width;
-		int height;
+		sf::Vector2f window_size;
 		int padding;
 		int count = 0;
 		int lines = 0;
@@ -45,6 +50,7 @@ namespace sf {
 		int end_length = 0;
 		int string_length = 0;
 		int aniCounter = 0;
-		int aniFrameDuration = 25;
+		int aniFrameDuration = 0;
+		unsigned int state;
 	};
 #endif

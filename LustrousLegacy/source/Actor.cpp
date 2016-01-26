@@ -79,7 +79,7 @@ void Actor::move(float elapsedTime, int direction) {
 void Actor::move(float elapsedTime, sf::Vector2f pos) {
 	if (!stop || allowMovement(elapsedTime)) {
 		sf::Vector2f vec_dir = sfmath::Normalize(pos - getPosition());
-		unsigned int dir = sfmath::vecDirection(vec_dir);
+		unsigned int dir = sfmath::vecTrueDirection(vec_dir);
 
 		pastPosition = getPosition();
 		pastDirection = getDirection();
@@ -127,16 +127,10 @@ bool Actor::getCollision() {
 /*********************************************************************
 \brief temp
 *********************************************************************/
-void Actor::setCollisionBox(int x, int y) {
-	sf::Vector2f center = getPosition();
-	collision_box = sf::FloatRect(center.x + x, center.y + y, x, y);
-}
-
-/*********************************************************************
-\brief temp
-*********************************************************************/
 sf::FloatRect Actor::getCollisionBox() {
-	return collision_box;
+	sf::Vector2f center = getPosition();
+	int offset = getSprite().getTextureRect().width / 2;
+	return sf::FloatRect(center.x + offset, center.y + offset, offset, offset);
 }
 
 /*********************************************************************

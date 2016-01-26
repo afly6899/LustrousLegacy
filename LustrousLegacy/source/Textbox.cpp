@@ -1,7 +1,7 @@
 #include "textbox.h"
 
-	Textbox::Textbox(std::map<std::string, sf::Sprite>& faceMap, const sf::Font& font, sf::Sound& bleep, int width_box, int height_box, bool block, int font_size, int padding) :
-		faceMap(faceMap), width(width_box), height(height_box), bleep(bleep), block_draw(block), padding(padding) {
+	Textbox::Textbox(std::map<std::string, sf::Sprite>& faceMap, const sf::Font& font, sf::Sound& bleep, sf::Vector2f window_size, bool block, int font_size, int padding) :
+		faceMap(faceMap), window_size(window_size), bleep(bleep), block_draw(block), padding(padding) {
 		
 		displayText.setFont(font);
 		displayText.setCharacterSize(font_size);
@@ -10,8 +10,8 @@
 		bleep.setPitch(2);
 		if (!block_draw)
 		{
-			rectText.setSize(sf::Vector2f(width - padding, height*.3));
-			rectText.setOrigin((width - padding)*.5, height*.5);
+			rectText.setSize(sf::Vector2f(window_size.x - padding, window_size.y*.3));
+			rectText.setOrigin((window_size.x - padding)*.5, window_size.y*.5);
 			rectText.setFillColor(sf::Color::Black);
 			rectText.setOutlineColor(sf::Color::White);
 			rectText.setOutlineThickness(2);
@@ -19,8 +19,8 @@
 			actorName.setFont(font);
 		}
 		else {
-			rectText.setSize(sf::Vector2f(width, height));
-			rectText.setOrigin(width*.5, height*.5);
+			rectText.setSize(window_size);
+			rectText.setOrigin(window_size.x*.5, window_size.y*.5);
 		}	
 	}
 
@@ -77,7 +77,7 @@
 				temp_string += to_display[count];
 				length_counter += 1;
 
-				difference_x = length_counter*displayText.getCharacterSize() - (width*2 - (padding*3)*4);
+				difference_x = length_counter*displayText.getCharacterSize() - (window_size.x*2 - (padding*3)*4);
 				if (difference_x > 0) {
 					int space_pos = temp_string.find_last_of(' ');
 					std::string temp_word = temp_string.substr(space_pos + 1);
@@ -135,4 +135,25 @@
 
 	void Textbox::setFontSize(int size) {
 		displayText.setCharacterSize(size);
+	}
+
+	bool Textbox::display_message(std::string scene_arr[], Character& player, float elapsedTime) {
+		setPosition(player.getViewArm());
+		if (reader == nullptr) {
+			reader = new SceneReader(scene_arr[0], scene_arr[1]);
+		}
+		if (!if_endMessage())
+			message(reader->currentMessage().second, reader->currentMessage().first, elapsedTime);
+		else
+		{
+			reset();
+			if (!reader->isEmpty())
+				reader->nextMessage();
+			if (reader->isEmpty()) {
+				delete reader;
+				reader = nullptr;
+				return false;
+			}
+		}
+		return true;
 	}

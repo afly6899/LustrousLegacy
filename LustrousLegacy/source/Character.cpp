@@ -14,10 +14,6 @@ Player class virtual destructor.
 Character::~Character() {
 }
 
-PlayerController& Character::getPlayerController() {
-	return movement;
-}
-
 /*********************************************************************
 \brief temp
 *********************************************************************/
