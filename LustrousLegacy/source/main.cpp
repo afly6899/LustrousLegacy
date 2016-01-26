@@ -38,6 +38,8 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "Actor.h"
 #include "Character.h"
 #include "sfMath.h"
+#include "MoveStep.h"
+#include "Step.h"
 
 using namespace std;
 
@@ -259,6 +261,20 @@ int main() {
 	test_actor.addTargetPosition(tile(10, 10));
 	test_actor.addTargetPosition(tile(10, 12));
 
+
+	// EVENT TESTING //
+	std::vector<sf::Vector2f> positions;
+	positions.push_back(tile(12, 12));
+	positions.push_back(tile(12, 10));
+	positions.push_back(tile(10, 10));
+	positions.push_back(tile(10, 12));
+
+	MoveStep* move_ptr = new MoveStep(positions);
+	std::queue<Step*> step_ptrs;
+	step_ptrs.push(move_ptr);
+
+	//
+
 	std::vector<Actor*> actors;
 	std::vector<Pawn*> entities;
 
@@ -274,7 +290,12 @@ int main() {
 	}
 
 	Textbox* _Textbox = new Textbox(faceMap, sysFont, sfx_blip1, sf::Vector2f(window_size.x, window_size.y));
+	
+	
+	// TEST //
 
+		
+	// END TEST //
 	/*********************************************************************
 	BEGIN GAME LOOP:
 	*********************************************************************/
@@ -341,7 +362,7 @@ int main() {
 
 			//test move to vector position
 			test_actor.setSpeed(2);
-			test_actor.cycleMovement(elapsedTime);
+			//test_actor.cycleMovement(elapsedTime);
 			/*else
 				test_actor.setPosition(tile(10, 15));*/
 			// end test move for test_actor
@@ -350,13 +371,14 @@ int main() {
 			sysCollision(actors, ml);
 
 			// test interaction
-			if (test_actor.getSprite().getGlobalBounds().intersects(player.getSprite().getGlobalBounds())) {
+			/*if (test_actor.getSprite().getGlobalBounds().intersects(player.getSprite().getGlobalBounds())) {
 
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
-					unsigned int player_dir = sfmath::vecDirection(sfmath::Normalize(player.getPosition() - test_actor.getPosition()));
-					std::cout << player_dir << "(from test_actor)<------>(player facing)" << player.getDirection() << endl;
+					unsigned int dir_player_from_actor = sfmath::vecTrueDirection(sfmath::Normalize(player.getPosition() - test_actor.getPosition()));
+					std::cout << dir_player_from_actor << "(from test_actor)<------>(player facing)" << player.getDirection() << endl;
+					std::cout << player.getDirection() << std::endl;
 
-					if (player_dir != player.getDirection()) {
+					if (dir_player_from_actor != player.getDirection()) {
 						// alot of the direction system needs to change for this to work properly
 						test_actor.faceActor(player);
 						test_actor.collided();
@@ -366,11 +388,21 @@ int main() {
 					}
 				}
 			}
+			*/
+
+			if (step_ptrs.front()->run(elapsedTime, test_actor)) {
+				std::cout << "doing" << endl;
+			}
+
 			// end test interaction
 
 			// adjust the camera to be viewing player
 			playerView.setCenter(player.getViewArm());
 		}
+
+		// end
+
+		//
 
 		// prepare to update screen
 
