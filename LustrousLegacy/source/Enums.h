@@ -61,5 +61,11 @@ enum Fade {
 	In = 0,
 	Out = 1
 };
+
+enum Map {
+	Counter = 0,
+	FrameDuration = 1,
+	Layer = 2
+};
 #endif
 

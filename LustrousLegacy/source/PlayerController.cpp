@@ -1,17 +1,17 @@
 #include "PlayerController.h"
 
 /*********************************************************************
-PlayerController default constructor.
+\brief temp
 *********************************************************************/
 PlayerController::PlayerController() {}
 
 /*********************************************************************
-PlayerController destructor.
+\brief temp
 *********************************************************************/
 PlayerController::~PlayerController() {}
 
 /*********************************************************************
-PlayerController get_input() functon.
+\brief temp
 *********************************************************************/
 int PlayerController::get_input() {
 
@@ -57,14 +57,14 @@ int PlayerController::get_input() {
 }
 
 /*********************************************************************
-PlayerController get_input() functon.
+\brief temp
 *********************************************************************/
 void PlayerController::allow_input() {
 	allow_player_input = true;
 }
 
 /*********************************************************************
-PlayerController get_input() functon.
+\brief temp
 *********************************************************************/
 void PlayerController::block_input() {
 	allow_player_input = false;

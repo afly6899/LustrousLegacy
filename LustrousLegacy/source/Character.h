@@ -19,6 +19,7 @@ public:
 	sf::Vector2f getViewArm();
 	virtual std::string getClass();
 	void collided();
+	bool check_Interact(Actor& actor);
 
 	PlayerController controller;
 };

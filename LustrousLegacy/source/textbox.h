@@ -37,7 +37,7 @@ namespace sf {
 		sf::RectangleShape rectText;
 		std::string temp_string = "";
 		sf::Sound& bleep;
-		SceneReader* reader;
+		SceneReader* reader = nullptr;
 		bool processingText = false;
 		bool end_message = false;
 		bool block_draw;

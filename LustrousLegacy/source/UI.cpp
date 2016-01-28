@@ -1,18 +1,25 @@
 #include "UI.h"
 #include "Enums.h"
 
-// Utility Functions
-
+/*********************************************************************
+\brief temp
+*********************************************************************/
 void UI::selected(sf::Text& string) {
 	string.setColor(sf::Color::Yellow);
 	string.setStyle(sf::Text::Italic);
 }
 
+/*********************************************************************
+\brief temp
+*********************************************************************/
 void UI::clearStyle(sf::Text& string) {
 	string.setColor(sf::Color::White);
 	string.setStyle(sf::Text::Regular);
 }
 
+/*********************************************************************
+\brief temp
+*********************************************************************/
 sf::Text UI::createOption(std::string option_name, const sf::Font& font) {
 	sf::Text option;
 	option.setFont(font);

@@ -1,27 +1,38 @@
 #include "fader.h"
 
+/*********************************************************************
+\brief temp
+*********************************************************************/
 Fader::Fader() {
 	rectFade.setSize(sf::Vector2f(800, 600));
 	rectBlack = rectFade;
 	rectBlack.setFillColor(sf::Color(0, 0, 0, 255));
 }
 
-Fader::~Fader() {
+/*********************************************************************
+\brief temp
+*********************************************************************/
+Fader::~Fader() {}
 
-}
-
+/*********************************************************************
+\brief temp
+*********************************************************************/
 void Fader::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(rectFade, states);
 }
 
+/*********************************************************************
+\brief temp
+*********************************************************************/
 void Fader::setPosition(const sf::Vector2f position) {
 	rectFade.setPosition(position.x - 400, position.y - 300);
 	rectBlack.setPosition(position.x - 400, position.y - 300);
 }
 
+/*********************************************************************
+\brief temp
+*********************************************************************/
 void Fader::performFade(int fade_type, int speed) {
-	
-	
 	if (!fading)
 	{
 		fader_type = fade_type;
@@ -59,15 +70,24 @@ void Fader::performFade(int fade_type, int speed) {
 	}
 }
 
+/*********************************************************************
+\brief temp
+*********************************************************************/
 void Fader::resetFader() {
 	fading = false;
 	complete = false;
 }
 
+/*********************************************************************
+\brief temp
+*********************************************************************/
 sf::RectangleShape Fader::blackScreen() {
 	return rectBlack;
 }
 
+/*********************************************************************
+\brief temp
+*********************************************************************/
 bool Fader::isComplete() {
 	return complete;
 }
