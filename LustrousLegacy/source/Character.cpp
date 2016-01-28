@@ -44,25 +44,25 @@ bool Character::check_Interact(Actor& actor) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
 			unsigned int dir_player_from_actor = sfmath::vecTrueDirection(sfmath::Normalize(getPosition() - actor.getPosition()));
 			unsigned int play_dir = getDirection();
-			bool interact = false;
+			bool interact = true;
 
 			switch (dir_player_from_actor)
 			{
 			case(Direction::NorthWest) :
-				if (play_dir != Direction::North && play_dir != Direction::West)
-					interact = true;
+				if (play_dir == Direction::North || play_dir == Direction::West)
+					interact = false;
 				break;
 			case(Direction::NorthEast) :
-				if (play_dir != Direction::North && play_dir != Direction::East)
-					interact = true;
+				if (play_dir == Direction::North || play_dir == Direction::East)
+					interact = false;
 				break;
 			case(Direction::SouthWest) :
-				if (play_dir != Direction::North && play_dir != Direction::West)
-					interact = true;
+				if (play_dir == Direction::North || play_dir == Direction::West)
+					interact = false;
 				break;
 			case(Direction::SouthEast) :
-				if (play_dir != Direction::South && play_dir != Direction::East)
-					interact = true;
+				if (play_dir == Direction::South || play_dir == Direction::East)
+					interact = false;
 				break;
 			}
 			if (dir_player_from_actor != getDirection() && interact) {

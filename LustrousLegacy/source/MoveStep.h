@@ -2,7 +2,7 @@
 #ifndef MOVESTEP_H_
 #define MOVESTEP_H_
 
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <vector>
 #include "Step.h"
 
