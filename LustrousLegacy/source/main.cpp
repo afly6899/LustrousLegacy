@@ -20,14 +20,14 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 
 *********************************************************************/
 
-// Include libraries
+//// Include libraries
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <map>
 #include <math.h>
 #include "tmx/MapLoader.h"
 
-// Class definitions
+//// Class definitions
 #include "SceneReader.h"
 #include "Enums.h"
 #include "Textbox.h"
