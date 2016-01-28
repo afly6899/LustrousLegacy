@@ -1,5 +1,8 @@
 #include "textbox.h"
 
+	/*********************************************************************
+	\brief temp
+	*********************************************************************/
 	Textbox::Textbox(std::map<std::string, sf::Sprite>& faceMap, const sf::Font& font, sf::Sound& bleep, sf::Vector2f window_size, bool block, int font_size, int padding) :
 		faceMap(faceMap), window_size(window_size), bleep(bleep), block_draw(block), padding(padding) {
 		
@@ -24,9 +27,14 @@
 		}	
 	}
 
-	Textbox::~Textbox() {
-	}
+	/*********************************************************************
+	\brief temp
+	*********************************************************************/
+	Textbox::~Textbox() {}
 
+	/*********************************************************************
+	\brief temp
+	*********************************************************************/
 	void Textbox::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 		
 		if (!block_draw)
@@ -38,14 +46,17 @@
 		target.draw(displayText, states);
 	}
 
+	/*********************************************************************
+	\brief temp
+	*********************************************************************/
 	void Textbox::setPosition(const sf::Vector2f position) {
 		if (!block_draw)
 		{
 			rectText.setPosition(position.x, position.y + 410);
 			if (actorName.getString() == "Warren")
-				faceMap[actorName.getString()].setPosition(position.x - 200, position.y - 85);
+				faceMap[actorName.getString()].setPosition(position.x - 200, position.y - 84);
 			else
-				faceMap[actorName.getString()].setPosition(position.x + 200, position.y - 85);
+				faceMap[actorName.getString()].setPosition(position.x + 200, position.y - 84);
 			rectText.setPosition(position.x, position.y + 410);
 			displayText.setPosition(position.x - 350, position.y + 150);
 			actorName.setPosition(position.x - 350, position.y + 115);
@@ -55,6 +66,9 @@
 		}	
 	}
 
+	/*********************************************************************
+	\brief temp
+	*********************************************************************/
 	void Textbox::message(std::string to_display, std::string name, float elapsedTime)
 	{
 		if (!processingText && !end_message) {
@@ -113,6 +127,9 @@
 		}
 	}
 
+	/*********************************************************************
+	\brief temp
+	*********************************************************************/
 	bool Textbox::if_endMessage() {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
 			return end_message;
@@ -120,23 +137,33 @@
 		return false;
 	}
 
-	// reset prepares the Textbox for the next input string
+	/*********************************************************************
+	\brief temp
+	*********************************************************************/
 	void Textbox::reset() {
 		end_message = false;
 		temp_string = "";
 		displayText.setString(temp_string);
 	}
 
-	// setSpeed sets the speed of the text rendering; a larger value results in slower text rendering in ms
+	/*********************************************************************
+	\brief temp
+	*********************************************************************/
 	void Textbox::setSpeed(int frame_duration)
 	{	
 		aniFrameDuration = frame_duration;
 	}
 
+	/*********************************************************************
+	\brief temp
+	*********************************************************************/
 	void Textbox::setFontSize(int size) {
 		displayText.setCharacterSize(size);
 	}
 
+	/*********************************************************************
+	\brief temp
+	*********************************************************************/
 	bool Textbox::display_message(std::string scene_arr[], Character& player, float elapsedTime) {
 		setPosition(player.getViewArm());
 		if (reader == nullptr) {

@@ -34,23 +34,28 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "Title.h"
 #include "Pause.h"
 #include "Fader.h"
-#include "TutorialEvent.h"
 #include "Actor.h"
 #include "Character.h"
 #include "sfMath.h"
+#include "MoveStep.h"
+#include "Step.h"
 
 using namespace std;
 
-// main functions temporarily located here
-
+// MAIN FUNCTIONS
 void sysCollision(std::vector<Actor*>& actors, tmx::MapLoader& map);
 void actorCollision(std::vector<Actor*>&);
 bool UI_visible(std::vector<UI*>& sysWindows);
 bool UI_visible_excluding(UI* sysWindow, std::vector<UI*> sysWindows);
-
+void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> texMap);
+void animateMap(tmx::MapLoader& ml, sf::RenderWindow& window, float(&worldAnimationArr)[3]);
+void drawTextbox(sf::RenderWindow& window, Textbox* textbox, bool flag);
+void drawEntities(sf::RenderWindow& window, std::vector<Pawn*>& entities);
+void drawUI(sf::RenderWindow& window, sf::View playerView, std::vector<UI*>& sysWindows, float elapsedTime);
+sf::Vector2f Vector2iTo2f(sf::Vector2i pos);
 sf::Vector2f tile(int tile_row, int tile_column);
 
-// used to sort a vector of pawns by depth
+// TEMP -> DEPTH SORT CLASS
 class byDepth
 {
 public:
@@ -60,8 +65,6 @@ public:
 	}
 
 };
-
-// end main functions
 
 int main() {
 
@@ -85,6 +88,7 @@ int main() {
 	*********************************************************************/
 
 	sf::View playerView(sf::FloatRect(0, 0, window_size.x, window_size.y));
+	playerView.setCenter(Vector2iTo2f(window.getPosition()));
 	sf::Clock gameClock;
 
 	/*********************************************************************
@@ -102,28 +106,22 @@ int main() {
 	SYSTEM SWITCHES:
 	*********************************************************************/
 
-	bool intro = false;
+	bool initial_load_map = false;
 	bool textbox = false;
-	bool ENTER_KEY = false;
 
 	/*********************************************************************
 	TEXTURES
 	*********************************************************************/
 
-	// PLAYER TEXTURE
+	// WARREN SPRITE
 	sf::Texture pTexture;
 	if (!pTexture.loadFromFile("resources/textures/playerSprite.png")) {
 		cerr << "Texture Error" << endl;
 	}
 
+	// LUKE SPRITE
 	sf::Texture lukeTexture;
 	if (!lukeTexture.loadFromFile("resources/textures/lukeSprite.png")) {
-		cerr << "Texture Error" << endl;
-	}
-
-	// NPC TEXTURE
-	sf::Texture npcTexture;
-	if (!npcTexture.loadFromFile("resources/textures/tempSprite.png")) {
 		cerr << "Texture Error" << endl;
 	}
 
@@ -168,7 +166,13 @@ int main() {
 	if (!bookTexture.loadFromFile("resources/textures/book.png")) {
 		cerr << "Texture Error" << endl;
 	}
+	
+	// textureMap HOLDS THE REFERENCES OF ALL TEXTURES
+	std::map<std::string, sf::Texture*> textureMap;
+	textureMap["Warren"] = &pTexture;
+	textureMap["Luke"] = &lukeTexture;
 
+	// faceMap HOLDS ALL THE FACE SPRITES
 	std::map<std::string, sf::Sprite> faceMap;
 	faceMap["Warren"] = sf::Sprite(pfTexture);
 	faceMap["Warren"].setOrigin(faceMap["Warren"].getLocalBounds().width*.5, faceMap["Warren"].getLocalBounds().height*.5);
@@ -204,29 +208,23 @@ int main() {
 	sfx_blip2.setBuffer(bleep2);
 
 	/*********************************************************************
-	WORLD PARAMETERS:
+	WORLD ANIMATION PARAMETERS:
 	*********************************************************************/
-
-	float aniCounter = 0;
-	float aniFrameDuration = 800;
-	int layer = 0;
+	float worldAnimationArr[] = { 0, 800, 0 };
 
 	/*********************************************************************
-	LOAD MAP
-	Create all maps and load the first map.
+	PREPARE MAP
 	*********************************************************************/
 
 	tmx::MapLoader ml("resources/maps");
-	ml.Load("start.tmx");
+	std::string map_name = "start.tmx";
+	std::string current_map = "";
 
 	/*********************************************************************
 	PREPARE CHARACTER
-	Create the player and assign the player texture and set starting position.
 	*********************************************************************/
 
 	Character player(pTexture);
-	player.setPosition(tile(10, 10));
-	playerView.setCenter(player.getViewArm());
 
 	/*********************************************************************
 	OLD PROTOTYPE STUFF THAT HAS NOT BEEN REMOVED YET
@@ -245,6 +243,7 @@ int main() {
 	Pause* pausePtr = new Pause(sysFont, window_size);
 
 	titlePtr->setVisible(true);
+	titlePtr->setPosition(Vector2iTo2f(window.getPosition()));
 
 	sysWindows.push_back(titlePtr);
 	sysWindows.push_back(pausePtr);
@@ -252,29 +251,18 @@ int main() {
 	/*********************************************************************
 	ENTITY PROCESSING
 	*********************************************************************/
-	Actor test_actor(lukeTexture);
-	test_actor.setPosition(tile(10, 15));
-	test_actor.addTargetPosition(tile(12, 12));
-	test_actor.addTargetPosition(tile(12, 10));
-	test_actor.addTargetPosition(tile(10, 10));
-	test_actor.addTargetPosition(tile(10, 12));
 
 	std::vector<Actor*> actors;
 	std::vector<Pawn*> entities;
+	actors.push_back(&player);
 
-	Actor* actorPtr;
-
-	actorPtr = &player;
-	actors.push_back(actorPtr);
-	actorPtr = &test_actor;
-	actors.push_back(actorPtr);
-	
-	for (int i = actors.size(); i != 0; i--) {
-		entities.push_back(actors[i - 1]);
-	}
+	/*********************************************************************
+	TEXT RENDERING
+	*********************************************************************/
 
 	Textbox* _Textbox = new Textbox(faceMap, sysFont, sfx_blip1, sf::Vector2f(window_size.x, window_size.y));
-
+	std::string message[] = { "resources/script/scenes.txt", "Intro" };
+	
 	/*********************************************************************
 	BEGIN GAME LOOP:
 	*********************************************************************/
@@ -302,15 +290,17 @@ int main() {
 						case(Selection::Play_Game) :
 							sysFader.resetFader();
 							titlePtr->setVisible(false);
-							intro = true;
+							initial_load_map = true;
 							break;
 						case(Selection::Exit) :
 							window.close();
 							break;
 						case(Selection::Load_Game) :
 							std::cout << "There is no implementation of this option yet." << std::endl;
+							break;
 						case(Selection::Settings) :
 							std::cout << "There is no implementation of this option yet." << std::endl;
+							break;
 						}
 					}
 				}
@@ -327,111 +317,69 @@ int main() {
 			}
 		}
 
-		// get the elapsed time from the game clock
 		elapsedTime = gameClock.restart().asMilliseconds();
 
-		// if there is no UI visible, perform normal game actions!
-		if (!UI_visible(sysWindows) && window.hasFocus() && !textbox)
+		if (current_map != map_name && initial_load_map)
 		{
-			aniCounter += elapsedTime;
+			load_map(ml, map_name, player, actors, entities, textureMap);
+			for (int i = actors.size(); i != 0; i--) {
+				entities.push_back(actors[i - 1]);
+			}
+			current_map = map_name;
+		}
+
+		// if there is no UI visible, perform normal game actions!
+		if (!UI_visible(sysWindows) && window.hasFocus())
+		{
+			worldAnimationArr[Map::Counter] += elapsedTime;
 			if (music.getStatus() == sf::Music::Stopped)
 				music.play();
 
-			player.move(elapsedTime, player.controller.get_input());
+			if (!textbox) {
+				player.move(elapsedTime, player.controller.get_input());
+				sysCollision(actors, ml);
 
-			//test move to vector position
-			test_actor.setSpeed(2);
-			test_actor.cycleMovement(elapsedTime);
-			/*else
-				test_actor.setPosition(tile(10, 15));*/
-			// end test move for test_actor
-
-			// world collision handling with quad trees
-			sysCollision(actors, ml);
-
-			// test interaction
-			if (test_actor.getSprite().getGlobalBounds().intersects(player.getSprite().getGlobalBounds())) {
-
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
-					unsigned int player_dir = sfmath::vecDirection(sfmath::Normalize(player.getPosition() - test_actor.getPosition()));
-					std::cout << player_dir << "(from test_actor)<------>(player facing)" << player.getDirection() << endl;
-
-					if (player_dir != player.getDirection()) {
-						// alot of the direction system needs to change for this to work properly
-						test_actor.faceActor(player);
-						test_actor.collided();
-						if (!textbox) {
-							textbox = !textbox;
+				// TEST INTERACTION BETWEEN PLAYER AND OTHER ACTORS
+				for (auto actor = actors.begin(); actor != actors.end(); actor++)
+				{
+					if ((*actor)->getClass() != "Character") {
+						textbox = player.check_Interact(**actor);
+						if (textbox) {
+							message[1] = (*actor)->getScene();
+							break;
 						}
 					}
 				}
-			}
-			// end test interaction
-
-			// adjust the camera to be viewing player
-			playerView.setCenter(player.getViewArm());
+				playerView.setCenter(player.getViewArm());
+			}	
 		}
 
-		// prepare to update screen
+		// BEGIN DRAW CYCLE
 
 		window.clear();
-
-		// update camera
 		window.setView(playerView);
 
-		// draw animated background (layers 0 and 1 are alternated)
-		if (aniCounter >= aniFrameDuration)
-		{
-			aniCounter -= aniFrameDuration;
-			ml.Draw(window, layer);
-			layer += 1;
-			if (layer > Layer::Background_2)
-				layer = Layer::Background_1;
-		}
-		else
-		{
-			ml.Draw(window, layer, Background_1);
-		}
+		if (!titlePtr->isVisible()) {
 
-		// draw walkable and collidable tiles
-		ml.Draw(window, Layer::Field);
-		ml.Draw(window, Layer::Collision_Objects);
-		
-		std::sort(entities.begin(), entities.end(), byDepth());
-		// draw entities
-		for (int i = entities.size(); i != 0; i--) {
-			window.draw(*entities[i-1]);
-		}
+			animateMap(ml, window, worldAnimationArr);
+			drawEntities(window, entities);
+			ml.Draw(window, Layer::Overlay);
 
-		// draw top layer of map
-		ml.Draw(window, Layer::Overlay);
-	
-		// draw UI
-		for (auto sys = sysWindows.begin(); sys != sysWindows.end(); sys++) {
-			if ((*sys)->isVisible()) {
-				(*sys)->update(player.getViewArm(), elapsedTime);
-				window.draw(**sys);
-			}
-		}
-
-		if (textbox) {
-			std::string message[] = { "resources/script/scenes.txt", "LukeTEST" };
-			if (textbox) {
-				player.resetTextureRect();
+			if (textbox && !UI_visible(sysWindows)) {
 				textbox = _Textbox->display_message(message, player, elapsedTime);
-				if (textbox)
-					window.draw(*_Textbox);
 			}
 		}
 
-		// update screen with changes
+		drawTextbox(window, _Textbox, textbox);
+		drawUI(window, playerView, sysWindows, elapsedTime);
+
 		window.display();
 	}
 		return 0;
 }
 
 /*********************************************************************
-/brief temp
+/brief Performs the collision between actors.
 *********************************************************************/
 void actorCollision(std::vector<Actor*>& actors)
 {
@@ -448,7 +396,7 @@ void actorCollision(std::vector<Actor*>& actors)
 }
 
 /*********************************************************************
-\brief Performs collision and event handling.
+\brief Performs the collision handling for all actors.
 *********************************************************************/
 void sysCollision(std::vector<Actor*>& actors, tmx::MapLoader& map)
 {
@@ -469,17 +417,14 @@ void sysCollision(std::vector<Actor*>& actors, tmx::MapLoader& map)
 }
 
 /*********************************************************************
-\Returns the center position of a specific tile.
-Returns the center position of a tile based on the row and column provided.
-\param row, column
+\brief Returns the center position of a specific tile.
 *********************************************************************/
 sf::Vector2f tile(int tile_row, int tile_column) {
 	return sf::Vector2f(System::Tilesize*tile_row + System::Tilesize*.5, System::Tilesize*tile_column + System::Tilesize*.5);
 }
 
-
 /*********************************************************************
-\brief temp
+\brief Checks if any of the UI is visible.
 *********************************************************************/
 bool UI_visible(std::vector<UI*>& sysWindows) {
 	for (auto sys = sysWindows.begin(); sys != sysWindows.end(); sys++) {
@@ -491,9 +436,130 @@ bool UI_visible(std::vector<UI*>& sysWindows) {
 }
 
 /*********************************************************************
-\brief temp
+\brief Checks if any of the UI is visible excluding the passed in UI object.
 *********************************************************************/
 bool UI_visible_excluding(UI* sysWindow, std::vector<UI*> sysWindows) {
 	sysWindows.erase(std::find(sysWindows.begin(), sysWindows.end(), sysWindow));
 	return UI_visible(sysWindows);
 }
+
+/*********************************************************************
+\brief Returns the direction of the actor in a map during loading.
+*********************************************************************/
+int  _directionOfActor(std::string dir) {
+	if (dir == "North")
+		return Direction::North;
+	else if (dir == "South")
+		return Direction::South;
+	else if (dir == "East")
+		return Direction::East;
+	else if (dir == "West")
+		return Direction::West;
+}
+
+/*********************************************************************
+\brief Loads the specified map and instantiates all actors and pawns.
+	   The player is set at the start position specified by the map.
+*********************************************************************/
+void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> textureMap) {
+	ml.Load(map_name);
+
+	for (auto layer = ml.GetLayers().begin(); layer != ml.GetLayers().end(); ++layer)
+	{
+		if (layer->name == "Setup")
+		{
+			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
+			{
+				if (object->GetName() == "START")
+					player.setPosition(object->GetCentre());
+				else if (object->GetName() == "ACTOR")
+				{
+					std::string scene_name = object->GetPropertyString("Scene");
+					Actor* ptr = new Actor(*textureMap[object->GetPropertyString("Texture")]);
+					ptr->setScene(scene_name);
+					ptr->setPosition(object->GetCentre());
+					ptr->setPastPosition(ptr->getPosition());
+					ptr->setDirection(_directionOfActor(object->GetPropertyString("Direction")));
+					actors.push_back(ptr);
+				}
+				else if(object->GetName() == "PAWN")
+				{
+					Pawn* ptr = new Pawn(*textureMap[object->GetPropertyString("Texture")]);
+					pawns.push_back(ptr);
+				}
+				
+			}
+		}
+	}
+}
+
+/*********************************************************************
+\brief Animates the background of maps.
+*********************************************************************/
+void animateMap(tmx::MapLoader& ml, sf::RenderWindow& window, float (&worldAnimationArr)[3]) {
+	if (worldAnimationArr[Map::Counter] >= worldAnimationArr[Map::FrameDuration])
+	{
+		worldAnimationArr[Map::Counter] -= worldAnimationArr[Map::FrameDuration];
+		ml.Draw(window, worldAnimationArr[Map::Layer]);
+		worldAnimationArr[Map::Layer] += 1;
+		if (worldAnimationArr[Map::Layer] > Layer::Background_2)
+			worldAnimationArr[Map::Layer] = Layer::Background_1;
+	}
+	else
+	{
+		ml.Draw(window, worldAnimationArr[Map::Layer], Background_1);
+	}
+
+	// draw walkable and collidable tiles
+	ml.Draw(window, Layer::Field);
+	ml.Draw(window, Layer::Collision_Objects);
+}
+
+/*********************************************************************
+\brief Converts sf::Vector2i to sf::Vector2f
+*********************************************************************/
+sf::Vector2f Vector2iTo2f(sf::Vector2i pos) {
+	return sf::Vector2f(pos.x, pos.y);
+}
+
+/*********************************************************************
+\brief Draws all UI elements.
+*********************************************************************/
+void drawUI(sf::RenderWindow& window, sf::View playerView, std::vector<UI*>& sysWindows, float elapsedTime) {
+	for (auto sys = sysWindows.begin(); sys != sysWindows.end(); sys++) {
+		if ((*sys)->isVisible()) {
+			(*sys)->update(playerView.getCenter(), elapsedTime);
+			window.draw(**sys);
+		}
+	}
+}
+
+/*********************************************************************
+\brief Draws textbox if flag is set.
+*********************************************************************/
+void drawTextbox(sf::RenderWindow& window, Textbox* textbox, bool flag) {
+	if (flag)
+		window.draw(*textbox);
+}
+
+/*********************************************************************
+\brief Draws all entities that are in the entities vector.
+*********************************************************************/
+void drawEntities(sf::RenderWindow& window, std::vector<Pawn*>& entities) {
+	std::sort(entities.begin(), entities.end(), byDepth());
+	for (int i = entities.size(); i != 0; i--) {
+		window.draw(*entities[i - 1]);
+	}
+}
+
+// left-overs
+/*
+if (step_ptrs.front()->run(elapsedTime, test_actor)) {
+if (!step_ptrs.front()->run(elapsedTime,test_actor)) {
+if (!step_ptrs.empty()) {
+// need to manage memory
+step_ptrs.pop();
+}
+}
+}
+*/

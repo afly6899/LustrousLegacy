@@ -25,7 +25,6 @@ namespace sf {
 		void message(std::string to_display, std::string name = "", float elapsedTime = 0);
 		void setSpeed(int speed);
 		void setFontSize(int size);
-		void get_input(bool ENTER_KEY);
 		bool if_endMessage();
 		void reset();
 		bool display_message(std::string scene_arr[], Character& player, float elapsedTime);
@@ -38,7 +37,7 @@ namespace sf {
 		sf::RectangleShape rectText;
 		std::string temp_string = "";
 		sf::Sound& bleep;
-		SceneReader* reader;
+		SceneReader* reader = nullptr;
 		bool processingText = false;
 		bool end_message = false;
 		bool block_draw;

@@ -2,15 +2,14 @@
 #include "sfMath.h"
 
 /*********************************************************************
-Actor class default constructor.
-\brief Requires a texture for instantiation.
+\brief temp
 *********************************************************************/
 Actor::Actor(const sf::Texture& imagePath) :
 	Pawn(imagePath) {
 }
 
 /*********************************************************************
-Actor class virtual destructor.
+\brief temp
 *********************************************************************/
 Actor::~Actor() {
 }
@@ -34,8 +33,7 @@ void Actor::setStopCounter(int new_counter) {
 }
 
 /*********************************************************************
-\brief Moves the player based on provided speed and direction.
-\param Elapsed Time, Direction
+\brief temp
 *********************************************************************/
 void Actor::move(float elapsedTime, int direction) {
 	if (!stop || allowMovement(elapsedTime)) {
@@ -193,9 +191,31 @@ void Actor::cycleMovement(float elapsedTime) {
 		}
 	}
 }
+
 /*********************************************************************
 \brief temp
 *********************************************************************/
 void Actor::addTargetPosition(sf::Vector2f pos) {
 	targetPositions.push_back(pos);
+}
+
+/*********************************************************************
+\brief temp
+*********************************************************************/
+void Actor::setScene(std::string scene_name) {
+	actorScene = scene_name;
+}
+
+/*********************************************************************
+\brief temp
+*********************************************************************/
+std::string Actor::getScene() {
+	return actorScene;
+}
+
+/*********************************************************************
+\brief temp
+*********************************************************************/
+void Actor::setPastPosition(sf::Vector2f pos) {
+	pastPosition = pos;
 }
