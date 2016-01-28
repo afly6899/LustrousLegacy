@@ -43,7 +43,29 @@ bool Character::check_Interact(Actor& actor) {
 	if (actor.getSprite().getGlobalBounds().intersects(getSprite().getGlobalBounds())) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
 			unsigned int dir_player_from_actor = sfmath::vecTrueDirection(sfmath::Normalize(getPosition() - actor.getPosition()));
-			if (dir_player_from_actor != getDirection()) {
+			unsigned int play_dir = getDirection();
+			bool interact = false;
+
+			switch (dir_player_from_actor)
+			{
+			case(Direction::NorthWest) :
+				if (play_dir != Direction::North && play_dir != Direction::West)
+					interact = true;
+				break;
+			case(Direction::NorthEast) :
+				if (play_dir != Direction::North && play_dir != Direction::East)
+					interact = true;
+				break;
+			case(Direction::SouthWest) :
+				if (play_dir != Direction::North && play_dir != Direction::West)
+					interact = true;
+				break;
+			case(Direction::SouthEast) :
+				if (play_dir != Direction::South && play_dir != Direction::East)
+					interact = true;
+				break;
+			}
+			if (dir_player_from_actor != getDirection() && interact) {
 				actor.faceActor(*this);
 				actor.collided();
 				resetTextureRect();
