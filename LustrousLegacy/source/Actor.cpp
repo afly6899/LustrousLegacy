@@ -219,3 +219,31 @@ std::string Actor::getScene() {
 void Actor::setPastPosition(sf::Vector2f pos) {
 	pastPosition = pos;
 }
+
+/*********************************************************************
+\brief temp
+*********************************************************************/
+sf::Vector2f Actor::getCurrentTarget() {
+	return targetPositions[0];
+}
+
+/*********************************************************************
+\brief temp
+*********************************************************************/
+bool Actor::hasTarget() {
+	return !targetPositions.empty();
+}
+
+/*********************************************************************
+\brief temp
+*********************************************************************/
+void Actor::setCurrentTarget(sf::Vector2f pos) {
+	targetPositions[0] = pos;
+}
+
+/*********************************************************************
+\brief temp
+*********************************************************************/
+void Actor::popTarget() {
+	targetPositions.erase(targetPositions.begin());
+}

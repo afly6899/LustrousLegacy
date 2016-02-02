@@ -30,19 +30,23 @@ public:
 	bool allowMovement(float elapsedTime);
 	sf::FloatRect getCollisionBox();
 	sf::Vector2f getPastPosition();
+	sf::Vector2f getCurrentTarget();
 	virtual void collided();
 	void disableMovement();
 	void addTargetPosition(sf::Vector2f pos);
 	void cycleMovement(float elapsedTime);
 	void setScene(std::string scene_name);
 	virtual std::string getClass();
-
+	bool hasTarget();
+	void setCurrentTarget(sf::Vector2f pos);
+	void Actor::popTarget();
+	
 private:
 	int pastDirection;
 	unsigned int tile_counter = 0;
 	int actorSpeed = 4;
 	int time_counter = 0;
-	int stop_counter = 3000;
+	int stop_counter = 100;
 	bool tile_move_set = false;
 	bool movement_complete = true;
 	bool collision = false;
