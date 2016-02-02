@@ -28,7 +28,7 @@ namespace sf {
 		bool if_endMessage();
 		void reset();
 		bool display_message(std::string scene_arr[], Character& player, float elapsedTime);
-
+		void ProcessMessage(std::string to_display, std::string name, float elapsedTime);
 	private:
 
 		std::map<std::string, sf::Sprite>& faceMap;

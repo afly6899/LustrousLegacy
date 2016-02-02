@@ -170,7 +170,7 @@
 			reader = new SceneReader(scene_arr[0], scene_arr[1]);
 		}
 		if (!if_endMessage())
-			message(reader->currentMessage().second, reader->currentMessage().first, elapsedTime);
+			ProcessMessage(reader->currentMessage().second, reader->currentMessage().first, elapsedTime);
 		else
 		{
 			reset();
@@ -183,4 +183,14 @@
 			}
 		}
 		return true;
+	}
+
+	void Textbox::ProcessMessage(std::string to_display, std::string name, float elapsedTime) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+			while (!end_message) {
+				message(to_display, name, elapsedTime);
+			}
+		}
+		else 
+			message(to_display, name, elapsedTime);
 	}
