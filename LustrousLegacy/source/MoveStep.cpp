@@ -1,4 +1,7 @@
 #include "MoveStep.h"
+// Audrey Edit: Adding Event class functionalities //
+#include <iostream>
+// *************** End Audrey Edit *************** //
 
 /*********************************************************************
 \brief temp
@@ -18,8 +21,9 @@ MoveStep::~MoveStep() {
 \brief temp
 *********************************************************************/
 bool MoveStep::run(float elapsedTime, Actor& actor) {
-	if (positions.empty())
+	if (positions.empty()) {
 		return false;
+	}
 	if (actor.getPosition() == current_target) {
 		positions.erase(positions.begin());
 		current_target = positions[0];

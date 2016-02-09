@@ -40,6 +40,10 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "MoveStep.h"
 #include "Step.h"
 
+// Audrey Edit: Adding Event class functionalities //
+#include "Event.h"
+// *************** End Audrey Edit *************** //
+
 using namespace std;
 
 // MAIN FUNCTIONS
@@ -109,6 +113,10 @@ int main() {
 	bool initial_load_map = false;
 	bool textbox = false;
 
+	// Audrey Edit: Adding Event class functionalities //
+	bool eventIsRunning = false;
+	// *************** End Audrey Edit *************** //
+
 	/*********************************************************************
 	TEXTURES
 	*********************************************************************/
@@ -166,7 +174,7 @@ int main() {
 	if (!bookTexture.loadFromFile("resources/textures/book.png")) {
 		cerr << "Texture Error" << endl;
 	}
-	
+
 	// textureMap HOLDS THE REFERENCES OF ALL TEXTURES
 	std::map<std::string, sf::Texture*> textureMap;
 	textureMap["Warren"] = &pTexture;
@@ -179,7 +187,7 @@ int main() {
 	faceMap["Resdin"] = sf::Sprite(resdinfTexture);
 	faceMap["Resdin"].setOrigin(faceMap["Resdin"].getLocalBounds().width*.5, faceMap["Resdin"].getLocalBounds().height*.5);
 	faceMap["Luke"] = sf::Sprite(lukefTexture);
-	faceMap["Luke"].setOrigin(faceMap["Luke"].getLocalBounds().width*.5, faceMap["Luke"].getLocalBounds().height*.5);	
+	faceMap["Luke"].setOrigin(faceMap["Luke"].getLocalBounds().width*.5, faceMap["Luke"].getLocalBounds().height*.5);
 
 	/*********************************************************************
 	MUSIC
@@ -188,7 +196,7 @@ int main() {
 	sf::Music music;
 	if (!music.openFromFile("resources/audio/test.wav"))
 		return -1; // error
-	
+
 	/*********************************************************************
 	SOUNDS
 	*********************************************************************/
@@ -262,7 +270,12 @@ int main() {
 
 	Textbox* _Textbox = new Textbox(faceMap, sysFont, sfx_blip1, sf::Vector2f(window_size.x, window_size.y));
 	std::string message[] = { "resources/script/scenes.txt", "Intro" };
-	
+
+	// Audrey Edit: Adding Event class functionalities //
+	Step* test_step = new MoveStep(std::vector<sf::Vector2f>({ tile(10, 10), tile(10, 15), tile(10, 10) }));
+	Event test_events({ test_step });
+	// *************** End Audrey Edit *************** //
+
 	/*********************************************************************
 	BEGIN GAME LOOP:
 	*********************************************************************/
@@ -278,7 +291,7 @@ int main() {
 				window_size = sf::Vector2u(event.size.width, event.size.height);
 				window.setSize(window_size);
 				break;
-			case(sf::Event::KeyPressed) :					
+			case(sf::Event::KeyPressed) :
 				if (titlePtr->isVisible()) {
 					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 						titlePtr->change_selection(Cursor_Direction::Down);
@@ -313,6 +326,13 @@ int main() {
 							music.play();
 					}
 				}
+				// Audrey Edit: Adding Event class functionalities //
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+					if (!textbox && !pausePtr->isVisible()) {
+						eventIsRunning = test_events.startEvent();
+					}
+				}
+				// *************** End Audrey Edit *************** //
 				break;
 			}
 		}
@@ -336,22 +356,32 @@ int main() {
 				music.play();
 
 			if (!textbox) {
-				player.move(elapsedTime, player.controller.get_input());
-				sysCollision(actors, ml);
+				// Audrey Edit: Adding Event class functionalities //
+				if (eventIsRunning) {
+					test_events.runEvent(elapsedTime, player);
+					eventIsRunning = test_events.eventIsRunning();
+				}
+				else {
+					// *************** End Audrey Edit *************** //
+					player.move(elapsedTime, player.controller.get_input());
+					sysCollision(actors, ml);
 
-				// TEST INTERACTION BETWEEN PLAYER AND OTHER ACTORS
-				for (auto actor = actors.begin(); actor != actors.end(); actor++)
-				{
-					if ((*actor)->getClass() != "Character") {
-						textbox = player.check_Interact(**actor);
-						if (textbox) {
-							message[1] = (*actor)->getScene();
-							break;
+					// TEST INTERACTION BETWEEN PLAYER AND OTHER ACTORS
+					for (auto actor = actors.begin(); actor != actors.end(); actor++)
+					{
+						if ((*actor)->getClass() != "Character") {
+							textbox = player.check_Interact(**actor);
+							if (textbox) {
+								message[1] = (*actor)->getScene();
+								break;
+							}
 						}
 					}
+					// Audrey Edit: Adding Event class functionalities //
 				}
+				// *************** End Audrey Edit *************** //
 				playerView.setCenter(player.getViewArm());
-			}	
+			}
 		}
 
 		// BEGIN DRAW CYCLE
@@ -375,7 +405,7 @@ int main() {
 
 		window.display();
 	}
-		return 0;
+	return 0;
 }
 
 /*********************************************************************
@@ -482,12 +512,12 @@ void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::
 					ptr->setDirection(_directionOfActor(object->GetPropertyString("Direction")));
 					actors.push_back(ptr);
 				}
-				else if(object->GetName() == "PAWN")
+				else if (object->GetName() == "PAWN")
 				{
 					Pawn* ptr = new Pawn(*textureMap[object->GetPropertyString("Texture")]);
 					pawns.push_back(ptr);
 				}
-				
+
 			}
 		}
 	}
@@ -496,7 +526,7 @@ void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::
 /*********************************************************************
 \brief Animates the background of maps.
 *********************************************************************/
-void animateMap(tmx::MapLoader& ml, sf::RenderWindow& window, float (&worldAnimationArr)[3]) {
+void animateMap(tmx::MapLoader& ml, sf::RenderWindow& window, float(&worldAnimationArr)[3]) {
 	if (worldAnimationArr[Map::Counter] >= worldAnimationArr[Map::FrameDuration])
 	{
 		worldAnimationArr[Map::Counter] -= worldAnimationArr[Map::FrameDuration];
