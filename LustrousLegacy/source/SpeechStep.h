@@ -1,27 +1,23 @@
 #pragma once
-#ifndef STEP_H_
-#define STEP_H_
+#ifndef SPEECHSTEP_H_
+#define SPEECHSTEP_H_
 
-#include "Enums.h"
-#include "Event.h"
 #include <SFML/Graphics.hpp>
+#include <map>
+#include "Textbox.h"
+#include "Step.h"
 
-namespace sf {
-
-	class Texture;
-}
-
-class Step {
+// Each Speech Step is for ONE SCENE - just pass in the textbox?
+class SpeechStep : public Step {
 public:
 
-	Step();
-	virtual ~Step();
-	virtual void run() = 0;
-	virtual bool is_running();
-	virtual bool set_running(bool flag);
+	SpeechStep(std::string fileName, Textbox* textbox);
+	virtual ~SpeechStep();
+	virtual bool run(float elapsedTime, Actor& actor);
 
-private: 
-	bool is_running = false;
-	
+private:
+	std::string currentMessage;
+	std::string fileName;
+	Textbox* textbox;
 };
 #endif

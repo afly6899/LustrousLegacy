@@ -1,0 +1,7 @@
+Scene1
+Resdin:Hi there!
+Resdin:I'm not really sure what I'm supposed to say, since I don't know my character!
+Warren:Don't worry, dude. You're not the only one.
+Warren:Let's see if we can at least get this far without breaking the game.
+
+

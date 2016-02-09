@@ -7,8 +7,11 @@
 \brief temp
 *********************************************************************/
 MoveStep::MoveStep(std::vector<sf::Vector2f> positions):
-	positions(positions),
-	current_target(positions[0]){
+	positions(positions){
+	if (!positions.empty()) {
+		current_target = positions[0];
+		positions.erase(positions.begin());
+	}
 }
 
 /*********************************************************************
@@ -21,13 +24,13 @@ MoveStep::~MoveStep() {
 \brief temp
 *********************************************************************/
 bool MoveStep::run(float elapsedTime, Actor& actor) {
-	if (positions.empty()) {
-		return false;
-	}
 	if (actor.getPosition() == current_target) {
-		positions.erase(positions.begin());
+		if (positions.empty()) {
+			return false;
+		}
 		current_target = positions[0];
+		positions.erase(positions.begin());
 	}
-	actor.move(elapsedTime, positions[0]);
+	actor.move(elapsedTime, current_target);
 	return true;
 }

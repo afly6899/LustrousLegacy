@@ -19,8 +19,10 @@ public:
 	
 	// Accessors
 	bool eventIsRunning() { return isRunning; }
+	bool finishedEvents() { return eventSteps.empty(); }
 
-	// Step Handling?
+	// Just for now - temp
+	void addEvents(Step* step) { eventSteps.push(step); }
 
 private:
 	std::queue<Step*> eventSteps;

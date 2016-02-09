@@ -271,6 +271,9 @@ int main() {
 	Textbox* _Textbox = new Textbox(faceMap, sysFont, sfx_blip1, sf::Vector2f(window_size.x, window_size.y));
 	std::string message[] = { "resources/script/scenes.txt", "Intro" };
 
+
+
+
 	// Audrey Edit: Adding Event class functionalities //
 	Step* test_step = new MoveStep(std::vector<sf::Vector2f>({ tile(10, 10), tile(10, 15), tile(10, 10) }));
 	Event test_events({ test_step });
@@ -329,7 +332,8 @@ int main() {
 				// Audrey Edit: Adding Event class functionalities //
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
 					if (!textbox && !pausePtr->isVisible()) {
-						eventIsRunning = test_events.startEvent();
+						if (!test_events.finishedEvents())
+							eventIsRunning = test_events.startEvent();
 					}
 				}
 				// *************** End Audrey Edit *************** //
