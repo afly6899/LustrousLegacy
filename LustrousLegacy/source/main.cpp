@@ -39,6 +39,7 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "sfMath.h"
 #include "MoveStep.h"
 #include "Step.h"
+#include "Event.h"
 
 using namespace std;
 
@@ -108,6 +109,10 @@ int main() {
 
 	bool initial_load_map = false;
 	bool textbox = false;
+
+	// Audrey Edit: Adding Event class functionalities //
+	bool eventIsRunning = false;
+	// *************** End Audrey Edit *************** //
 
 	/*********************************************************************
 	TEXTURES
@@ -263,6 +268,16 @@ int main() {
 	Textbox* _Textbox = new Textbox(faceMap, sysFont, sfx_blip1, sf::Vector2f(window_size.x, window_size.y));
 	std::string message[] = { "resources/script/scenes.txt", "Intro" };
 	
+	// Audrey Edit: Adding Event class functionalities //
+	Step* test_step = new MoveStep(std::vector<sf::Vector2f>({ tile(10, 10), tile(10, 15), tile(10, 10) }));
+	Event test_events({ test_step });
+	// *************** End Audrey Edit *************** //
+
+	bool ENTER_KEY = false;
+	char input_val = 'X';
+	std::string test = "";
+	sf::Text test_string;
+
 	/*********************************************************************
 	BEGIN GAME LOOP:
 	*********************************************************************/
@@ -278,7 +293,15 @@ int main() {
 				window_size = sf::Vector2u(event.size.width, event.size.height);
 				window.setSize(window_size);
 				break;
-			case(sf::Event::KeyPressed) :					
+			case(sf::Event::TextEntered) :
+				input_val = static_cast<char>(event.text.unicode);
+				test += input_val;
+				break;
+			case(sf::Event::KeyReleased) :
+				if (event.key.code == sf::Keyboard::Return)
+					ENTER_KEY = true;
+				break;
+			case(sf::Event::KeyPressed) :
 				if (titlePtr->isVisible()) {
 					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 						titlePtr->change_selection(Cursor_Direction::Down);
@@ -313,6 +336,14 @@ int main() {
 							music.play();
 					}
 				}
+				// Audrey Edit: Adding Event class functionalities //
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+					if (!textbox && !pausePtr->isVisible()) {
+						if (!test_events.finishedEvents())
+							eventIsRunning = test_events.startEvent();
+					}
+				}
+				// *************** End Audrey Edit *************** //
 				break;
 			}
 		}
@@ -336,26 +367,35 @@ int main() {
 				music.play();
 
 			if (!textbox) {
-				player.move(elapsedTime, player.controller.get_input());
-				sysCollision(actors, ml);
+				// Audrey Edit: Adding Event class functionalities //
+				if (eventIsRunning) {
+					test_events.runEvent(elapsedTime, player);
+					eventIsRunning = test_events.eventIsRunning();
+				}
+				else {
+					// *************** End Audrey Edit *************** //
+					player.move(elapsedTime, player.controller.get_input());
+					sysCollision(actors, ml);
 
-				// TEST INTERACTION BETWEEN PLAYER AND OTHER ACTORS
-				for (auto actor = actors.begin(); actor != actors.end(); actor++)
-				{
-					if ((*actor)->getClass() != "Character") {
-						textbox = player.check_Interact(**actor);
-						if (textbox) {
-							message[1] = (*actor)->getScene();
-							break;
+					// TEST INTERACTION BETWEEN PLAYER AND OTHER ACTORS
+					for (auto actor = actors.begin(); actor != actors.end(); actor++)
+					{
+						if ((*actor)->getClass() != "Character") {
+							textbox = player.check_Interact(**actor);
+							if (textbox) {
+								message[1] = (*actor)->getScene();
+								break;
+							}
 						}
 					}
+					// Audrey Edit: Adding Event class functionalities //
 				}
+				// *************** End Audrey Edit *************** //
 				playerView.setCenter(player.getViewArm());
-			}	
+			}
 		}
 
 		// BEGIN DRAW CYCLE
-
 		window.clear();
 		window.setView(playerView);
 
@@ -366,14 +406,30 @@ int main() {
 			ml.Draw(window, Layer::Overlay);
 
 			if (textbox && !UI_visible(sysWindows)) {
-				textbox = _Textbox->display_message(message, player, elapsedTime);
+				textbox = _Textbox->display_message(message, player, elapsedTime, ENTER_KEY);
 			}
 		}
 
 		drawTextbox(window, _Textbox, textbox);
 		drawUI(window, playerView, sysWindows, elapsedTime);
 
+		// TEST TEXTINPUT
+
+		test_string.setFont(sysFont);
+		if (pausePtr->isVisible()){
+			if (input_val == '\b' && test.length() != 0) {
+				test.pop_back();
+			}
+			test_string.setString(test);
+			test_string.setPosition(player.getPosition());
+			window.draw(test_string);
+			std::cout << test << std::endl;
+		}
+
+
+
 		window.display();
+		ENTER_KEY = false;
 	}
 		return 0;
 }

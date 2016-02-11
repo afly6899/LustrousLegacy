@@ -1,4 +1,5 @@
 #include "Textbox.h"
+#include <iostream>
 
 	/*********************************************************************
 	\brief temp
@@ -130,8 +131,8 @@
 	/*********************************************************************
 	\brief temp
 	*********************************************************************/
-	bool Textbox::if_endMessage() {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+	bool Textbox::if_endMessage(bool& ENTER_KEY) {
+		if (ENTER_KEY) {
 			return end_message;
 		}
 		return false;
@@ -164,13 +165,13 @@
 	/*********************************************************************
 	\brief temp
 	*********************************************************************/
-	bool Textbox::display_message(std::string scene_arr[], Character& player, float elapsedTime) {
+	bool Textbox::display_message(std::string scene_arr[], Character& player, float elapsedTime, bool& ENTER_KEY) {
 		setPosition(player.getViewArm());
 		if (reader == nullptr) {
 			reader = new SceneReader(scene_arr[0], scene_arr[1]);
 		}
-		if (!if_endMessage())
-			ProcessMessage(reader->currentMessage().second, reader->currentMessage().first, elapsedTime);
+		if (!if_endMessage(ENTER_KEY))
+			ProcessMessage(reader->currentMessage().second, reader->currentMessage().first, elapsedTime, ENTER_KEY);
 		else
 		{
 			reset();
@@ -185,12 +186,13 @@
 		return true;
 	}
 
-	void Textbox::ProcessMessage(std::string to_display, std::string name, float elapsedTime) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+	void Textbox::ProcessMessage(std::string to_display, std::string name, float elapsedTime, bool& ENTER_KEY) {
+		
+		if (ENTER_KEY) {
 			while (!end_message) {
 				message(to_display, name, elapsedTime);
 			}
 		}
-		else 
+		else
 			message(to_display, name, elapsedTime);
 	}
