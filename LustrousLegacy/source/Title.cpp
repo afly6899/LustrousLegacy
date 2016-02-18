@@ -46,10 +46,10 @@ void Title::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 \brief temp
 *********************************************************************/
 void Title::change_selection(int up_or_down) {
-	
+
 	clearStyle(title_options[selection]);
 
-	if (up_or_down == Cursor_Direction::Down)
+	if (up_or_down == sf::Keyboard::Down)
 	{
 		selection += 1;
 		if (selection > num_of_selections) {
@@ -60,7 +60,7 @@ void Title::change_selection(int up_or_down) {
 			titleCursor.setPosition(sf::Vector2f(titleCursor.getPosition().x, titleCursor.getPosition().y + seperation));
 		cursorBleep.play();
 	}
-	else {
+	else if (up_or_down == sf::Keyboard::Up) {
 		selection -= 1;
 		if (selection < 1) {
 			selection = num_of_selections;
@@ -94,4 +94,11 @@ void Title::setPosition(sf::Vector2f pos) {
 		titleCursor.setPosition(sf::Vector2f(title_options[Selection::Play_Game].getPosition().x, title_options[Selection::Play_Game].getPosition().y + seperation*.5));
 		cursor_originalPos = titleCursor.getPosition();
 	}
+}
+
+/*********************************************************************
+\brief temp
+*********************************************************************/
+std::string Title::getClass() {
+	return "Title";
 }

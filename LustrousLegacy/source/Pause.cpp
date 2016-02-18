@@ -69,3 +69,10 @@ void Pause::update(sf::Vector2f pos, float elapsedTime) {
 		originalPos = pos;
 	}
 }
+
+/*********************************************************************
+\brief temp
+*********************************************************************/
+std::string Pause::getClass() {
+	return "Pause";
+}

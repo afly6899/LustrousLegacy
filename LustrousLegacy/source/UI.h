@@ -15,6 +15,7 @@ public:
 		return visible;
 	}
 	virtual void update(sf::Vector2f pos, float elapsedTime) = 0;
+	virtual std::string getClass() = 0;
 	sf::Text createOption(std::string option_name, const sf::Font& font);
 	void clearStyle(sf::Text& string);
 	void selected(sf::Text& string);

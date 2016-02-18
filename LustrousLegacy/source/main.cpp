@@ -40,6 +40,7 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "MoveStep.h"
 #include "Step.h"
 #include "Event.h"
+#include "BattleSystem.h"
 
 using namespace std;
 
@@ -246,10 +247,12 @@ int main() {
 
 	Title* titlePtr = new Title(sysFont, window_size, titleTexture, sfx_blip1, music);
 	Pause* pausePtr = new Pause(sysFont, window_size);
+	BattleSystem* battlePtr = new BattleSystem(sysFont, window_size, titleTexture, sfx_blip1);
 
 	titlePtr->setVisible(true);
 	titlePtr->setPosition(Vector2iTo2f(window.getPosition()));
 
+	sysWindows.push_back(battlePtr);
 	sysWindows.push_back(titlePtr);
 	sysWindows.push_back(pausePtr);
 
@@ -261,22 +264,30 @@ int main() {
 	std::vector<Pawn*> entities;
 	actors.push_back(&player);
 
+
+	/*********************************************************************
+	UI KEYBOARD INPUT
+	*********************************************************************/
+
+	map<int, bool> ui_kb;
+	ui_kb[sf::Keyboard::Return] = false;
+	ui_kb[sf::Keyboard::Left] = false;
+	ui_kb[sf::Keyboard::Right] = false;
+	ui_kb[sf::Keyboard::Escape] = false;
+	ui_kb[sf::Keyboard::Up] = false;
+	ui_kb[sf::Keyboard::Down] = false;
+
 	/*********************************************************************
 	TEXT RENDERING
 	*********************************************************************/
 
 	Textbox* _Textbox = new Textbox(faceMap, sysFont, sfx_blip1, sf::Vector2f(window_size.x, window_size.y));
 	std::string message[] = { "resources/script/scenes.txt", "Intro" };
-	
+
 	// Audrey Edit: Adding Event class functionalities //
 	Step* test_step = new MoveStep(std::vector<sf::Vector2f>({ tile(10, 10), tile(10, 15), tile(10, 10) }));
 	Event test_events({ test_step });
 	// *************** End Audrey Edit *************** //
-
-	bool ENTER_KEY = false;
-	char input_val = 'X';
-	std::string test = "";
-	sf::Text test_string;
 
 	/*********************************************************************
 	BEGIN GAME LOOP:
@@ -293,51 +304,12 @@ int main() {
 				window_size = sf::Vector2u(event.size.width, event.size.height);
 				window.setSize(window_size);
 				break;
-			case(sf::Event::TextEntered) :
-				input_val = static_cast<char>(event.text.unicode);
-				test += input_val;
-				break;
 			case(sf::Event::KeyReleased) :
-				if (event.key.code == sf::Keyboard::Return)
-					ENTER_KEY = true;
+				ui_kb[event.key.code] = true;
 				break;
 			case(sf::Event::KeyPressed) :
-				if (titlePtr->isVisible()) {
-					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-						titlePtr->change_selection(Cursor_Direction::Down);
-					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-						titlePtr->change_selection(Cursor_Direction::Up);
-					}
-					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
-						switch (titlePtr->getSelection()) {
-						case(Selection::Play_Game) :
-							sysFader.resetFader();
-							titlePtr->setVisible(false);
-							initial_load_map = true;
-							break;
-						case(Selection::Exit) :
-							window.close();
-							break;
-						case(Selection::Load_Game) :
-							std::cout << "There is no implementation of this option yet." << std::endl;
-							break;
-						case(Selection::Settings) :
-							std::cout << "There is no implementation of this option yet." << std::endl;
-							break;
-						}
-					}
-				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-					if (!UI_visible_excluding(pausePtr, sysWindows)) {
-						pausePtr->setVisible(!pausePtr->isVisible());
-						if (pausePtr->isVisible())
-							music.pause();
-						else
-							music.play();
-					}
-				}
 				// Audrey Edit: Adding Event class functionalities //
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
 					if (!textbox && !pausePtr->isVisible()) {
 						if (!test_events.finishedEvents())
 							eventIsRunning = test_events.startEvent();
@@ -348,7 +320,69 @@ int main() {
 			}
 		}
 
+		/*
+		
+		UI KEYBOARD INPUT CHECK
+		NEED TO CHANGE INTO FUNCTIONS
+		
+		*/
+		if (titlePtr->isVisible()) {
+			if (ui_kb[sf::Keyboard::Up] || ui_kb[sf::Keyboard::Down])
+				titlePtr->change_selection(event.key.code);
+			else if (ui_kb[sf::Keyboard::Return]) {
+				switch (titlePtr->getSelection()) {
+				case(Selection::Play_Game) :
+					sysFader.resetFader();
+					titlePtr->setVisible(false);
+					initial_load_map = true;
+					battlePtr->setVisible(true);
+					break;
+				case(Selection::Exit) :
+					window.close();
+					break;
+				case(Selection::Load_Game) :
+					std::cout << "There is no implementation of this option yet." << std::endl;
+					break;
+				case(Selection::Settings) :
+					std::cout << "There is no implementation of this option yet." << std::endl;
+					break;
+				}
+			}
+		}
+		else if (battlePtr->isVisible() && !UI_visible_excluding(battlePtr, sysWindows)) {
+			if (ui_kb[sf::Keyboard::Up] || ui_kb[sf::Keyboard::Down])
+				battlePtr->change_selection(event.key.code);
+			else if (ui_kb[sf::Keyboard::Return]) {
+				switch (battlePtr->getSelection()) {
+				case(Battle::Fight) :
+					std::cout << "There is no implementation of this option yet." << std::endl;
+					break;
+				case(Battle::Items) :
+					std::cout << "There is no implementation of this option yet." << std::endl;
+					break;
+				case(Battle::Status) :
+					std::cout << "There is no implementation of this option yet." << std::endl;
+					break;
+				case(Battle::Escape) :
+					battlePtr->setVisible(false);
+					break;
+				}
+			}
+		}
+		if (ui_kb[sf::Keyboard::Escape]) {
+			if (!UI_visible_excluding(pausePtr, sysWindows)) {
+				pausePtr->setVisible(!pausePtr->isVisible());
+				if (pausePtr->isVisible())
+					music.pause();
+				else
+					music.play();
+			}
+		}
+		// END KEYBOARD UI INPUT CHECK
+
 		elapsedTime = gameClock.restart().asMilliseconds();
+
+
 
 		if (current_map != map_name && initial_load_map)
 		{
@@ -406,30 +440,17 @@ int main() {
 			ml.Draw(window, Layer::Overlay);
 
 			if (textbox && !UI_visible(sysWindows)) {
-				textbox = _Textbox->display_message(message, player, elapsedTime, ENTER_KEY);
+				textbox = _Textbox->display_message(message, player, elapsedTime, ui_kb[sf::Keyboard::Return]);
 			}
 		}
+
+		if (ui_kb.find(event.key.code) != ui_kb.end())
+			ui_kb[event.key.code] = false;
 
 		drawTextbox(window, _Textbox, textbox);
 		drawUI(window, playerView, sysWindows, elapsedTime);
 
-		// TEST TEXTINPUT
-
-		test_string.setFont(sysFont);
-		if (pausePtr->isVisible()){
-			if (input_val == '\b' && test.length() != 0) {
-				test.pop_back();
-			}
-			test_string.setString(test);
-			test_string.setPosition(player.getPosition());
-			window.draw(test_string);
-			std::cout << test << std::endl;
-		}
-
-
-
 		window.display();
-		ENTER_KEY = false;
 	}
 		return 0;
 }
@@ -607,15 +628,3 @@ void drawEntities(sf::RenderWindow& window, std::vector<Pawn*>& entities) {
 		window.draw(*entities[i - 1]);
 	}
 }
-
-// left-overs
-/*
-if (step_ptrs.front()->run(elapsedTime, test_actor)) {
-if (!step_ptrs.front()->run(elapsedTime,test_actor)) {
-if (!step_ptrs.empty()) {
-// need to manage memory
-step_ptrs.pop();
-}
-}
-}
-*/

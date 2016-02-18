@@ -23,6 +23,7 @@ public:
 	void setVisible(bool visibility);;
 	bool isVisible();
 	virtual void update(sf::Vector2f pos, float elapsedTime);
+	virtual std::string getClass();
 
 private:
 

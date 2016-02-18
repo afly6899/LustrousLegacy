@@ -25,7 +25,7 @@ namespace sf {
 		int getSelection();
 		virtual void setPosition(sf::Vector2f pos);
 		virtual void update(sf::Vector2f pos, float elapsedTime);
-
+		virtual std::string getClass();
 	private:
 
 		sf::Sound& cursorBleep;
