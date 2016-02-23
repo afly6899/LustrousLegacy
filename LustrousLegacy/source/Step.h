@@ -11,5 +11,6 @@ public:
 	virtual ~Step() {};
 	virtual bool run(float elapsedTime, Actor& actor) = 0;
 	
+	virtual std::string getType() { return ""; }
 };
 #endif

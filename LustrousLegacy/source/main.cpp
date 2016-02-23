@@ -37,11 +37,13 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "Actor.h"
 #include "Character.h"
 #include "sfMath.h"
-#include "MoveStep.h"
 #include "Step.h"
 
 // Audrey Edit: Adding Event class functionalities //
 #include "Event.h"
+#include "DirectionStep.h"
+#include "MoveStep.h"
+#include "SpeechStep.h"
 // *************** End Audrey Edit *************** //
 
 using namespace std;
@@ -275,8 +277,17 @@ int main() {
 
 
 	// Audrey Edit: Adding Event class functionalities //
-	Step* test_step = new MoveStep(std::vector<sf::Vector2f>({ tile(10, 10), tile(10, 15), tile(10, 10) }));
-	Event test_events({ test_step });
+	//Actor luke = Actor(lukeTexture);
+	//luke.setPosition(tile(11, 15));
+
+	//Step* test_step = new MoveStep(std::vector<sf::Vector2f>({ tile(10, 10), tile(10, 13), tile(10, 10) }));
+	//Event test_events({ test_step }, { &player});
+
+	Step* event_step_player = new MoveStep(std::vector<sf::Vector2f>({ tile(11,15) }));
+	//Step* event_step_luke = new MoveStep(std::vector<sf::Vector2f>({ tile(12, 15) }));
+	Event test_events({ event_step_player }, { &player });
+	//actors.push_back(&luke);
+	
 	// *************** End Audrey Edit *************** //
 
 	/*********************************************************************
@@ -330,12 +341,16 @@ int main() {
 					}
 				}
 				// Audrey Edit: Adding Event class functionalities //
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
-					if (!textbox && !pausePtr->isVisible()) {
-						if (!test_events.finishedEvents())
-							eventIsRunning = test_events.startEvent();
-					}
-				}
+				//else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+					//if (!textbox && !pausePtr->isVisible()) {
+						//if (!test_events.finishedEvents())
+							//eventIsRunning = test_events.startEvent();
+						//else {
+							//test_step = new MoveStep(std::vector<sf::Vector2f>({ tile(10, 10), tile(10, 13), tile(10, 10) }));
+							//test_events.addEvents(test_step, &player);
+						//}
+					//}
+				//}
 				// *************** End Audrey Edit *************** //
 				break;
 			}
@@ -350,6 +365,16 @@ int main() {
 				entities.push_back(actors[i - 1]);
 			}
 			current_map = map_name;
+			// Audrey Edit: Adding Event class functionalities //
+			//test_step = new MoveStep(std::vector<sf::Vector2f>({ tile(10, 10), tile(10, 13), tile(10, 11) }));
+			//test_events.addEvents(test_step, actors[2]);
+			Step* event_step_luke = new MoveStep(std::vector<sf::Vector2f>({ tile(12, 15) }));
+			Step* event_face_luke = new DirectionStep(Direction::West);
+			test_events.addEvents(event_step_luke, actors[2]);
+			test_events.addEvents(event_face_luke, actors[2]);
+			test_events.addEvents(new DirectionStep(Direction::East), &player);
+			test_events.addEvents(new SpeechStep(message, textbox), actors[2]);
+			// *************** End Audrey Edit *************** //
 		}
 
 		// if there is no UI visible, perform normal game actions!
@@ -362,12 +387,18 @@ int main() {
 			if (!textbox) {
 				// Audrey Edit: Adding Event class functionalities //
 				if (eventIsRunning) {
-					test_events.runEvent(elapsedTime, player);
+					std::cout << "Doing Event Number: " << test_events.getEventType() << std::endl;
+					test_events.runEvent(elapsedTime);
 					eventIsRunning = test_events.eventIsRunning();
 				}
 				else {
 					// *************** End Audrey Edit *************** //
 					player.move(elapsedTime, player.controller.get_input());
+					// Audrey Edit: Adding Event class functionalities //
+					if (player.getPosition().y >= System::Tilesize * 15 && player.getPosition().y <= System::Tilesize * 15 + System::Tilesize*.5) {
+						eventIsRunning = test_events.startEvent();
+					}
+					// *************** End Audrey Edit *************** //
 					sysCollision(actors, ml);
 
 					// TEST INTERACTION BETWEEN PLAYER AND OTHER ACTORS
@@ -454,7 +485,11 @@ void sysCollision(std::vector<Actor*>& actors, tmx::MapLoader& map)
 \brief Returns the center position of a specific tile.
 *********************************************************************/
 sf::Vector2f tile(int tile_row, int tile_column) {
-	return sf::Vector2f(System::Tilesize*tile_row + System::Tilesize*.5, System::Tilesize*tile_column + System::Tilesize*.5);
+	// Audrey Edit: Adding Event class functionalities //
+	// changed the coefficient for the y tile thing to be .75
+	return sf::Vector2f(System::Tilesize*tile_row + System::Tilesize*.5, System::Tilesize*tile_column + System::Tilesize*.75);
+	// *************** End Audrey Edit *************** //
+	//return sf::Vector2f(System::Tilesize*tile_row + System::Tilesize*.5, System::Tilesize*tile_column + System::Tilesize*.5);
 }
 
 /*********************************************************************

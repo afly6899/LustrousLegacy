@@ -11,13 +11,19 @@
 class SpeechStep : public Step {
 public:
 
-	SpeechStep(std::string fileName, Textbox* textbox);
+	SpeechStep(std::string* messages, bool& textbox);
 	virtual ~SpeechStep();
 	virtual bool run(float elapsedTime, Actor& actor);
 
+	// for debugging
+	virtual std::string getType() { return type; }
+
 private:
-	std::string currentMessage;
-	std::string fileName;
-	Textbox* textbox;
+	std::string* dialogue;
+	bool textboxOn;
+	bool textFinished = false;
+
+	// for debugging
+	std::string type = "Speech";
 };
 #endif

@@ -14,9 +14,14 @@ public:
 	virtual ~MoveStep();
 	virtual bool run(float elapsedTime, Actor& actor);
 
+	// for debugging
+	virtual std::string getType() { return type; }
+
 private: 
 	std::vector<sf::Vector2f> positions;
 	sf::Vector2f current_target;
 	
+	// for debugging
+	std::string type = "Move";
 };
 #endif

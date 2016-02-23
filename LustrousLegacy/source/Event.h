@@ -3,17 +3,17 @@
 #include <initializer_list>
 #include <queue>
 #include "Step.h"
-// Want to have an event class that takes in a queue of steps and can process each step?
 
 class Event
 {
 public:
-	Event(std::queue<Step*> steps);
-	Event(std::initializer_list<Step*> steps);
+	Event(std::queue<std::pair<Step*, Actor*>> steps);
+	Event(std::initializer_list<Step*> steps, std::initializer_list<Actor*> actors);
 	~Event();
 
 	bool startEvent();
-	void runEvent(float elapsedTime, Actor & actor);
+	void runEvent(float elapsedTime);
+	//void runEvent(float elapsedTime, Actor * actors);
 	void pauseEvent();
 	void nextEvent();
 	
@@ -22,10 +22,20 @@ public:
 	bool finishedEvents() { return eventSteps.empty(); }
 
 	// Just for now - temp
-	void addEvents(Step* step) { eventSteps.push(step); }
+	void addEvents(Step* step, Actor* actor);
+	// might not be useful
+	void reloadEvent();
+
+	// for debugging
+	std::string getEventType() { return eventType; }
 
 private:
-	std::queue<Step*> eventSteps;
-	Step* currentEvent = nullptr;
+	// might not be useful
+	std::queue<std::pair<Step*, Actor*>> finishedSteps;
+	std::queue<std::pair<Step*, Actor*>> eventSteps;
+	std::pair<Step*, Actor*> currentEvent;
 	bool isRunning = false;
+
+	// for debugging
+	std::string eventType = "None";
 };
