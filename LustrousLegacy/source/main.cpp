@@ -275,18 +275,11 @@ int main() {
 
 
 
-
 	// Audrey Edit: Adding Event class functionalities //
-	//Actor luke = Actor(lukeTexture);
-	//luke.setPosition(tile(11, 15));
-
-	//Step* test_step = new MoveStep(std::vector<sf::Vector2f>({ tile(10, 10), tile(10, 13), tile(10, 10) }));
-	//Event test_events({ test_step }, { &player});
+	//Step* test_step_player = new MoveStep(std::vector<sf::Vector2f>({ tile(10, 10), tile(10, 13), tile(10, 10) }));
 
 	Step* event_step_player = new MoveStep(std::vector<sf::Vector2f>({ tile(11,15) }));
-	//Step* event_step_luke = new MoveStep(std::vector<sf::Vector2f>({ tile(12, 15) }));
 	Event test_events({ event_step_player }, { &player });
-	//actors.push_back(&luke);
 	
 	// *************** End Audrey Edit *************** //
 
@@ -368,12 +361,10 @@ int main() {
 			// Audrey Edit: Adding Event class functionalities //
 			//test_step = new MoveStep(std::vector<sf::Vector2f>({ tile(10, 10), tile(10, 13), tile(10, 11) }));
 			//test_events.addEvents(test_step, actors[2]);
-			Step* event_step_luke = new MoveStep(std::vector<sf::Vector2f>({ tile(12, 15) }));
-			Step* event_face_luke = new DirectionStep(Direction::West);
-			test_events.addEvents(event_step_luke, actors[2]);
-			test_events.addEvents(event_face_luke, actors[2]);
+			test_events.addEvents(new MoveStep(std::vector<sf::Vector2f>({ tile(12, 15) })), actors[2]);
+			test_events.addEvents(new DirectionStep(Direction::West), actors[2]);
 			test_events.addEvents(new DirectionStep(Direction::East), &player);
-			test_events.addEvents(new SpeechStep(message, textbox), actors[2]);
+			test_events.addEvents(new SpeechStep(message[1], textbox), actors[2]);
 			// *************** End Audrey Edit *************** //
 		}
 
@@ -387,9 +378,15 @@ int main() {
 			if (!textbox) {
 				// Audrey Edit: Adding Event class functionalities //
 				if (eventIsRunning) {
+					if (test_events.getEventType() == "Speech" && !textbox) {
+						textbox = eventIsRunning;
+					}
 					std::cout << "Doing Event Number: " << test_events.getEventType() << std::endl;
 					test_events.runEvent(elapsedTime);
 					eventIsRunning = test_events.eventIsRunning();
+					if (textbox) {
+						textbox = eventIsRunning;
+					}
 				}
 				else {
 					// *************** End Audrey Edit *************** //

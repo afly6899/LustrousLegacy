@@ -99,3 +99,7 @@ void Event::reloadEvent()
 // Audrey Edit: Adding Event class functionalities //
 
 // *************** End Audrey Edit *************** //
+
+// Audrey Edit: Deleting Dynamic Allocations //
+
+// ************ End Audrey Edit ************ //

@@ -11,7 +11,7 @@
 class SpeechStep : public Step {
 public:
 
-	SpeechStep(std::string* messages, bool& textbox);
+	SpeechStep(std::string& message, bool& textbox);
 	virtual ~SpeechStep();
 	virtual bool run(float elapsedTime, Actor& actor);
 
@@ -19,7 +19,7 @@ public:
 	virtual std::string getType() { return type; }
 
 private:
-	std::string* dialogue;
+	std::string& dialogue;
 	bool textboxOn;
 	bool textFinished = false;
 
