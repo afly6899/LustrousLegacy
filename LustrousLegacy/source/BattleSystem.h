@@ -25,6 +25,7 @@ public:
 	int getSelection();
 	virtual void setPosition(sf::Vector2f pos);
 	virtual void update(sf::Vector2f pos, float elapsedTime);
+	void battle(bool ENTER_KEY, float elapsedTime); 
 	std::string BattleSystem::getClass();
 
 private:
@@ -33,14 +34,18 @@ private:
 	sf::Vector2u window_size;
 	sf::Vector2f originalPos;
 	sf::Vector2f option_points[4];
-	Pawn* _enemy = nullptr;
-	Pawn* _actor = nullptr;
+	Pawn enemy;
 	Pawn battleCursor;
 	int num_of_selections;
 	int selection = Battle::Fight;
 	int aniCounter = 0;
 	int aniFrameDuration = 300;
 	int seperation = 100;
+	bool player_turn = true;
+	int player_health = 100;
+	int player_attack = 20;
+	int enemy_attack = 10;
+	int enemy_health = 150;
 	sf::RectangleShape background;
 	std::map<int, sf::Text> battle_options;
 };

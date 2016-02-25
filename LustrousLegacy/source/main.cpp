@@ -350,12 +350,11 @@ int main() {
 			}
 		}
 		else if (battlePtr->isVisible() && !UI_visible_excluding(battlePtr, sysWindows)) {
-			if (ui_kb[sf::Keyboard::Up] || ui_kb[sf::Keyboard::Down])
+			if (ui_kb[event.key.code])
 				battlePtr->change_selection(event.key.code);
-			else if (ui_kb[sf::Keyboard::Return]) {
+			if (ui_kb[sf::Keyboard::Return]) {
 				switch (battlePtr->getSelection()) {
 				case(Battle::Fight) :
-					std::cout << "There is no implementation of this option yet." << std::endl;
 					break;
 				case(Battle::Items) :
 					std::cout << "There is no implementation of this option yet." << std::endl;
@@ -427,6 +426,10 @@ int main() {
 				// *************** End Audrey Edit *************** //
 				playerView.setCenter(player.getViewArm());
 			}
+		}
+
+		if (battlePtr->isVisible() && event.key.code == sf::Keyboard::Return) {
+			battlePtr->battle(ui_kb[event.key.code], elapsedTime);
 		}
 
 		// BEGIN DRAW CYCLE
