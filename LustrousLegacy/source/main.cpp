@@ -44,6 +44,7 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "DirectionStep.h"
 #include "MoveStep.h"
 #include "SpeechStep.h"
+#include "TogetherStep.h"
 // *************** End Audrey Edit *************** //
 
 using namespace std;
@@ -276,10 +277,14 @@ int main() {
 
 
 	// Audrey Edit: Adding Event class functionalities //
-	//Step* test_step_player = new MoveStep(std::vector<sf::Vector2f>({ tile(10, 10), tile(10, 13), tile(10, 10) }));
+	Actor* test_luke = new Actor(lukeTexture);
+	test_luke->setScene(scene_name);
+	test_luke->setPosition(tile(11,10));
+	test_luke->setPastPosition(tile(11,10));
+	test_luke->setDirection(Direction::South);
+	actors.push_back(test_luke);
 
-	Step* event_step_player = new MoveStep(std::vector<sf::Vector2f>({ tile(11,15) }));
-	Event test_events({ event_step_player }, { &player });
+	Event test_events({ new TogetherStep(std::vector<sf::Vector2f>({ tile(10,15), tile(11,15) }), std::vector<Actor*>({ &player, test_luke })) }, { &player});
 	
 	// *************** End Audrey Edit *************** //
 
@@ -334,16 +339,12 @@ int main() {
 					}
 				}
 				// Audrey Edit: Adding Event class functionalities //
-				//else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
-					//if (!textbox && !pausePtr->isVisible()) {
-						//if (!test_events.finishedEvents())
-							//eventIsRunning = test_events.startEvent();
-						//else {
-							//test_step = new MoveStep(std::vector<sf::Vector2f>({ tile(10, 10), tile(10, 13), tile(10, 10) }));
-							//test_events.addEvents(test_step, &player);
-						//}
-					//}
-				//}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+					if (!textbox && !pausePtr->isVisible()) {
+						if (!test_events.finishedEvents())
+							eventIsRunning = test_events.startEvent();
+					}
+				}
 				// *************** End Audrey Edit *************** //
 				break;
 			}
@@ -359,12 +360,9 @@ int main() {
 			}
 			current_map = map_name;
 			// Audrey Edit: Adding Event class functionalities //
-			//test_step = new MoveStep(std::vector<sf::Vector2f>({ tile(10, 10), tile(10, 13), tile(10, 11) }));
-			//test_events.addEvents(test_step, actors[2]);
-			test_events.addEvents(new MoveStep(std::vector<sf::Vector2f>({ tile(12, 15) })), actors[2]);
-			test_events.addEvents(new DirectionStep(Direction::West), actors[2]);
-			test_events.addEvents(new DirectionStep(Direction::East), &player);
-			test_events.addEvents(new SpeechStep(message[1], textbox), actors[2]);
+			//test_events.addEvents(new DirectionStep(Direction::West), actors[2]);
+			//test_events.addEvents(new DirectionStep(Direction::East), &player);
+			//test_events.addEvents(new SpeechStep(message[1], textbox), actors[2]);
 			// *************** End Audrey Edit *************** //
 		}
 
@@ -392,9 +390,9 @@ int main() {
 					// *************** End Audrey Edit *************** //
 					player.move(elapsedTime, player.controller.get_input());
 					// Audrey Edit: Adding Event class functionalities //
-					if (player.getPosition().y >= System::Tilesize * 15 && player.getPosition().y <= System::Tilesize * 15 + System::Tilesize*.5) {
-						eventIsRunning = test_events.startEvent();
-					}
+					//if (player.getPosition().y >= System::Tilesize * 15 && player.getPosition().y <= System::Tilesize * 15 + System::Tilesize*.5) {
+						//eventIsRunning = test_events.startEvent();
+					//}
 					// *************** End Audrey Edit *************** //
 					sysCollision(actors, ml);
 

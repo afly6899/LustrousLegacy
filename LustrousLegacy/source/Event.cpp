@@ -12,7 +12,8 @@ Event::Event(std::initializer_list<Step*> steps, std::initializer_list<Actor*> a
 	std::initializer_list<Step*>::iterator steps_it = steps.begin();
 	std::initializer_list<Actor*>::iterator actors_it = actors.begin();
 	
-	eventSteps.push(std::make_pair(*steps_it, *actors_it));
+	for (steps_it; steps_it != steps.end(); steps_it++, actors_it++)
+		eventSteps.push(std::make_pair(*steps_it, *actors_it));
 }
 
 Event::~Event() {
@@ -66,6 +67,7 @@ void Event::nextEvent()
 	//	finishedSteps.push(currentEvent);
 	//}
 	if (!eventSteps.empty()) {
+		std::cout << "number of events left: " << eventSteps.size() << std::endl;
 		currentEvent = eventSteps.front();
 		eventSteps.pop();
 		eventType = currentEvent.first->getType();
