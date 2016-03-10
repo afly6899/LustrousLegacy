@@ -10,4 +10,4 @@ To Add Events via Tiled
 	- Move Steps: 0posx,posy
 	- Together Steps: 1posx,posy
 	- Direction Step: 2directionnumber (direction number = 0 (south), 1(west), 2(East), 3(north))
-	- Speech Step: 3(identifier of actor talking)
+	- Speech Step: 3(identifier of actor talking) -> actor has this step
