@@ -7,6 +7,7 @@
 class Event
 {
 public:
+	Event() { return; }
 	Event(std::queue<std::pair<Step*, Actor*>> steps);
 	Event(std::initializer_list<Step*> steps, std::initializer_list<Actor*> actors);
 	~Event();

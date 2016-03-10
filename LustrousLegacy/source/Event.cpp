@@ -85,13 +85,14 @@ void Event::nextEvent()
 
 void Event::addEvents(Step* step, Actor* actor) 
 { 
-	eventSteps.push(std::make_pair(step, actor));
+	
+		eventSteps.push(std::make_pair(step, actor));
 }
 
 // might not be useful
 void Event::reloadEvent() 
 { 
-	for (int i = 0; i < finishedSteps.size(); i++) {
+	for (int i = 0; i < signed(finishedSteps.size()); i++) {
 		eventSteps.push(finishedSteps.front());
 		finishedSteps.pop();
 	}

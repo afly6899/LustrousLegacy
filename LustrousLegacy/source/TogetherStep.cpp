@@ -24,3 +24,9 @@ bool TogetherStep::run(float elapsedTime, Actor & actor)
 	}
 	return !isDone;
 }
+
+void TogetherStep::addToStep(sf::Vector2f position, Actor * actor)
+{
+	positions.push_back(position);
+	actors.push_back(actor);
+}

@@ -54,7 +54,8 @@ void sysCollision(std::vector<Actor*>& actors, tmx::MapLoader& map);
 void actorCollision(std::vector<Actor*>&);
 bool UI_visible(std::vector<UI*>& sysWindows);
 bool UI_visible_excluding(UI* sysWindow, std::vector<UI*> sysWindows);
-void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> texMap);
+//void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> texMap); // original
+void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> texMap, Event& events);
 void animateMap(tmx::MapLoader& ml, sf::RenderWindow& window, float(&worldAnimationArr)[3]);
 void drawTextbox(sf::RenderWindow& window, Textbox* textbox, bool flag);
 void drawEntities(sf::RenderWindow& window, std::vector<Pawn*>& entities);
@@ -277,14 +278,16 @@ int main() {
 
 
 	// Audrey Edit: Adding Event class functionalities //
-	Actor* test_luke = new Actor(lukeTexture);
-	test_luke->setScene(scene_name);
-	test_luke->setPosition(tile(11,10));
-	test_luke->setPastPosition(tile(11,10));
-	test_luke->setDirection(Direction::South);
-	actors.push_back(test_luke);
+	//Actor* test_luke = new Actor(lukeTexture);
+	//test_luke->setScene(scene_name);
+	//test_luke->setPosition(tile(11,10));
+	//test_luke->setPastPosition(tile(11,10));
+	//test_luke->setDirection(Direction::South);
+	//actors.push_back(test_luke);
 
-	Event test_events({ new TogetherStep(std::vector<sf::Vector2f>({ tile(10,15), tile(11,15) }), std::vector<Actor*>({ &player, test_luke })) }, { &player});
+	//Event test_events({ new TogetherStep(std::vector<sf::Vector2f>({ tile(10,15), tile(11,15) }), std::vector<Actor*>({ &player, test_luke })) }, { &player});
+
+	Event test_events;
 	
 	// *************** End Audrey Edit *************** //
 
@@ -341,6 +344,7 @@ int main() {
 				// Audrey Edit: Adding Event class functionalities //
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
 					if (!textbox && !pausePtr->isVisible()) {
+				
 						if (!test_events.finishedEvents())
 							eventIsRunning = test_events.startEvent();
 					}
@@ -354,7 +358,7 @@ int main() {
 
 		if (current_map != map_name && initial_load_map)
 		{
-			load_map(ml, map_name, player, actors, entities, textureMap);
+			load_map(ml, map_name, player, actors, entities, textureMap, test_events);
 			for (int i = actors.size(); i != 0; i--) {
 				entities.push_back(actors[i - 1]);
 			}
@@ -525,13 +529,19 @@ int  _directionOfActor(std::string dir) {
 \brief Loads the specified map and instantiates all actors and pawns.
 	   The player is set at the start position specified by the map.
 *********************************************************************/
-void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> textureMap) {
+//void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> textureMap) {
+bool sort_by_step_num(std::pair<Step*, Actor*> first, std::pair<Step*, Actor*> second) { return true; }
+void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> textureMap, Event& events) {
 	ml.Load(map_name);
+	std::vector<std::pair<Step*, Actor*>> steps;
 
 	for (auto layer = ml.GetLayers().begin(); layer != ml.GetLayers().end(); ++layer)
 	{
 		if (layer->name == "Setup")
 		{
+			for (int i = 0; i < std::stoi(layer->properties["numEvents"]); i++) {
+				steps.push_back({ nullptr, nullptr });
+			}
 			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
 			{
 				if (object->GetName() == "START")
@@ -551,10 +561,49 @@ void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::
 					Pawn* ptr = new Pawn(*textureMap[object->GetPropertyString("Texture")]);
 					pawns.push_back(ptr);
 				}
+				// Adding
+				std::string order = object->GetPropertyString("Event Order");
+				std::cout << object->GetPropertyString("ID") << std::endl;
+				if (object->GetPropertyString("ID") == "108") {
+					std::cout << "Switching using " << order << std::endl;
+				}
+				if (order != "") {
+					for (int i = 0; i < order.size(); i++)
+					{
+						std::string e = object->GetPropertyString(std::string(1, order[i]));
 
+						Actor* moving_actor = (object->GetName() == "START") ? actors[0] : actors[actors.size() - 1];
+						Step* step = nullptr;
+						switch (e[0] - '0') {
+						case 0:
+							step = new MoveStep(std::vector<sf::Vector2f>({ tile(std::stoi(e.substr(1, 2)), std::stoi(e.substr(4, 2))) }));
+							break;
+						case 1:
+							if (steps[order[i] - '0' - 1].first == nullptr) {
+								step = new TogetherStep(std::vector<sf::Vector2f>({ tile(std::stoi(e.substr(1, 2)), std::stoi(e.substr(4, 2))) }), std::vector<Actor*>({ moving_actor }));
+							}
+							else {
+								std::cout << object->GetPropertyString("ID") << std::endl;
+								steps[order[i] - '0' - 1].first->addToStep(sf::Vector2f({ tile(std::stoi(e.substr(1, 2)), std::stoi(e.substr(4, 2))) }), moving_actor);
+							}
+							break;
+						case 2:
+							break;
+						}
+						if (step != nullptr) {
+							steps[order[i] - '0' - 1] = (std::pair<Step*, Actor*>(step, moving_actor));
+						}
+					}
+
+				}
 			}
 		}
 	}
+	for (auto step : steps) {
+		events.addEvents(step.first, step.second);
+		std::cout << step.first->getType() << " ";
+	}
+	std::cout << std::endl;
 }
 
 /*********************************************************************

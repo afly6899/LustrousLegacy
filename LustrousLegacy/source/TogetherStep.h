@@ -11,6 +11,8 @@ public:
 
 	// for debugging
 	virtual std::string getType() { return type; }
+
+	void addToStep(sf::Vector2f position, Actor* actor);
 private:
 	std::vector<sf::Vector2f> positions;
 	std::vector<Actor*> actors;

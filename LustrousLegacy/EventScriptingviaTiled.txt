@@ -1,0 +1,13 @@
+To Add Events via Tiled
+* Setup layer
+  + change custom property numEvents to number of events you want to have total (all together steps would count as 1)
+* Setup layer objects (START, ACTOR)
+  + custom property Event Order holds the event numbers that that particular actor will be doing
+	ex. Event Order 12 -> actor will do the first and second events
+  + for each event in Event Order, create a custom property with that event number
+	ex. for above actor, add custom properties labeled 1 and 2
+  + in the number labels
+	- Move Steps: 0posx,posy
+	- Together Steps: 1posx,posy
+	- Direction Step: 2directionnumber (direction number = 0 (south), 1(west), 2(East), 3(north))
+	- Speech Step: 3(identifier of actor talking)
