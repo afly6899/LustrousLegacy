@@ -1,7 +1,7 @@
 #include <iostream>
 #include "SpeechStep.h"
 
-SpeechStep::SpeechStep(std::string& message, bool& textbox) 
+SpeechStep::SpeechStep(std::string message, bool textbox) 
 : dialogue(message), textboxOn(textbox) {
 }
 

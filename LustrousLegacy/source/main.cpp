@@ -55,7 +55,7 @@ void actorCollision(std::vector<Actor*>&);
 bool UI_visible(std::vector<UI*>& sysWindows);
 bool UI_visible_excluding(UI* sysWindow, std::vector<UI*> sysWindows);
 //void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> texMap); // original
-void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> texMap, Event& events);
+void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> texMap, Event& events, bool& textbox);
 void animateMap(tmx::MapLoader& ml, sf::RenderWindow& window, float(&worldAnimationArr)[3]);
 void drawTextbox(sf::RenderWindow& window, Textbox* textbox, bool flag);
 void drawEntities(sf::RenderWindow& window, std::vector<Pawn*>& entities);
@@ -358,7 +358,7 @@ int main() {
 
 		if (current_map != map_name && initial_load_map)
 		{
-			load_map(ml, map_name, player, actors, entities, textureMap, test_events);
+			load_map(ml, map_name, player, actors, entities, textureMap, test_events, textbox);
 			for (int i = actors.size(); i != 0; i--) {
 				entities.push_back(actors[i - 1]);
 			}
@@ -380,10 +380,10 @@ int main() {
 			if (!textbox) {
 				// Audrey Edit: Adding Event class functionalities //
 				if (eventIsRunning) {
-					if (test_events.getEventType() == "Speech" && !textbox) {
+					if ((test_events.getEventType()).substr(0, 6) == "Speech" && !textbox) {
 						textbox = eventIsRunning;
+						message[1] = test_events.getSpeechDialogue();
 					}
-					std::cout << "Doing Event Number: " << test_events.getEventType() << std::endl;
 					test_events.runEvent(elapsedTime);
 					eventIsRunning = test_events.eventIsRunning();
 					if (textbox) {
@@ -530,8 +530,7 @@ int  _directionOfActor(std::string dir) {
 	   The player is set at the start position specified by the map.
 *********************************************************************/
 //void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> textureMap) {
-bool sort_by_step_num(std::pair<Step*, Actor*> first, std::pair<Step*, Actor*> second) { return true; }
-void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> textureMap, Event& events) {
+void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> textureMap, Event& events, bool& textbox) {
 	ml.Load(map_name);
 	std::vector<std::pair<Step*, Actor*>> steps;
 
@@ -575,19 +574,23 @@ void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::
 						Actor* moving_actor = (object->GetName() == "START") ? actors[0] : actors[actors.size() - 1];
 						Step* step = nullptr;
 						switch (e[0] - '0') {
-						case 0:
+						case 0: // Move Step
 							step = new MoveStep(std::vector<sf::Vector2f>({ tile(std::stoi(e.substr(1, 2)), std::stoi(e.substr(4, 2))) }));
 							break;
-						case 1:
+						case 1: // Together Step
 							if (steps[order[i] - '0' - 1].first == nullptr) {
 								step = new TogetherStep(std::vector<sf::Vector2f>({ tile(std::stoi(e.substr(1, 2)), std::stoi(e.substr(4, 2))) }), std::vector<Actor*>({ moving_actor }));
 							}
 							else {
-								std::cout << object->GetPropertyString("ID") << std::endl;
 								steps[order[i] - '0' - 1].first->addToStep(sf::Vector2f({ tile(std::stoi(e.substr(1, 2)), std::stoi(e.substr(4, 2))) }), moving_actor);
 							}
 							break;
-						case 2:
+						case 2: // Direction Step
+							step = new DirectionStep(Direction(e[1] - '0'));
+							break;
+						case 3: // Speech Step
+							std::cout << "Scene: " << object->GetPropertyString("Scene") << std::endl;
+							step = new SpeechStep(object->GetPropertyString("Scene"), textbox);
 							break;
 						}
 						if (step != nullptr) {

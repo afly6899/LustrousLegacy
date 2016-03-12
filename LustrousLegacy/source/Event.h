@@ -29,6 +29,7 @@ public:
 
 	// for debugging
 	std::string getEventType() { return eventType; }
+	std::string getSpeechDialogue();
 
 private:
 	// might not be useful

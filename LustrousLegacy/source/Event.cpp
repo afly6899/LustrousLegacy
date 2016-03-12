@@ -98,6 +98,11 @@ void Event::reloadEvent()
 	}
 }
 
+std::string Event::getSpeechDialogue()
+{
+	return currentEvent.second->getScene();
+}
+
 
 // Audrey Edit: Adding Event class functionalities //
 
