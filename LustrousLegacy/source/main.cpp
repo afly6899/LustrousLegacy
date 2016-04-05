@@ -55,7 +55,7 @@ void actorCollision(std::vector<Actor*>&);
 bool UI_visible(std::vector<UI*>& sysWindows);
 bool UI_visible_excluding(UI* sysWindow, std::vector<UI*> sysWindows);
 //void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> texMap); // original
-void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> texMap, Event& events, bool& textbox);
+void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> texMap, Event& events, bool& textbox, string messages[]);
 void animateMap(tmx::MapLoader& ml, sf::RenderWindow& window, float(&worldAnimationArr)[3]);
 void drawTextbox(sf::RenderWindow& window, Textbox* textbox, bool flag);
 void drawEntities(sf::RenderWindow& window, std::vector<Pawn*>& entities);
@@ -358,7 +358,7 @@ int main() {
 
 		if (current_map != map_name && initial_load_map)
 		{
-			load_map(ml, map_name, player, actors, entities, textureMap, test_events, textbox);
+			load_map(ml, map_name, player, actors, entities, textureMap, test_events, textbox, message);
 			for (int i = actors.size(); i != 0; i--) {
 				entities.push_back(actors[i - 1]);
 			}
@@ -382,7 +382,7 @@ int main() {
 				if (eventIsRunning) {
 					if ((test_events.getEventType()).substr(0, 6) == "Speech" && !textbox) {
 						textbox = eventIsRunning;
-						message[1] = test_events.getSpeechDialogue();
+						//message[1] = test_events.getSpeechDialogue();
 					}
 					test_events.runEvent(elapsedTime);
 					eventIsRunning = test_events.eventIsRunning();
@@ -530,7 +530,7 @@ int  _directionOfActor(std::string dir) {
 	   The player is set at the start position specified by the map.
 *********************************************************************/
 //void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> textureMap) {
-void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> textureMap, Event& events, bool& textbox) {
+void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::vector<Actor*>& actors, std::vector<Pawn*>& pawns, std::map<std::string, sf::Texture*> textureMap, Event& events, bool& textbox, string messages[]) {
 	ml.Load(map_name);
 	std::vector<std::pair<Step*, Actor*>> steps;
 
@@ -590,7 +590,7 @@ void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::
 							break;
 						case 3: // Speech Step
 							std::cout << "Scene: " << object->GetPropertyString("Scene") << std::endl;
-							step = new SpeechStep(object->GetPropertyString("Scene"), textbox);
+							step = new SpeechStep(messages, textbox);
 							break;
 						}
 						if (step != nullptr) {
