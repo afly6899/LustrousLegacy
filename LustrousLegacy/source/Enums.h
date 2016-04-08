@@ -41,6 +41,13 @@ enum Selection {
 	Exit = 4,
 };
 
+enum Battle {
+	Fight = 1,
+	Items = 2,
+	Status = 3,
+	Escape = 4,
+};
+
 enum Cursor_Direction {
 	Down,
 	Up
@@ -67,5 +74,8 @@ enum Map {
 	FrameDuration = 1,
 	Layer = 2
 };
+
+// *~~*~~*~~*~~*~~*~~*~~* Audrey Menu Edits *~~*~~*~~*~~*~~*~~*~~*
+// +--+--+--+--+--+--+--+-- End Menu Edit +--+--+--+--+--+--+--+--
 #endif
 
