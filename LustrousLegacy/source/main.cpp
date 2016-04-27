@@ -48,8 +48,7 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 // *************** End Audrey Edit *************** //
 
 // Audrey Edit: Adding Menu Functionalities
-#include "Menu.h"
-void usingMenu();
+#include "MenuSystem.h"
 // ++++++++++++++++++ End Audrey Edit
 
 using namespace std;
@@ -172,12 +171,6 @@ int main() {
 		cerr << "Texture Error" << endl;
 	}
 
-	// CURSOR TEXTURE
-	sf::Texture cursorTexture;
-	if (!cursorTexture.loadFromFile("resources/textures/cursor.png")) {
-		cerr << "Texture Error" << endl;
-	}
-
 	// BOOK TEXTURE
 	sf::Texture bookTexture;
 	if (!bookTexture.loadFromFile("resources/textures/book.png")) {
@@ -255,10 +248,8 @@ int main() {
 	*********************************************************************/
 
 	std::vector<UI*> sysWindows;
-	
-	GeneralInfo info = {50, sf::Vector2f(10,0), window_size};
-	OptionNames names = { "Items", "Magic", "Equip", "Stats", "Config", "Save" };
-	Menu* menuPtr = new Menu(info, names, sysFont, cursorTexture, sfx_blip1, false);
+
+	MenuSystem gameMenu("resources/menus/MenuScripting.txt", window);
 
 	Title* titlePtr = new Title(sysFont, window_size, titleTexture, sfx_blip1, music);
 	Pause* pausePtr = new Pause(sysFont, window_size);
@@ -268,7 +259,6 @@ int main() {
 
 	sysWindows.push_back(titlePtr);
 	sysWindows.push_back(pausePtr);
-	sysWindows.push_back(menuPtr);
 
 	/*********************************************************************
 	ENTITY PROCESSING
@@ -298,7 +288,7 @@ int main() {
 	//Event test_events({ new TogetherStep(std::vector<sf::Vector2f>({ tile(10,15), tile(11,15) }), std::vector<Actor*>({ &player, test_luke })) }, { &player});
 
 	Event test_events;
-	
+
 	// *************** End Audrey Edit *************** //
 
 	/*********************************************************************
@@ -342,21 +332,6 @@ int main() {
 						}
 					}
 				}
-				else if (menuPtr->isVisible()) {
-					switch (event.key.code)
-					{
-					case sf::Keyboard::Down:
-					case sf::Keyboard::Right:
-						menuPtr->moveCursor(true);
-						std::cout << "Moved pointer down" << std::endl;
-						break;
-					case sf::Keyboard::Up:
-					case sf::Keyboard::Left:
-						menuPtr->moveCursor(false);
-						std::cout << "Moved pointer up" << std::endl;
-						break;
-					}
-				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 					if (!UI_visible_excluding(pausePtr, sysWindows)) {
 						pausePtr->setVisible(!pausePtr->isVisible());
@@ -369,16 +344,16 @@ int main() {
 				// Audrey Edit: Adding Event class functionalities //
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
 					if (!textbox && !pausePtr->isVisible()) {
-				
+
 						if (!test_events.finishedEvents())
 							eventIsRunning = test_events.startEvent();
 					}
 				}
 				// *************** End Audrey Edit *************** //
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::T)) {
-					menuPtr->setVisible(!menuPtr->isVisible());
+				else {
+					gameMenu.handleInput(event);
+					std::cout << "Game Menu is visible: " << gameMenu.isVisible() << std::endl;
 				}
-				break;
 			}
 		}
 
@@ -450,9 +425,12 @@ int main() {
 
 		window.clear();
 		window.setView(playerView);
-		if (!menuPtr->isVisible()) {
-			if (!titlePtr->isVisible()) {
 
+		if (!titlePtr->isVisible()) {
+			if (gameMenu.isVisible()) {
+				window.draw(gameMenu);
+			}
+			else {
 				animateMap(ml, window, worldAnimationArr);
 				drawEntities(window, entities);
 				ml.Draw(window, Layer::Overlay);
@@ -463,9 +441,12 @@ int main() {
 			}
 		}
 
+
+		
+
 		drawTextbox(window, _Textbox, textbox);
 		drawUI(window, playerView, sysWindows, elapsedTime);
-
+		
 		window.display();
 	}
 	return 0;
@@ -486,10 +467,6 @@ void actorCollision(std::vector<Actor*>& actors)
 			}
 		}
 	}
-}
-
-void usingMenu()
-{
 }
 
 /*********************************************************************
@@ -700,15 +677,3 @@ void drawEntities(sf::RenderWindow& window, std::vector<Pawn*>& entities) {
 		window.draw(*entities[i - 1]);
 	}
 }
-
-// left-overs
-/*
-if (step_ptrs.front()->run(elapsedTime, test_actor)) {
-if (!step_ptrs.front()->run(elapsedTime,test_actor)) {
-if (!step_ptrs.empty()) {
-// need to manage memory
-step_ptrs.pop();
-}
-}
-}
-*/

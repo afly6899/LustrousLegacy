@@ -4,10 +4,18 @@
 Pawn class default constructor.
 \brief Requires a texture for instantiation. The sprite_sheet
 *********************************************************************/
-Pawn::Pawn(const sf::Texture& imagePath):
+//Pawn::Pawn(const sf::Texture& imagePath):
+//	pawnSprite(imagePath),
+//	spriteSource(Source::Idle, Direction:: South) {
+//	spriteSize = pawnSprite.getTexture()->getSize().x / 3;
+//	pawnSprite.setOrigin(spriteSize*.5, spriteSize);
+//	pawnSprite.setTextureRect(sf::IntRect(spriteSource.x * spriteSize, spriteSource.y * spriteSize, spriteSize, spriteSize));
+//}
+
+Pawn::Pawn(const sf::Texture& imagePath, int numColumns) :
 	pawnSprite(imagePath),
-	spriteSource(Source::Idle, Direction:: South) {
-	spriteSize = pawnSprite.getTexture()->getSize().x / 3;
+	spriteSource(Source::Idle, Direction::South) {
+	spriteSize = pawnSprite.getTexture()->getSize().x / numColumns;
 	pawnSprite.setOrigin(spriteSize*.5, spriteSize);
 	pawnSprite.setTextureRect(sf::IntRect(spriteSource.x * spriteSize, spriteSource.y * spriteSize, spriteSize, spriteSize));
 }

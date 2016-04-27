@@ -1,0 +1,6 @@
+background.png text_blip2.wav Vera.ttf
+0 Start .25 1 0 0 Items Magic Party Equipment Save
+1 Items .75 .2 200 0 Inventory KeyItems Sort
+1 Magic .75 .2 200 0 Equip Use
+2 Inventory .75 .8 200 120 ...
+0 Save .15 .15 200 510 Yes_save No

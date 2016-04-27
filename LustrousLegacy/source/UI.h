@@ -18,6 +18,7 @@ public:
 	sf::Text createOption(std::string option_name, const sf::Font& font);
 	void clearStyle(sf::Text& string);
 	void selected(sf::Text& string);
+	void toggleStyle(sf::Text &current, sf::Text &old = sf::Text());
 
 private: 
 	bool visible = false;

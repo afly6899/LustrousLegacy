@@ -1,39 +1,40 @@
 #pragma once
 #include <SFML/Audio.hpp>
+#include <vector>
 #include <map>
 #include "Pawn.h"
 #include "UI.h"
 
-typedef std::vector<std::string> OptionNames;
-
-struct GeneralInfo
-{
-	int separation;
-	sf::Vector2f startPos;
-	sf::Vector2u windowSize;
-};
+typedef std::vector<std::string> Names;
+typedef sf::Vector2f Tile;
 
 class Menu : public UI {
-public: 
-	Menu(GeneralInfo info, OptionNames stroptions, sf::Font& font, sf::Texture &texture, sf::Sound &bleep, bool rightleft);
+public:
+	Menu();
+	Menu(int number);
+	Menu(Names names, sf::Vector2f start, sf::Vector2u size, sf::Sound &bleep, sf::Texture backgroundTexture);
 	~Menu();
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-	virtual void setPosition(sf::Vector2f pos);
-	virtual void update(sf::Vector2f pos, float elapsedTime);
-	virtual std::string getClass() { return "Menu"; };
 
-	void moveCursor(bool downRight);
+	void draw(sf::RenderTarget &target, sf::RenderStates states) const;
+	void update(sf::Vector2f position, float elapsedTime);
+	virtual void setPosition(Tile pos) = 0;
+
+	void resetCursor();
+	virtual void moveCursor(bool downRight, bool vertical, std::string type = "Menu", int previousSelection = 0);
+	std::string getSelected();
+	sf::Text *getSelectedText();
+
+	virtual void setInfo(std::vector<sf::Text*> names, sf::Vector2f start, sf::Vector2u size, sf::Sprite *background, sf::Sound *bleep);
+
+protected:
+	float cpos[2];
+	int numOptions;
+	sf::Vector2u size;
+	int currentSelection;
+	std::vector<sf::Text*> optionNames;
+	std::vector<sf::Vector2f> positions;
 
 private:
-	sf::Vector2f cursorAdjustment();
-
-	Pawn cursor;
-	int separation;
-	int numOptions;
-	int currentSelection;
-	sf::Vector2f changeBy;
-	sf::Sound &cursorBleep;
-	sf::Vector2u windowSize;
-	std::map<int, sf::Text> options;
-	std::vector<sf::Vector2f> positions; // original pos is the first one
+	sf::Sound *cursorBleep;
+	sf::Sprite *background;
 };

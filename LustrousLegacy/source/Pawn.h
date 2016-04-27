@@ -12,7 +12,8 @@ namespace sf {
 class Pawn : public sf::Drawable {
 public:
 
-	Pawn(const sf::Texture& playerTexture);
+	//Pawn(const sf::Texture& playerTexture);
+	Pawn(const sf::Texture& playerTexture, int numColumns = 3);
 	virtual ~Pawn();
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	unsigned int getDirection();

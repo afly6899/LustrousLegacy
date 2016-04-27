@@ -1,74 +1,98 @@
-#include "Menu.h"
 #include <iostream>
+#include "Menu.h"
 
-Menu::Menu(GeneralInfo info, OptionNames stroptions, sf::Font& font, sf::Texture &texture, sf::Sound &bleep, bool rightleft)
-: windowSize(info.windowSize), separation(info.separation), cursorBleep(bleep), cursor(texture){
+Menu::Menu() {
+}
 
-	changeBy = (rightleft) ? sf::Vector2f(separation, 0) : sf::Vector2f(0, separation);
+Menu::Menu(int numRows)
+{
+}
 
-	for (int i = 0; i < stroptions.size(); i++) {
-		options[i] = createOption(stroptions[i], font);
-		positions.push_back(sf::Vector2f(info.startPos.x + changeBy.x * i, info.startPos.y + changeBy.y * i));
-		options[i].setPosition(positions[i]);
-	}
-	currentSelection = 0;
-	cursor.setPosition(cursorAdjustment());
+Menu::Menu(Names names, sf::Vector2f start, sf::Vector2u size, sf::Sound &bleep, sf::Texture backgroundTexture)
+: numOptions(names.size()), currentSelection(0), size(size) {
+	cursorBleep = new sf::Sound(bleep);
+	background = new sf::Sprite(backgroundTexture);
+	background->setTextureRect(sf::IntRect(start.x, start.y, size.x, size.y));
+	background->setPosition(start);
+	cpos[0] = 0.0; cpos[1] = 0.0;
 }
 
 Menu::~Menu() {
+	if (optionNames.size() > 0) {
+		delete background;
+		//delete cursorBleep;
+		for (int i = 0; i < optionNames.size(); i++) {
+			delete optionNames[i];
+		}
+	}
 }
 
 void Menu::draw(sf::RenderTarget & target, sf::RenderStates states) const {
-	target.draw(cursor, states);
-	for (int i = 0; i < positions.size(); i++) {
-		target.draw(options.at(i), states);
+	target.draw(*background, states);
+	for (int i = 0; i < numOptions; i++) {
+		target.draw(*(optionNames.at(i)),states);
 	}
 }
 
-void Menu::setPosition(sf::Vector2f pos) {
-	if (pos != positions[0]) {
-		cursor.setPosition(cursorAdjustment());
-		for (int i = 0; i < positions.size(); i++) {
-			positions[i] = sf::Vector2f(pos.x + changeBy.x * i, pos.y + changeBy.y * i);
-			options[i].setPosition(positions[i]);
-		}
-	}
+void Menu::update(sf::Vector2f position, float elapsedTime)
+{
+	setPosition(position);
 }
 
-void Menu::update(sf::Vector2f pos, float elapsedTime) {
-	setPosition(pos);
-	cursor.spriteAnimate(elapsedTime);
-}
-
-void Menu::moveCursor(bool downRight) {
-	if (downRight) {
-		currentSelection = (currentSelection + 1) % positions.size();
+void Menu::resetCursor()
+{
+	if (currentSelection == 0) {
+		toggleStyle(*optionNames[currentSelection]);
 	}
 	else {
-		if (currentSelection == 0) {
-			currentSelection = positions.size() -1 ;
+		int previousSelection = currentSelection;
+		toggleStyle(*optionNames[currentSelection], *optionNames[previousSelection]);
+		currentSelection = 0;
+	}
+}
+
+void Menu::moveCursor(bool downRight, bool vertical, std::string type, int previousSelection)
+{
+	if (type == "Menu") {
+		previousSelection = currentSelection;
+		if (downRight) {
+			currentSelection = (currentSelection + 1) % numOptions;
 		}
 		else {
-			currentSelection--;
+			if (currentSelection == 0) {
+				currentSelection = numOptions - 1;
+			}
+			else {
+				currentSelection--;
+			}
 		}
 	}
-	cursor.setPosition(cursorAdjustment());
-	cursorBleep.play();
+	toggleStyle(*optionNames[currentSelection], *optionNames[previousSelection]);
+	cursorBleep->play();
 }
 
-sf::Vector2f Menu::cursorAdjustment()
+std::string Menu::getSelected()
 {
-	sf::Vector2f temp = positions[currentSelection];
-	temp.x -= 30;
-	temp.y += 10;
-	return temp;
+	return optionNames.at(currentSelection)->getString();
 }
 
-/*int separation;
-	int numOptions;
-	int currentSelection;
-	sf::Vector2f changeBy;
-	sf::Sound &cursorBleep;
-	sf::Vector2u windowSize;
-	std::map<int, sf::Text> options;
-	std::vector<sf::Vector2f> positions; // original pos is the first one*/
+sf::Text * Menu::getSelectedText()
+{
+	return optionNames.at(currentSelection);
+}
+
+void Menu::setInfo(std::vector<sf::Text*> names, sf::Vector2f start, sf::Vector2u size, sf::Sprite *background, sf::Sound *bleep)
+{
+	this->size = size;
+	numOptions = names.size();
+	currentSelection = 0;
+	cursorBleep = bleep;
+	this->background = background;
+	this->background->setTextureRect(sf::IntRect(start.x, start.y, size.x, size.y));
+	this->background->setPosition(start);
+	optionNames = names;
+	cpos[0] = 0.0; cpos[1] = 0.0;
+}
+
+
+

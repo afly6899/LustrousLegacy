@@ -1,0 +1,3 @@
+None text_blip2.wav Vera.ttf
+2 Start .34 .34 528 400 Fight Items Party Run
+2 Fight .66 .34 0 400 Attack1 Attack2 Attack3 Attack4

@@ -28,3 +28,13 @@ sf::Text UI::createOption(std::string option_name, const sf::Font& font) {
 	option.setOrigin(option.getLocalBounds().width *.5, option.getLocalBounds().height*.5);
 	return option;
 }
+
+void UI::toggleStyle(sf::Text & current, sf::Text & old) {
+	current.setColor(sf::Color::Yellow);
+	current.setStyle(sf::Text::Italic | sf::Text::Bold);
+
+	if (old.getString() != "") {
+		old.setColor(sf::Color::White);
+		old.setStyle(sf::Text::Regular);
+	}
+}
