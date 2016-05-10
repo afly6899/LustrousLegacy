@@ -66,8 +66,7 @@ void Event::nextEvent()
 	//if (currentEvent != nullptr) {
 	//	finishedSteps.push(currentEvent);
 	//}
-	if (!eventSteps.empty()) {
-		std::cout << "number of events left: " << eventSteps.size() << std::endl;
+	if (!eventSteps.empty() || currentEvent.first == nullptr) {
 		currentEvent = eventSteps.front();
 		eventSteps.pop();
 		eventType = currentEvent.first->getType();
@@ -85,8 +84,10 @@ void Event::nextEvent()
 
 void Event::addEvents(Step* step, Actor* actor) 
 { 
-	
 		eventSteps.push(std::make_pair(step, actor));
+		if (currentEvent.first == nullptr) {
+			nextEvent();
+		}
 }
 
 // might not be useful
@@ -95,6 +96,13 @@ void Event::reloadEvent()
 	for (int i = 0; i < signed(finishedSteps.size()); i++) {
 		eventSteps.push(finishedSteps.front());
 		finishedSteps.pop();
+	}
+}
+
+void Event::clearEvents()
+{
+	while (isRunning) {
+		nextEvent();
 	}
 }
 

@@ -26,6 +26,7 @@ public:
 	void addEvents(Step* step, Actor* actor);
 	// might not be useful
 	void reloadEvent();
+	void clearEvents();
 
 	// for debugging
 	std::string getEventType() { return eventType; }

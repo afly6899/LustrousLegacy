@@ -76,3 +76,14 @@ Luke: Go away, I can't move.
 
 LukeTEST
 Luke:Sup bro. Get out of here.
+Warren:That's a little mean. Couldn't you say that in a nicer way?
+Luke:...
+Luke:Get out of here, please?
+
+ResdinTEST
+Resdin:Hi, Warren! Are you doing well today?
+Warren:Yes I am, and you, Resdin? You're sounding pretty upbeat today.
+Resdin:I'm feeling pretty good! Ready to make the rounds.
+Luke:WARREN!!!!!
+Warren:Yikes! Sorry, Resdin. Gotta go train!
+
