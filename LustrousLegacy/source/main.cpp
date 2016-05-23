@@ -184,10 +184,10 @@ int main() {
 		cerr << "Texture Error: cursor.png" << endl;
 	}
 
-	// BOOK TEXTURE
-	sf::Texture bookTexture;
-	if (!bookTexture.loadFromFile("resources/textures/book.png")) {
-		cerr << "Texture Error: book.png" << endl;
+	// TRANSPARENT TEXTURE
+	sf::Texture transparentTexture;
+	if (!transparentTexture.loadFromFile("resources/textures/transparent.png")) {
+		cerr << "Texture Error: transparet.png" << endl;
 	}
 
 	// textureMap HOLDS THE REFERENCES OF ALL TEXTURES
@@ -195,6 +195,7 @@ int main() {
 	textureMap["Warren"] = &pTexture;
 	textureMap["Luke"] = &lukeTexture;
 	textureMap["Resdin"] = &resdinTexture;
+	textureMap["Empty"] = &transparentTexture;
 
 	// faceMap HOLDS ALL THE FACE SPRITES
 	std::map<std::string, sf::Sprite> faceMap;
@@ -241,7 +242,6 @@ int main() {
 	*********************************************************************/
 
 	tmx::MapLoader ml("resources/maps");
-	std::string map_name = "start.tmx";
 	std::string current_map = "";
 
 	/*********************************************************************
@@ -255,6 +255,10 @@ int main() {
 	*********************************************************************/
 
 	Fader sysFader;
+	bool start = false;
+	bool canPoll = true;
+	bool fade_in = false;
+	bool fade_out = false;
 	std::string scene_name = "Scene1";
 
 	/*********************************************************************
@@ -279,6 +283,7 @@ int main() {
 	std::vector<Actor*> actors;
 	std::vector<Pawn*> entities;
 
+
 	/*********************************************************************
 	TEXT RENDERING
 	*********************************************************************/
@@ -290,7 +295,7 @@ int main() {
 	std::vector<EventTile> event_tiles;
 
 	sf::Texture battleTexture;
-	if (!bookTexture.loadFromFile("resources/textures/battleSprite.png")) {
+	if (!battleTexture.loadFromFile("resources/textures/battleSprite.png")) {
 		cerr << "Texture Error" << endl;
 	}
 
@@ -306,8 +311,14 @@ int main() {
 	*********************************************************************/
 
 	while (window.isOpen()) {
+		if (test_events.getPriority() && sysFader.isComplete()) {
+			if (!textbox && !pausePtr->isVisible()) {
+				if (!test_events.finishedEvents())
+					eventIsRunning = test_events.startEvent();
+			}
+		}
 		sf::Event event;
-		while (window.pollEvent(event)) {
+		while (canPoll && window.pollEvent(event)) {
 			switch (event.type) {
 			case(sf::Event::Closed) :
 				window.close();
@@ -317,7 +328,7 @@ int main() {
 				window.setSize(window_size);
 				break;
 			case(sf::Event::KeyPressed) :
-				if (titlePtr->isVisible()) {
+				if (titlePtr->isVisible() && !start) {
 					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 						titlePtr->change_selection(Cursor_Direction::Down);
 					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
@@ -327,8 +338,9 @@ int main() {
 						switch (titlePtr->getSelection()) {
 						case(Selection::Play_Game) :
 							sysFader.resetFader();
-							titlePtr->setVisible(false);
+							start = true;
 							initial_load_map = true;
+							canPoll = false;
 							break;
 						case(Selection::Exit) :
 							window.close();
@@ -366,7 +378,7 @@ int main() {
 						testEnemySprite.respawn();
 					}
 				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+				else if (!textbox && sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
 					std::string new_map = onEventTile(player, event_tiles);
 					if (new_map != "") {
 						map_name = new_map;
@@ -380,12 +392,19 @@ int main() {
 
 		if (current_map != map_name && initial_load_map)
 		{
-			load_map(ml, map_name, player, actors, textureMap, event_tiles, test_events, textbox, message);
-			entities.clear();
-			for (int i = actors.size(); i != 0; i--) {
-				entities.push_back(actors[i - 1]);
+			if (!fade_out && !fade_in) {
+				fade_out = true;
+				sysFader.resetFader();
 			}
-			current_map = map_name;
+			else if (fade_in) {
+				load_map(ml, map_name, player, actors, textureMap, event_tiles, test_events, textbox, message);
+				entities.clear();
+				for (int i = actors.size(); i != 0; i--) {
+					entities.push_back(actors[i - 1]);
+				}
+				current_map = map_name;
+				
+			}
 			// *************** End Audrey Edit *************** //
 		}
 
@@ -401,7 +420,7 @@ int main() {
 				if (eventIsRunning) {
 					if ((test_events.getEventType()).substr(0, 6) == "Speech" && !textbox) {
 						textbox = eventIsRunning;
-						
+
 					}
 					test_events.runEvent(elapsedTime);
 					eventIsRunning = test_events.eventIsRunning();
@@ -438,19 +457,48 @@ int main() {
 		window.setView(playerView);
 
 		if (!titlePtr->isVisible()) {
-			
-				animateMap(ml, window, worldAnimationArr);
-				drawEntities(window, entities);
-				ml.Draw(window, Layer::Overlay);
 
-				if (textbox && !UI_visible(sysWindows)) {
-					textbox = _Textbox->display_message(message, player, elapsedTime);
-				}
-			
+			animateMap(ml, window, worldAnimationArr);
+			drawEntities(window, entities);
+			ml.Draw(window, Layer::Overlay);
+
+			if (textbox && !UI_visible(sysWindows)) {
+				textbox = _Textbox->display_message(message, player, elapsedTime);
+			}
+
 		}
+		
+		if (fade_out && !fade_in && !sysFader.isComplete()) {
+			sysFader.setPosition(playerView.getCenter());
+			sysFader.performFade(Fade::Out, Speed::Fast);
+			window.draw(sysFader);
+		}
+		else if (fade_out && !fade_in && sysFader.isComplete()) {
+			fade_out = false;
+			fade_in = true;
+			if (start) {
+				start = false;
+				titlePtr->setVisible(false);
+			}
+			sysFader.resetFader();
+			window.draw(sysFader.blackScreen());
+		}
+		else if (fade_in && !fade_out && !sysFader.isComplete()) {
+			sysFader.setPosition(playerView.getCenter());
+			sysFader.performFade(Fade::In, Speed::Fast);
+			window.draw(sysFader);
+		}
+		else if (fade_in && !fade_out && sysFader.isComplete()) {
+			fade_in = false;
+			canPoll = true;
+		}
+
 		drawTextbox(window, _Textbox, textbox);
 		drawUI(window, playerView, sysWindows, elapsedTime);
+
 		
+		
+
 		window.display();
 	}
 	return 0;
@@ -580,13 +628,22 @@ void load_map(tmx::MapLoader& ml, std::string map_name, Character& player, std::
 		}
 		if (layer->name == "Setup")
 		{
+			if (layer->properties["hasPriority"] == "Yes") { events.setPriority(true); }
+			else { events.setPriority(false); }
 			for (int i = 0; i < std::stoi(layer->properties["numEvents"]); i++) {
 				steps.push_back({ nullptr, nullptr });
 			}
 			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
 			{
-				if (object->GetName() == "START")
+				if (object->GetName() == "START") {
 					player.setPosition(object->GetCentre());
+					if (object->GetPropertyString("Texture") == "Hide") {
+						player.changeSprite(*textureMap["Empty"]);
+					}
+					else {
+						player.changeSprite(*textureMap["Warren"]);
+					}
+				}
 				else if (object->GetName() == "ACTOR")
 				{
 					std::string scene_name = object->GetPropertyString("Scene");

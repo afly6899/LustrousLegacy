@@ -14,16 +14,17 @@ public:
 
 	bool startEvent();
 	void runEvent(float elapsedTime);
-	//void runEvent(float elapsedTime, Actor * actors);
 	void pauseEvent();
 	void nextEvent();
-	
+
 	// Accessors
+	bool getPriority() { return hasPriority; }
 	bool eventIsRunning() { return isRunning; }
-	bool finishedEvents() { return eventSteps.empty(); }
+	bool finishedEvents() { return eventSteps.empty() && currentEvent.first == nullptr; }
 
 	// Just for now - temp
 	void addEvents(Step* step, Actor* actor);
+	void setPriority(bool priority) { hasPriority = priority; }
 	// might not be useful
 	void reloadEvent();
 	void clearEvents();
@@ -38,6 +39,7 @@ private:
 	std::queue<std::pair<Step*, Actor*>> eventSteps;
 	std::pair<Step*, Actor*> currentEvent;
 	bool isRunning = false;
+	bool hasPriority = false;
 
 	// for debugging
 	std::string eventType = "None";

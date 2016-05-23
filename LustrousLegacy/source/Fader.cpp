@@ -59,7 +59,6 @@ void Fader::performFade(int fade_type, int speed) {
 			if (fader > 255)
 				fader = 255;
 		}
-
 		rectFade.setFillColor(sf::Color(0, 0, 0, fader));
 
 		if (fader_type == 0 && fader == 0)
