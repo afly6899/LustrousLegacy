@@ -7,6 +7,7 @@
 
 // For testing
 #include <vector>
+#include <queue>
 
 namespace sf {
 
@@ -36,6 +37,8 @@ public:
 	void cycleMovement(float elapsedTime);
 	void setScene(std::string scene_name);
 	virtual std::string getClass();
+	void addEventDialogue(std::string dialogue);
+	std::string nextEventDialogue();
 
 private:
 	int pastDirection;
@@ -50,6 +53,6 @@ private:
 	std::string actorScene = "";
 	sf::Vector2f pastPosition;
 	std::vector<sf::Vector2f> targetPositions;
-
+	std::queue<std::string> eventDialogues;
 };
 #endif

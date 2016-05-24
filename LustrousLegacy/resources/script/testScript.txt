@@ -1,0 +1,23 @@
+ResdinShouts
+Resdin:Hey!
+Resdin:Warren, is that you?!
+
+
+ResdinGreets
+Warren:Good morning, Res! You're pretty energetic today.
+Resdin:Yep I am! Today's the day our game creators are finally going to start putting things together! It's so exciting!
+Warren:Ahaha, that is pretty exciting. I hope it ends up working out well. Though, I've heard that there's been some communication trouble between group members.
+Resdin:Yeah... but even so, they have gotten a lot done within these past 8 weeks! So, if anything, they'll at least have a tutorial sequence better than last time's!
+Warren:They have definitely improved on those kinds of events. I'm sure their tutorial won't disappoint. Well, I'm off to go see Luke. Talk with you later?
+Resdin:Of course! Just press E when you're standing next to me!
+Warren:Ahahaha, you might as well do the tutorial!
+
+ResdinDialogue
+Resdin:Press E to talk with people and Return to see if they have anything more to say.
+Resdin:If you don't know how to leave the dialogue, just keep pressing Return until the person stops talking!
+
+LukeTEST
+Luke:Sup bro. Get out of here.
+Warren:That's a little mean. Couldn't you say that in a nicer way?
+Luke:...
+Luke:Get out of here, please?

@@ -18,7 +18,7 @@ namespace sf {
 	class Title : public UI {
 	public:
 
-		Title(const sf::Font& font, const sf::Vector2u window_size, const sf::Texture& imagePath_title, sf::Sound& sfx, sf::Music& titleMusic);
+		Title(const sf::Font& font, const sf::Vector2u window_size, const sf::Texture& imagePath_title, const sf::Texture& imagePath_cursor, sf::Sound& sfx, sf::Music& titleMusic);
 		virtual ~Title();
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 		void change_selection(int up_or_down);

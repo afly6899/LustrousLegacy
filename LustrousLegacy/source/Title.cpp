@@ -4,11 +4,11 @@
 /*********************************************************************
 \brief temp
 *********************************************************************/
-Title::Title(const sf::Font& font, const sf::Vector2u window_size, const sf::Texture& imagePath_title, sf::Sound& sfx, sf::Music& titleMusic):
+Title::Title(const sf::Font& font, const sf::Vector2u window_size, const sf::Texture& imagePath_title, const sf::Texture& imagePath_cursor, sf::Sound& sfx, sf::Music& titleMusic):
 		cursorBleep(sfx),
 		window_size(window_size), 
 		titleLogo(imagePath_title),
-		titleCursor(imagePath_title) {
+		titleCursor(imagePath_cursor, 1) {
 
 		title_options[Selection::Play_Game] = createOption("Play Game", font);
 		title_options[Selection::Load_Game] = createOption("Load Game", font);
@@ -37,9 +37,10 @@ void Title::update(sf::Vector2f pos, float elapsedTime) {
 \brief temp
 *********************************************************************/
 void Title::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-		target.draw(titleCursor, states);
+	target.draw(titleCursor, states);
 	for (auto option = title_options.begin(); option != title_options.end(); option++)
 		target.draw(option->second, states);
+	target.draw(titleLogo, states);
 }
 
 /*********************************************************************

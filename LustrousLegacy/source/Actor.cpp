@@ -148,6 +148,18 @@ std::string Actor::getClass() {
 	return "Actor";
 }
 
+void Actor::addEventDialogue(std::string dialogue)
+{
+	eventDialogues.push(dialogue);
+}
+
+std::string Actor::nextEventDialogue()
+{
+	std::string next = eventDialogues.front();
+	eventDialogues.pop();
+	return next;
+}
+
 /*********************************************************************
 \brief temp
 *********************************************************************/

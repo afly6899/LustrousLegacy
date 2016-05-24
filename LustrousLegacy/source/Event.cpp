@@ -66,7 +66,7 @@ void Event::nextEvent()
 	//if (currentEvent != nullptr) {
 	//	finishedSteps.push(currentEvent);
 	//}
-	if (!eventSteps.empty() || currentEvent.first == nullptr) {
+	if (!eventSteps.empty()) {
 		currentEvent = eventSteps.front();
 		eventSteps.pop();
 		eventType = currentEvent.first->getType();

@@ -1,0 +1,2 @@
+default_background.png text_blip2.wav Vera.ttf
+0 Start .25 .5 350 300 Play Quit

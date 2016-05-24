@@ -74,7 +74,7 @@
 	{
 		if (!processingText && !end_message) {
 			end_length = to_display.length();
-			actorName.setString(name);
+			actorName.setString((name == "System")? " " : name);
 			processingText = true;
 		}
 		if (processingText)
