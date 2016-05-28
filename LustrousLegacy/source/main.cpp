@@ -172,11 +172,11 @@ int main() {
 		cerr << "Texture Error: face_luke.png" << endl;
 	}
 
-	// TITLE BACKGROUND TEXTURE
-	sf::Texture bgtitleTexture;
-	if (!bgtitleTexture.loadFromFile("resources/textures/title.png")) {
-		cerr << "Texture Error: title.png" << endl;
-	}
+	//// TITLE BACKGROUND TEXTURE
+	//sf::Texture bgtitleTexture;
+	//if (!bgtitleTexture.loadFromFile("resources/textures/title.png")) {
+	//	cerr << "Texture Error: title.png" << endl;
+	//}
 
 	// TITLE TEXTURE
 	sf::Texture titleTexture;

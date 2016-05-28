@@ -10,6 +10,7 @@ namespace sf {
 }
 
 class Pawn : public sf::Drawable {
+
 public:
 
 	//Pawn(const sf::Texture& playerTexture);
@@ -28,7 +29,7 @@ public:
 	sf::Vector2f getPosition();
 	virtual std::string getClass();
 
-private:
+protected:
 
 	sf::Sprite pawnSprite;
 	sf::Vector2u spriteSource;

@@ -4,21 +4,21 @@
 /*********************************************************************
 \brief temp
 *********************************************************************/
-Title::Title(const sf::Font& font, const sf::Vector2u window_size, const sf::Texture& imagePath_title, const sf::Texture& imagePath_cursor, sf::Sound& sfx, sf::Music& titleMusic):
-		cursorBleep(sfx),
-		window_size(window_size), 
-		titleLogo(imagePath_title),
-		titleCursor(imagePath_cursor, 1) {
+Title::Title(const sf::Font& font, const sf::Vector2u window_size, const sf::Texture& imagePath_title, const sf::Texture& imagePath_cursor, sf::Sound& sfx, sf::Music& titleMusic) :
+	cursorBleep(sfx),
+	window_size(window_size),
+	titleLogo(imagePath_title),
+	titleCursor(imagePath_cursor) {
 
-		title_options[Selection::Play_Game] = createOption("Play Game", font);
-		title_options[Selection::Load_Game] = createOption("Load Game", font);
-		title_options[Selection::Settings] = createOption("Settings", font);
-		title_options[Selection::Exit] = createOption("Exit", font);
-	
-		num_of_selections = title_options.size();
+	title_options[Selection::Play_Game] = createOption("Play Game", font);
+	title_options[Selection::Load_Game] = createOption("Load Game", font);
+	title_options[Selection::Settings] = createOption("Settings", font);
+	title_options[Selection::Exit] = createOption("Exit", font);
 
-		selected(title_options[Selection::Play_Game]);
-	}
+	num_of_selections = title_options.size();
+
+	selected(title_options[Selection::Play_Game]);
+}
 
 /*********************************************************************
 \brief temp
@@ -37,17 +37,18 @@ void Title::update(sf::Vector2f pos, float elapsedTime) {
 \brief temp
 *********************************************************************/
 void Title::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	target.draw(titleLogo, states);
 	target.draw(titleCursor, states);
 	for (auto option = title_options.begin(); option != title_options.end(); option++)
 		target.draw(option->second, states);
-	target.draw(titleLogo, states);
+
 }
 
 /*********************************************************************
 \brief temp
 *********************************************************************/
 void Title::change_selection(int up_or_down) {
-	
+
 	clearStyle(title_options[selection]);
 
 	if (up_or_down == Cursor_Direction::Down)
@@ -88,7 +89,8 @@ int Title::getSelection() {
 void Title::setPosition(sf::Vector2f pos) {
 	if (pos != originalPos) {
 		originalPos = pos;
-		title_options[Selection::Play_Game].setPosition(pos);
+		titleLogo.setPosition({ pos.x - titleLogo.getTextureRect().width/2 + 10, pos.y - 3*titleLogo.getTextureRect().height/4 });
+		title_options[Selection::Play_Game].setPosition({pos.x, pos.y + 85});
 		title_options[Selection::Load_Game].setPosition(title_options[Selection::Play_Game].getPosition().x, title_options[Selection::Play_Game].getPosition().y + seperation);
 		title_options[Selection::Settings].setPosition(title_options[Selection::Load_Game].getPosition().x, title_options[Selection::Load_Game].getPosition().y + seperation);
 		title_options[Selection::Exit].setPosition(title_options[Selection::Settings].getPosition().x, title_options[Selection::Settings].getPosition().y + seperation);

@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include "Pawn.h"
+#include "Cursor.h"
 #include "UI.h"
 #include <map>
 
@@ -32,8 +32,8 @@ namespace sf {
 		sf::Vector2u window_size;
 		sf::Vector2f originalPos;
 		sf::Vector2f cursor_originalPos;
-		Pawn titleCursor;
-		Pawn titleLogo;
+		Cursor titleCursor;
+		sf::Sprite titleLogo;
 		int num_of_selections;
 		int selection = 1;
 		int aniCounter = 0;

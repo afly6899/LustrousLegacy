@@ -1,51 +1,25 @@
 #include "Cursor.h"
 
-Cursor::Cursor(sf::Texture &texture, sf::Sound &cursorBleep, sf::Vector2f startPos, int numOptions, int separation, bool rightleft)
-	: Pawn(texture), bleep(cursorBleep), numOptions(numOptions), separation(separation), rightleft(rightleft) {
-	if (rightleft) {
-		for (int i = 0; i < numOptions; i++) {
-			positions.push_back(sf::Vector2f(startPos.x, startPos.y + separation*i));
-		}
-	}
-	else {
-		for (int i = 0; i < numOptions; i++) {
-			positions.push_back(sf::Vector2f(startPos.x + separation*i, startPos.y));
-		}
-	}
+Cursor::Cursor(const sf::Texture & playerTexture)
+: Pawn(playerTexture, 1) {
+	spriteSource.x = Direction::South;
+	spriteSource.y = Source::Idle;
+	pawnSprite.setTextureRect(sf::IntRect(spriteSource.x * spriteSize, spriteSource.y * spriteSize, spriteSize, spriteSize));
 }
 
-void Cursor::moveToNext(bool rightOrdown) {
-	if (rightOrdown) {
-		if (currentPosition == numOptions - 1) {
-			currentPosition = 0;
-		}
-		else {
-			currentPosition++;
+void Cursor::spriteAnimate(float elapsedTime)
+{
+	aniCounter += elapsedTime;
+
+	if (aniCounter >= aniFrameDuration)
+	{
+		aniCounter -= aniFrameDuration;
+		spriteSource.y++;
+
+		if (spriteSource.y * spriteSize >= pawnSprite.getTexture()->getSize().y) {
+			spriteSource.y = 0;
 		}
 	}
-	else {
-		if (currentPosition == 0) {
-			currentPosition++;
-		}
-		else {
-			currentPosition = numOptions - 1;
-		}
-	}
-	setPosition(positions[currentPosition]);
-}
 
-int Cursor::giveOption() {
-
-	return currentPosition;
-}
-
-void Cursor::setPosition(sf::Vector2f position) {
-	for (int i = 0; i < numOptions; i++) {
-		if (rightleft) {
-			positions[i] = sf::Vector2f(position.x, position.y + separation*i);
-		}
-		else {
-			positions[i] = sf::Vector2f(position.x + separation*i, position.y);
-		}
-	}
+	pawnSprite.setTextureRect(sf::IntRect(spriteSource.x * spriteSize, spriteSource.y * spriteSize, spriteSize, spriteSize));
 }
