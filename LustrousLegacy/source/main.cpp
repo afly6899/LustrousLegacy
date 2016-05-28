@@ -303,15 +303,17 @@ int main() {
 	Event test_events;
 	std::vector<EventTile> event_tiles;
 
-	sf::Texture battleTexture;
-	if (!battleTexture.loadFromFile("resources/textures/battleSprite.png")) {
-		cerr << "Texture Error" << endl;
-	}
+	//sf::Texture battleTexture;
+	//if (!battleTexture.loadFromFile("resources/textures/battleSprite.png")) {
+	//	cerr << "Texture Error" << endl;
+	//}
 
-	StatPawn playerStats = { 250, 15, 5 };
-	StatPawn enemyStats = { 70, 20, 7 };
+	//StatPawn playerStats = { 250, 15, 5 };
+	//StatPawn enemyStats = { 70, 20, 7 };
 
-	FightingPawn testBattleSprite(battleTexture, playerStats), testEnemySprite(battleTexture, enemyStats);
+	//FightingPawn testBattleSprite(battleTexture, playerStats), testEnemySprite(battleTexture, enemyStats);
+
+	bool inBattle = false;
 
 	// *************** End Audrey Edit *************** //
 
@@ -363,6 +365,9 @@ int main() {
 						}
 					}
 				}
+				else if (inBattle) {
+
+				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 					if (!UI_visible_excluding(pausePtr, sysWindows)) {
 						pausePtr->setVisible(!pausePtr->isVisible());
@@ -381,12 +386,12 @@ int main() {
 					}
 				}
 				// *************** End Audrey Edit *************** //
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-					if (!testEnemySprite.takeDamage(&testBattleSprite)) {
-						std::cout << "Enemy is defeated!!!" << std::endl;
-						testEnemySprite.respawn();
-					}
-				}
+				//else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+				//	if (!testEnemySprite.takeDamage(&testBattleSprite)) {
+				//		std::cout << "Enemy is defeated!!!" << std::endl;
+				//		testEnemySprite.respawn();
+				//	}
+				//}
 				else if (!textbox && sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
 					std::string new_map = onEventTile(player, event_tiles);
 					if (new_map != "") {

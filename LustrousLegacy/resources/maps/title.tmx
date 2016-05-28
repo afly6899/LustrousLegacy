@@ -1163,7 +1163,7 @@
  <objectgroup name="Setup">
   <properties>
    <property name="hasPriority" value="Yes"/>
-   <property name="music" value="title.wav"/>
+   <property name="music" value="LL_Title.wav"/>
    <property name="numEvents" value="2"/>
   </properties>
   <object id="3" name="START" x="448" y="512" width="64" height="64">
