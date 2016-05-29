@@ -6,6 +6,7 @@
 #include "Pawn.h"
 #include "UI.h"
 #include <map>
+#include <random>
 
 // Forward Declaration
 namespace sf {
@@ -29,6 +30,10 @@ public:
 	std::string BattleSystem::getClass();
 
 private:
+
+	std::default_random_engine gen;
+	std::uniform_real_distribution<float> play_dis{ .6,1 };
+	std::uniform_real_distribution<float> enemy_dis{ .3,.9 };
 
 	sf::Sound& cursorBleep;
 	sf::Vector2u window_size;

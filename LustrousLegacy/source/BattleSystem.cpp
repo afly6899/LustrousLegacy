@@ -1,7 +1,6 @@
 #include "BattleSystem.h"
 #include "Enums.h"
 #include <iostream>
-#include <random>
 
 /*********************************************************************
 \brief temp
@@ -24,6 +23,9 @@ BattleSystem::BattleSystem(const sf::Font& font, const sf::Vector2u window_size,
 
 		num_of_selections = battle_options.size();
 		selected(battle_options[Battle::Fight]);
+
+		std::random_device device;
+		gen = std::default_random_engine{ device() };
 	}
 
 /*********************************************************************
@@ -106,11 +108,9 @@ void BattleSystem::change_selection(int key) {
 \brief temp
 *********************************************************************/
 void BattleSystem::battle(bool ENTER_KEY, float elapsedTime) {
-	std::default_random_engine generator;
-	std::uniform_real_distribution<float> distribution(0, 1);
-	std::uniform_real_distribution<float> distribution_e(.3, 1);
-	float proportion = distribution(generator);
-	float proportion_e = distribution_e(generator);
+	
+	float proportion = play_dis(gen);
+	float proportion_e = enemy_dis(gen);
 
 	if (player_turn && ENTER_KEY) {
 		if (selection == Battle::Fight) {
@@ -133,6 +133,10 @@ void BattleSystem::battle(bool ENTER_KEY, float elapsedTime) {
 		std::cout << "Player Health: " << player_health << std::endl;
 		player_turn = true;
 
+	}
+	else if (enemy_health == 0)
+	{
+		std::cout << "ENEMY HAS DIED -> YOU GAIN: 0 EXP!" << std::endl;
 	}
 }
 /*********************************************************************
