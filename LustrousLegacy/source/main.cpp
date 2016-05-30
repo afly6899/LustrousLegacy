@@ -135,7 +135,30 @@ int main() {
 	/*********************************************************************
 	TEXTURES
 	*********************************************************************/
+#pragma region BattleBackgrounds
+	sf::Image forestBattleBG;
+	if (!forestBattleBG.loadFromFile("resources/textures/bg_forest.png")) {
+		cerr << "Image Error: bg_forest.png" << endl;
+	}
 
+	sf::Image trainingBattleBG;
+	if (!trainingBattleBG.loadFromFile("resources/textures/bg_training.png")) {
+		cerr << "Image Error: bg_training.png" << endl;
+	}
+#pragma endregion
+
+#pragma region BattleTextures
+	sf::Texture warrenBattle1;
+	if (!warrenBattle1.loadFromFile("resources/textures/battleSprite_warren1.png")) {
+		cerr << "Image Error: battleSpriteWarren1.png" << endl;
+	}
+	sf::Texture warrenBattle2;
+	if (!warrenBattle2.loadFromFile("resources/textures/battleSprite_warren2.png")) {
+		cerr << "Image Error: battleSpriteWarren2.png" << endl;
+	}
+#pragma endregion
+
+#pragma region Player_Textures
 	// WARREN SPRITE
 	sf::Texture pTexture;
 	if (!pTexture.loadFromFile("resources/textures/playerSprite.png")) {
@@ -152,6 +175,11 @@ int main() {
 	sf::Texture resdinTexture;
 	if (!resdinTexture.loadFromFile("resources/textures/resdinSprite.png")) {
 		cerr << "Texture Error: sprite_resdin.png" << endl;
+	}
+
+	sf::Texture villagerTexture;
+	if (!villagerTexture.loadFromFile("resources/textures/villagerSprite.png")) {
+		cerr << "Texture Error: sprite_villager.png" << endl;
 	}
 
 	// WARREN FACE TEXTURE
@@ -171,12 +199,6 @@ int main() {
 	if (!lukefTexture.loadFromFile("resources/textures/face_luke.png")) {
 		cerr << "Texture Error: face_luke.png" << endl;
 	}
-
-	//// TITLE BACKGROUND TEXTURE
-	//sf::Texture bgtitleTexture;
-	//if (!bgtitleTexture.loadFromFile("resources/textures/title.png")) {
-	//	cerr << "Texture Error: title.png" << endl;
-	//}
 
 	// TITLE TEXTURE
 	sf::Texture titleTexture;
@@ -201,7 +223,9 @@ int main() {
 	textureMap["Warren"] = &pTexture;
 	textureMap["Luke"] = &lukeTexture;
 	textureMap["Resdin"] = &resdinTexture;
+	textureMap["Villager"] = &villagerTexture;
 	textureMap["Empty"] = &transparentTexture;
+	
 
 	// faceMap HOLDS ALL THE FACE SPRITES
 	std::map<std::string, sf::Sprite> faceMap;
@@ -211,6 +235,7 @@ int main() {
 	faceMap["Resdin"].setOrigin(faceMap["Resdin"].getLocalBounds().width*.5, faceMap["Resdin"].getLocalBounds().height*.5);
 	faceMap["Luke"] = sf::Sprite(lukefTexture);
 	faceMap["Luke"].setOrigin(faceMap["Luke"].getLocalBounds().width*.5, faceMap["Luke"].getLocalBounds().height*.5);
+#pragma endregion
 
 	/*********************************************************************
 	MUSIC
@@ -249,7 +274,7 @@ int main() {
 	*********************************************************************/
 
 	tmx::MapLoader ml("resources/maps");
-	std::string map_name = "title.tmx";
+	std::string map_name = "start.tmx";
 	std::string current_map = "";
 	std::vector<std::string> previous_maps;
 
@@ -474,6 +499,7 @@ int main() {
 
 		window.clear();
 		window.setView(playerView);
+
 
 		if (!titlePtr->isVisible()) {
 
