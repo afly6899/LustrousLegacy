@@ -29,6 +29,9 @@ public:
 	sf::Vector2f getPosition();
 	virtual std::string getClass();
 
+	void setSpriteSize(unsigned int size) { spriteSize = size; }
+	void setTextureRect(sf::IntRect newRect);
+
 protected:
 
 	sf::Sprite pawnSprite;

@@ -15,9 +15,12 @@ public:
 	~FightingPawn();
 	std::string getClass() { return "FightingPawn"; }
 
-	int FightingPawn::attack();
+	int attack();
 	bool takeDamage(FightingPawn *enemy);
 	void respawn();
+
+	bool isAlive() { return alive; }
+	std::string getHealthInfo() { return base.name + ": " + std::to_string(remainingHealth) + " / " + std::to_string(base.health); }
 
 private:
 	bool alive;

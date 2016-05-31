@@ -3,7 +3,7 @@
 #include <iostream>
 
 FightingPawn::FightingPawn(const sf::Texture & playerTexture, StatPawn statBase)
-: Pawn(playerTexture), base(statBase) {
+: Pawn(playerTexture, 2), base(statBase){
 	remainingHealth = base.health;
 	criticalRate = (base.speed * RNG()) % 20;
 	if (criticalRate <= 5) {

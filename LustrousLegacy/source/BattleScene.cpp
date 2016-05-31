@@ -1,121 +1,68 @@
 #include <iostream>
-#include "Event.h"
+#include <sstream>
+#include <fstream>
+#include "BattleScene.h"
 
-Event::Event(std::queue<std::pair<Step*, Actor*>> steps)
-: eventSteps(steps) {
-	currentEvent.first = nullptr;
-	currentEvent.second = nullptr;
+BattleScene::BattleScene(const sf::Texture &background, const sf::Texture &player, StatPawn playerStats)
+: fighterPlayer(player, playerStats) {
+	battleBackground.setTexture(background);
+
+	battleName = "battle";
+	numBattles = 2;
+	battleNum = 1;
+
+	currentBattle = nullptr;
+
+	status.setString(fighterPlayer.getHealthInfo());
 }
 
-Event::Event(std::initializer_list<Step*> steps, std::initializer_list<Actor*> actors)
+BattleScene::~BattleScene()
 {
-	std::initializer_list<Step*>::iterator steps_it = steps.begin();
-	std::initializer_list<Actor*>::iterator actors_it = actors.begin();
-	
-	for (steps_it; steps_it != steps.end(); steps_it++, actors_it++)
-		eventSteps.push(std::make_pair(*steps_it, *actors_it));
 }
 
-Event::~Event() {
-	// might not be useful
-	Step* to_delete_step = nullptr;
-	while (!finishedSteps.empty()) {
-		to_delete_step = finishedSteps.front().first;
-		finishedSteps.pop();
-		delete to_delete_step;
-	}
-
-	// just in case there's something in eventSteps
-	while (!eventSteps.empty()) {
-		to_delete_step = eventSteps.front().first;
-		eventSteps.pop();
-		delete to_delete_step;
-	}
-}
-
-bool Event::startEvent()
+void BattleScene::loadBattle(bool &startBattle, const sf::Font &font, const sf::Texture &menubg, sf::Texture &cursor, sf::Sound &sfx)
 {
-	isRunning = true;
-	if (currentEvent.first == nullptr) {
-		nextEvent();
+	std::string filename = battleName + std::to_string(battleNum) + ".txt";
+	std::ifstream file("resources/battles/" + filename);
+	std::vector<StatPawn> stats;
+	std::vector<sf::Texture*> textures;
+	int health, attack, speed;
+	std::string texture, name, filelines;
+	while (std::getline(file, filelines)) {
+		std::stringstream info(filelines);
+		info >> texture >> health >> attack >> speed >> name;
+		sf::Texture *temp = new sf::Texture();
+		temp->loadFromFile("resources/textures/" + texture);
+		StatPawn tempStats = { health, attack, speed, name };
+		stats.push_back(tempStats);
+		textures.push_back(temp);
 	}
-	return isRunning;
+	currentBattle = new BattleSystem(font, menubg, cursor, textures, stats, sfx);
+	startBattle = inBattle = true;
+
+	status = sf::Text(fighterPlayer.getHealthInfo(), font, 20);
 }
 
-void Event::runEvent(float elapsedTime)
+void BattleScene::update(sf::Vector2f pos, float elapsedTime)
 {
-	if (isRunning) {
-		// for debugging
-		// Step.run returns true if the event is still happening and false if it's not!
-		if (!currentEvent.first->run(elapsedTime, *currentEvent.second)) {
-			nextEvent();
-			
-		}
-	}
+	status.setString(fighterPlayer.getHealthInfo());
+	setPosition(pos);
+	currentBattle->update(pos, elapsedTime);
+	inBattle = currentBattle->battleIsHappening();
 }
 
-void Event::pauseEvent() // is this needed? How would we do things such that the thing isn't
+void BattleScene::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
-	isRunning = false;
+	target.draw(battleBackground, states);
+	target.draw(fighterPlayer);
+	target.draw(*currentBattle, states);
+	target.draw(status, states);
 }
 
-void Event::nextEvent()
+void BattleScene::setPosition(sf::Vector2f pos)
 {
-	Step* to_delete = currentEvent.first; // want to deallocate the previously done step!
-	//// might not be useful
-	//if (currentEvent != nullptr) {
-	//	finishedSteps.push(currentEvent);
-	//}
-	if (!eventSteps.empty()) {
-		currentEvent = eventSteps.front();
-		eventSteps.pop();
-		eventType = currentEvent.first->getType();
-		isRunning = true;
-	}
-	else {
-		isRunning = false;
-		currentEvent.first = nullptr;
-		currentEvent.second = nullptr;
-	}
-	if (to_delete != nullptr) {
-		delete to_delete;
-	}
+	battleBackground.setPosition(pos - sf::Vector2f(400, 300));
+	fighterPlayer.setPosition(pos + sf::Vector2f(200, 150));
+	currentBattle->setPosition(pos);
+	status.setPosition(pos + sf::Vector2f(150, 150));
 }
-
-void Event::addEvents(Step* step, Actor* actor) 
-{ 
-		eventSteps.push(std::make_pair(step, actor));
-		if (currentEvent.first == nullptr) {
-			nextEvent();
-		}
-}
-
-// might not be useful
-void Event::reloadEvent() 
-{ 
-	for (int i = 0; i < signed(finishedSteps.size()); i++) {
-		eventSteps.push(finishedSteps.front());
-		finishedSteps.pop();
-	}
-}
-
-void Event::clearEvents()
-{
-	while (isRunning) {
-		nextEvent();
-	}
-}
-
-std::string Event::getSpeechDialogue()
-{
-	return currentEvent.second->getScene();
-}
-
-
-// Audrey Edit: Adding Event class functionalities //
-
-// *************** End Audrey Edit *************** //
-
-// Audrey Edit: Deleting Dynamic Allocations //
-
-// ************ End Audrey Edit ************ //

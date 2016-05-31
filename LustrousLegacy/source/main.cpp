@@ -50,6 +50,7 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 
 // Audrey Edit: Adding Battle Functionalities
 #include "FightingPawn.h"
+#include "BattleScene.h"
 // ++++++++++++++++++ End Audrey Edit
 
 struct EventTile
@@ -268,7 +269,7 @@ int main() {
 	WORLD ANIMATION PARAMETERS:
 	*********************************************************************/
 	float worldAnimationArr[] = { 0, 800, 0 };
-#pragma endregion
+
 	/*********************************************************************
 	PREPARE MAP
 	*********************************************************************/
@@ -310,6 +311,14 @@ int main() {
 	sysWindows.push_back(titlePtr);
 	sysWindows.push_back(pausePtr);
 
+	map<int, bool> ui_kb;
+	ui_kb[sf::Keyboard::Return] = false;
+	ui_kb[sf::Keyboard::Left] = false;
+	ui_kb[sf::Keyboard::Right] = false;
+	ui_kb[sf::Keyboard::Escape] = false;
+	ui_kb[sf::Keyboard::Up] = false;
+	ui_kb[sf::Keyboard::Down] = false;
+
 	/*********************************************************************
 	ENTITY PROCESSING
 	*********************************************************************/
@@ -328,31 +337,40 @@ int main() {
 	Event test_events;
 	std::vector<EventTile> event_tiles;
 
-	//sf::Texture battleTexture;
-	//if (!battleTexture.loadFromFile("resources/textures/battleSprite.png")) {
-	//	cerr << "Texture Error" << endl;
-	//}
+	sf::Texture battleTexture;
+	if (!battleTexture.loadFromFile("resources/textures/battleSprite_warren.png")) {
+		cerr << "Texture Error" << endl;
+	}
 
-	//StatPawn playerStats = { 250, 15, 5 };
-	//StatPawn enemyStats = { 70, 20, 7 };
+	sf::Texture battleBackground;
+	if (!battleBackground.loadFromFile("resources/textures/bg_training.png")) {
+		cerr << "Texture Error: bg_traning" << endl;
+	}
 
-	//FightingPawn testBattleSprite(battleTexture, playerStats), testEnemySprite(battleTexture, enemyStats);
+	sf::Texture battleMenuTexture;
+	if (!battleMenuTexture.loadFromFile("resources/textures/battleMenuBG.png")) {
+		cerr << "Texture Error: battleMenuBG" << endl;
+	}
+
+	StatPawn playerStats = { 250, 15, 5, "Warren" };
+
+	BattleScene test(battleBackground, battleTexture, playerStats);
 
 	bool inBattle = false;
 
 	// *************** End Audrey Edit *************** //
-
+#pragma endregion
 	/*********************************************************************
 	BEGIN GAME LOOP:
 	*********************************************************************/
 
 	while (window.isOpen()) {
-		if (test_events.getPriority() && sysFader.isComplete()) {
-			if (!textbox && !pausePtr->isVisible()) {
-				if (!test_events.finishedEvents())
-					eventIsRunning = test_events.startEvent();
-			}
-		}
+		//if (test_events.getPriority() && sysFader.isComplete()) {
+		//	if (!textbox && !pausePtr->isVisible()) {
+		//		if (!test_events.finishedEvents())
+		//			eventIsRunning = test_events.startEvent();
+		//	}
+		//}
 		sf::Event event;
 		while (canPoll && window.pollEvent(event)) {
 			switch (event.type) {
@@ -363,53 +381,28 @@ int main() {
 				window_size = sf::Vector2u(event.size.width, event.size.height);
 				window.setSize(window_size);
 				break;
-			case(sf::Event::KeyPressed) :
-				if (titlePtr->isVisible() && !start) {
-					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-						titlePtr->change_selection(Cursor_Direction::Down);
-					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-						titlePtr->change_selection(Cursor_Direction::Up);
+			case (sf::Event::KeyReleased) :
+				ui_kb[event.key.code] = true;
+				break;
+			case (sf::Event::KeyPressed) :
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y)) {
+					test.loadBattle(inBattle, sysFont, battleMenuTexture, cursorTexture, sfx_blip1);
+					if (inBattle) {
+						music.openFromFile("resources/audio/battle.wav");
+						music.play();
 					}
-					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
-						switch (titlePtr->getSelection()) {
-						case(Selection::Play_Game) :
-							sysFader.resetFader();
-							start = true;
-							initial_load_map = true;
-							canPoll = false;
-							break;
-						case(Selection::Exit) :
-							window.close();
-							break;
-						case(Selection::Load_Game) :
-							std::cout << "There is no implementation of this option yet." << std::endl;
-							break;
-						case(Selection::Settings) :
-							std::cout << "There is no implementation of this option yet." << std::endl;
-							break;
-						}
+					else {
+						music.openFromFile("resources/audio/" + musicName);
 					}
 				}
-				else if (inBattle) {
+				//// Audrey Edit: Adding Event class functionalities //
+				//else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+				//	if (!textbox && !pausePtr->isVisible()) {
 
-				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-					if (!UI_visible_excluding(pausePtr, sysWindows)) {
-						pausePtr->setVisible(!pausePtr->isVisible());
-						if (pausePtr->isVisible())
-							music.pause();
-						else
-							music.play();
-					}
-				}
-				// Audrey Edit: Adding Event class functionalities //
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
-					if (!textbox && !pausePtr->isVisible()) {
-
-						if (!test_events.finishedEvents())
-							eventIsRunning = test_events.startEvent();
-					}
-				}
+				//		if (!test_events.finishedEvents())
+				//			eventIsRunning = test_events.startEvent();
+				//	}
+				//}
 				// *************** End Audrey Edit *************** //
 				//else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 				//	if (!testEnemySprite.takeDamage(&testBattleSprite)) {
@@ -417,126 +410,172 @@ int main() {
 				//		testEnemySprite.respawn();
 				//	}
 				//}
-				else if (!textbox && sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
-					std::string new_map = onEventTile(player, event_tiles);
-					if (new_map != "") {
-						map_name = new_map;
-						initial_load_map = true;
-					}
+			}
+		}
+
+#pragma region UI_Keyboard
+		if (titlePtr->isVisible()) {
+			if (ui_kb[sf::Keyboard::Up] || ui_kb[sf::Keyboard::Down])
+				titlePtr->change_selection(event.key.code);
+			else if (ui_kb[sf::Keyboard::Return]) {
+				switch (titlePtr->getSelection()) {
+				case(Selection::Play_Game) :
+					sysFader.resetFader();
+					start = true;
+					initial_load_map = true;
+					canPoll = false;
+					break;
+				case(Selection::Exit) :
+					window.close();
+					break;
+				case(Selection::Load_Game) :
+					std::cout << "There is no implementation of this option yet." << std::endl;
+					break;
+				case(Selection::Settings) :
+					std::cout << "There is no implementation of this option yet." << std::endl;
+					break;
 				}
 			}
 		}
+		else if (ui_kb[sf::Keyboard::Escape]) {
+			if (!UI_visible_excluding(pausePtr, sysWindows)) {
+				pausePtr->setVisible(!pausePtr->isVisible());
+				if (pausePtr->isVisible())
+					music.pause();
+				else
+					music.play();
+			}
+		}
+		else if (!textbox && sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+			std::string new_map = onEventTile(player, event_tiles);
+			if (new_map != "") {
+				map_name = new_map;
+				initial_load_map = true;
+			}
+		}
+#pragma endregion
 
 		elapsedTime = gameClock.restart().asMilliseconds();
-
-		if (current_map != map_name && initial_load_map)
-		{
-			if (!fade_out && !fade_in) {
-				fade_out = true;
-				sysFader.resetFader();
-			}
-			else if (fade_in) {
-				previousMusicName = musicName;
-				load_map(ml, map_name, player, actors, textureMap, event_tiles, test_events, textbox, message, musicName, previous_maps);
-				entities.clear();
-				for (int i = actors.size(); i != 0; i--) {
-					entities.push_back(actors[i - 1]);
-				}
-				previous_maps.push_back(map_name);
-				current_map = map_name;
-				if (previousMusicName != musicName) {
-					music.openFromFile("resources/audio/" + musicName);
-				}
-			}
-			// *************** End Audrey Edit *************** //
-		}
-
-		// if there is no UI visible, perform normal game actions
-		if (music.getStatus() == sf::Music::Stopped)
-			music.play();
-		if (!UI_visible(sysWindows) && window.hasFocus())
-		{
-			worldAnimationArr[Map::Counter] += elapsedTime;
+		if (inBattle) {
 			
-
-			if (!textbox) {
-				// Audrey Edit: Adding Event class functionalities //
-				if (eventIsRunning) {
-					test_events.runEvent(elapsedTime);
-					eventIsRunning = test_events.eventIsRunning();
-					if ((test_events.getEventType()).substr(0, 6) == "Speech" && !textbox) {
-						test_events.runEvent(elapsedTime);
-						textbox = eventIsRunning;
-					}
-					else if (textbox) {
-						textbox = eventIsRunning;
-					}
+		}
+		else {
+			if (current_map != map_name && initial_load_map)
+			{
+				if (!fade_out && !fade_in) {
+					fade_out = true;
+					sysFader.resetFader();
 				}
-				else {
-					// *************** End Audrey Edit *************** //
-					player.move(elapsedTime, player.controller.get_input());
-					sysCollision(actors, ml);
-
-					// TEST INTERACTION BETWEEN PLAYER AND OTHER ACTORS
-					for (auto actor = actors.begin(); actor != actors.end(); actor++)
-					{
-						if ((*actor)->getClass() != "Character") {
-							textbox = player.check_Interact(**actor);
-							if (textbox) {
-								message[1] = (*actor)->getScene();
-								break;
-							}
-						}
+				else if (fade_in) {
+					previousMusicName = musicName;
+					load_map(ml, map_name, player, actors, textureMap, event_tiles, test_events, textbox, message, musicName, previous_maps);
+					entities.clear();
+					for (int i = actors.size(); i != 0; i--) {
+						entities.push_back(actors[i - 1]);
 					}
-					// Audrey Edit: Adding Event class functionalities //
+					previous_maps.push_back(map_name);
+					current_map = map_name;
+					if (previousMusicName != musicName) {
+						music.openFromFile("resources/audio/" + musicName);
+					}
 				}
 				// *************** End Audrey Edit *************** //
-				playerView.setCenter(player.getViewArm());
+			}
+
+			// if there is no UI visible, perform normal game actions
+			if (music.getStatus() == sf::Music::Stopped)
+				music.play();
+			if (!UI_visible(sysWindows) && window.hasFocus())
+			{
+				worldAnimationArr[Map::Counter] += elapsedTime;
+
+
+				if (!textbox) {
+					// Audrey Edit: Adding Event class functionalities //
+					if (eventIsRunning) {
+						test_events.runEvent(elapsedTime);
+						eventIsRunning = test_events.eventIsRunning();
+						if ((test_events.getEventType()).substr(0, 6) == "Speech" && !textbox) {
+							test_events.runEvent(elapsedTime);
+							textbox = eventIsRunning;
+						}
+						else if (textbox) {
+							textbox = eventIsRunning;
+						}
+					}
+					else {
+						// *************** End Audrey Edit *************** //
+						player.move(elapsedTime, player.controller.get_input());
+						sysCollision(actors, ml);
+
+						// TEST INTERACTION BETWEEN PLAYER AND OTHER ACTORS
+						for (auto actor = actors.begin(); actor != actors.end(); actor++)
+						{
+							if ((*actor)->getClass() != "Character") {
+								textbox = player.check_Interact(**actor);
+								if (textbox) {
+									message[1] = (*actor)->getScene();
+									break;
+								}
+							}
+						}
+						// Audrey Edit: Adding Event class functionalities //
+					}
+					// *************** End Audrey Edit *************** //
+					playerView.setCenter(player.getViewArm());
+				}
 			}
 		}
-
 		// BEGIN DRAW CYCLE
 
 		window.clear();
 		window.setView(playerView);
 
+		if (inBattle) {
+			test.update(playerView.getCenter(), elapsedTime);
+			window.draw(test);
+		}
+		else {
+			if (!titlePtr->isVisible()) {
 
-		if (!titlePtr->isVisible()) {
+				animateMap(ml, window, worldAnimationArr);
+				drawEntities(window, entities);
+				ml.Draw(window, Layer::Overlay);
 
-			animateMap(ml, window, worldAnimationArr);
-			drawEntities(window, entities);
-			ml.Draw(window, Layer::Overlay);
+				if (textbox && !UI_visible(sysWindows)) {
+					textbox = _Textbox->display_message(message, player, elapsedTime);
+				}
 
-			if (textbox && !UI_visible(sysWindows)) {
-				textbox = _Textbox->display_message(message, player, elapsedTime);
 			}
 
-		}
-
-		if (fade_out && !fade_in && !sysFader.isComplete()) {
-			sysFader.setPosition(playerView.getCenter());
-			sysFader.performFade(Fade::Out, Speed::Fast);
-			window.draw(sysFader);
-		}
-		else if (fade_out && !fade_in && sysFader.isComplete()) {
-			fade_out = false;
-			fade_in = true;
-			if (start) {
-				start = false;
-				titlePtr->setVisible(false);
+			if (fade_out && !fade_in && !sysFader.isComplete()) {
+				sysFader.setPosition(playerView.getCenter());
+				sysFader.performFade(Fade::Out, Speed::Fast);
+				window.draw(sysFader);
 			}
-			sysFader.resetFader();
-			window.draw(sysFader.blackScreen());
+			else if (fade_out && !fade_in && sysFader.isComplete()) {
+				fade_out = false;
+				fade_in = true;
+				if (start) {
+					start = false;
+					titlePtr->setVisible(false);
+				}
+				sysFader.resetFader();
+				window.draw(sysFader.blackScreen());
+			}
+			else if (fade_in && !fade_out && !sysFader.isComplete()) {
+				sysFader.setPosition(playerView.getCenter());
+				sysFader.performFade(Fade::In, Speed::Fast);
+				window.draw(sysFader);
+			}
+			else if (fade_in && !fade_out && sysFader.isComplete()) {
+				fade_in = false;
+				canPoll = true;
+			}
 		}
-		else if (fade_in && !fade_out && !sysFader.isComplete()) {
-			sysFader.setPosition(playerView.getCenter());
-			sysFader.performFade(Fade::In, Speed::Fast);
-			window.draw(sysFader);
-		}
-		else if (fade_in && !fade_out && sysFader.isComplete()) {
-			fade_in = false;
-			canPoll = true;
-		}
+		if (ui_kb.find(event.key.code) != ui_kb.end())
+			ui_kb[event.key.code] = false;
+
 
 		drawTextbox(window, _Textbox, textbox);
 		drawUI(window, playerView, sysWindows, elapsedTime);

@@ -136,3 +136,8 @@ int Pawn::getDepth() {
 std::string Pawn::getClass() {
 	return "Pawn";
 }
+
+void Pawn::setTextureRect(sf::IntRect newRect)
+{
+	pawnSprite.setTextureRect(newRect);
+}
