@@ -29,7 +29,8 @@ Event::~Event() {
 	while (!eventSteps.empty()) {
 		to_delete_step = eventSteps.front().first;
 		eventSteps.pop();
-		delete to_delete_step;
+		if (to_delete_step != nullptr)
+			delete to_delete_step;
 	}
 }
 
@@ -69,8 +70,10 @@ void Event::nextEvent()
 	if (!eventSteps.empty()) {
 		currentEvent = eventSteps.front();
 		eventSteps.pop();
-		eventType = currentEvent.first->getType();
-		isRunning = true;
+		if (currentEvent.first != nullptr) {
+			eventType = currentEvent.first->getType();
+			isRunning = true;
+		}
 	}
 	else {
 		isRunning = false;
@@ -101,9 +104,18 @@ void Event::reloadEvent()
 
 void Event::clearEvents()
 {
-	while (isRunning) {
-		nextEvent();
+	if (currentEvent.first != nullptr) {
+		delete currentEvent.first;
+		currentEvent.first = nullptr;
 	}
+	while (!eventSteps.empty()) {
+		currentEvent = eventSteps.front();
+		eventSteps.pop();
+		if (currentEvent.first != nullptr) {
+			delete currentEvent.first;
+			currentEvent.first = nullptr;
+		}
+	} 
 }
 
 std::string Event::getSpeechDialogue()

@@ -20,6 +20,8 @@ BattleSystem::BattleSystem(const sf::Font& font, const sf::Texture &menubg, sf::
 
 	num_of_selections = battle_options.size();
 	selected(battle_options[Battle::Fight]);
+
+	inBattle = true;
 }
 
 /*********************************************************************
@@ -61,21 +63,12 @@ void BattleSystem::change_selection(int key) {
 
 	clearStyle(battle_options[selection]);
 
-	if (key == sf::Keyboard::Up || key == sf::Keyboard::Down)
-		switch (selection) {
-		case(Battle::Status) :
-			selection = Battle::Fight;
-			break;
-		case(Battle::Fight) :
-			selection = Battle::Status;
-			break;
-		case(Battle::Escape) :
-			selection = Battle::Items;
-			break;
-		case(Battle::Items) :
-			selection = Battle::Escape;
-			break;
-		}
+	if (key == sf::Keyboard::Up) {
+		selection--;
+	}
+	else if (key == sf::Keyboard::Down) {
+		selection++;
+	}
 	if (selection > num_of_selections)
 		selection = 1;
 	else if (selection < 1)
@@ -92,20 +85,28 @@ void BattleSystem::change_selection(int key) {
 *********************************************************************/
 void BattleSystem::battle(bool ENTER_KEY, float elapsedTime, FightingPawn &player) {
 	if (player.isAlive() && enemyPawns.isAlive()) {
-		if (player_turn && ENTER_KEY) {
-			if (selection == Battle::Fight) {
+		if (ENTER_KEY && selection == Battle::Fight) {
+			player_turn = player.isFaster(&enemyPawns);
+			if (player_turn) {
+				if (!enemyPawns.takeDamage(&player)) {
+					std::cout << "Enemy has died" << std::endl;
+					inBattle = false;
+					return;
+				}
+				if (!player.takeDamage(&enemyPawns)) {
+					std::cout << "Player has died" << std::endl;
+				}
+			}
+			else {
+				if (!player.takeDamage(&enemyPawns)) {
+					std::cout << "Player has died" << std::endl;
+					inBattle = false;
+					return;
+				}
 				if (!enemyPawns.takeDamage(&player)) {
 					std::cout << "Enemy has died" << std::endl;
 				}
-				player_turn = false;
 			}
-		}
-		else if (!player_turn) {
-			if (!player.takeDamage(&enemyPawns)) {
-				std::cout << "Player has died" << std::endl;
-			}
-			player_turn = true;
-
 		}
 	}
 	else {

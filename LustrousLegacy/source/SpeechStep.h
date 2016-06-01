@@ -22,6 +22,7 @@ private:
 	std::string* dialogue;
 	bool textboxOn;
 	bool textFinished = false;
+	std::string scriptname;
 
 	// for debugging
 	std::string type = "Speech";

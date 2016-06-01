@@ -25,9 +25,10 @@ namespace sf {
 		void message(std::string to_display, std::string name = "", float elapsedTime = 0);
 		void setSpeed(int speed);
 		void setFontSize(int size);
-		bool if_endMessage();
+		bool if_endMessage(bool& ENTER_KEY);
 		void reset();
-		bool display_message(std::string scene_arr[], Character& player, float elapsedTime);
+		bool display_message(std::string scene_arr[], Character& player, float elapsedTime, bool& ENTER_KEY);
+		void ProcessMessage(std::string to_display, std::string name, float elapsedTime, bool& ENTER_KEY);
 
 	private:
 

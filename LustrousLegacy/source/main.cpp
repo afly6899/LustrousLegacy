@@ -46,6 +46,7 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 #include "MoveStep.h"
 #include "SpeechStep.h"
 #include "TogetherStep.h"
+#include "BattleStep.h"
 // *************** End Audrey Edit *************** //
 
 // Audrey Edit: Adding Battle Functionalities
@@ -56,8 +57,10 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 struct EventTile
 {
 	sf::Vector2f corner;
-	std::string new_map;
+	std::string type;
+	std::string info;
 };
+
 
 using namespace std;
 
@@ -65,9 +68,9 @@ using namespace std;
 void sysCollision(std::vector<Actor*>& actors, tmx::MapLoader& map);
 void actorCollision(std::vector<Actor*>&);
 bool UI_visible(std::vector<UI*>& sysWindows);
-std::string onEventTile(Character player, std::vector<EventTile> event_tiles);
+std::string onEventTile(Character player, std::vector<EventTile> event_tiles, std::string lookingFor);
 bool UI_visible_excluding(UI* sysWindow, std::vector<UI*> sysWindows);
-void load_map(tmx::MapLoader& ml, std::string &map_name, Character& player, std::vector<Actor*>& actors, std::map<std::string, sf::Texture*> texMap, std::vector<EventTile>& event_tiles, Event& events, bool& textbox, string messages[], std::string &music_name, std::vector<std::string> previous_maps);
+void load_map(tmx::MapLoader& ml, std::string &map_name, Character& player, std::vector<Actor*>& actors, std::map<std::string, sf::Texture*> texMap, std::vector<EventTile>& event_tiles, std::map<std::string, Event>& events, bool& textbox, string messages[], std::string &music_name, std::vector<std::string> previous_maps, BattleScene &battleScene);
 void animateMap(tmx::MapLoader& ml, sf::RenderWindow& window, float(&worldAnimationArr)[3]);
 void drawTextbox(sf::RenderWindow& window, Textbox* textbox, bool flag);
 void drawEntities(sf::RenderWindow& window, std::vector<Pawn*>& entities);
@@ -219,6 +222,12 @@ int main() {
 		cerr << "Texture Error: transparet.png" << endl;
 	}
 
+	// BOOK TEXTURE
+	sf::Texture bookTexture;
+	if (!bookTexture.loadFromFile("resources/textures/book.png")) {
+		cerr << "Texture Error: book.png" << endl;
+	}
+
 	// textureMap HOLDS THE REFERENCES OF ALL TEXTURES
 	std::map<std::string, sf::Texture*> textureMap;
 	textureMap["Warren"] = &pTexture;
@@ -226,7 +235,8 @@ int main() {
 	textureMap["Resdin"] = &resdinTexture;
 	textureMap["Villager"] = &villagerTexture;
 	textureMap["Empty"] = &transparentTexture;
-	
+	textureMap["Book"] = &bookTexture;
+
 
 	// faceMap HOLDS ALL THE FACE SPRITES
 	std::map<std::string, sf::Sprite> faceMap;
@@ -238,6 +248,7 @@ int main() {
 	faceMap["Luke"].setOrigin(faceMap["Luke"].getLocalBounds().width*.5, faceMap["Luke"].getLocalBounds().height*.5);
 #pragma endregion
 
+#pragma region	Sounds
 	/*********************************************************************
 	MUSIC
 	*********************************************************************/
@@ -265,6 +276,8 @@ int main() {
 	sfx_blip1.setBuffer(bleep1);
 	sfx_blip2.setBuffer(bleep2);
 
+#pragma endregion
+
 	/*********************************************************************
 	WORLD ANIMATION PARAMETERS:
 	*********************************************************************/
@@ -275,7 +288,7 @@ int main() {
 	*********************************************************************/
 
 	tmx::MapLoader ml("resources/maps");
-	std::string map_name = "start.tmx";
+	std::string map_name = "title.tmx";
 	std::string current_map = "";
 	std::vector<std::string> previous_maps;
 
@@ -326,7 +339,6 @@ int main() {
 	std::vector<Actor*> actors;
 	std::vector<Pawn*> entities;
 
-
 	/*********************************************************************
 	TEXT RENDERING
 	*********************************************************************/
@@ -334,7 +346,8 @@ int main() {
 	Textbox* _Textbox = new Textbox(faceMap, sysFont, sfx_blip1, sf::Vector2f(window_size.x, window_size.y));
 	std::string message[] = { "resources/script/scenes.txt", "Intro" };
 
-	Event test_events;
+	std::string currentEvent = "Story";
+	std::map<std::string, Event> events;
 	std::vector<EventTile> event_tiles;
 
 	sf::Texture battleTexture;
@@ -356,7 +369,10 @@ int main() {
 
 	BattleScene test(battleBackground, battleTexture, playerStats);
 
+	bool forceBattle = false;
 	bool inBattle = false;
+	bool endBattle = false;
+	bool stopLooking = false;
 
 	// *************** End Audrey Edit *************** //
 #pragma endregion
@@ -365,12 +381,12 @@ int main() {
 	*********************************************************************/
 
 	while (window.isOpen()) {
-		//if (test_events.getPriority() && sysFader.isComplete()) {
-		//	if (!textbox && !pausePtr->isVisible()) {
-		//		if (!test_events.finishedEvents())
-		//			eventIsRunning = test_events.startEvent();
-		//	}
-		//}
+		if (events["Story"].getPriority() && sysFader.isComplete()) {
+			if (!textbox && !pausePtr->isVisible()) {
+				if (!events["Story"].finishedEvents())
+					eventIsRunning = events["Story"].startEvent();
+			}
+		}
 		sf::Event event;
 		while (canPoll && window.pollEvent(event)) {
 			switch (event.type) {
@@ -385,31 +401,11 @@ int main() {
 				ui_kb[event.key.code] = true;
 				break;
 			case (sf::Event::KeyPressed) :
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y)) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y) && !inBattle) {
 					test.loadBattle(inBattle, sysFont, battleMenuTexture, cursorTexture, sfx_blip1);
-					if (inBattle) {
-						music.openFromFile("resources/audio/battle.wav");
-						music.play();
-					}
-					else {
-						music.openFromFile("resources/audio/" + musicName);
-					}
+					fade_out = true;
+					sysFader.resetFader();
 				}
-				//// Audrey Edit: Adding Event class functionalities //
-				//else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
-				//	if (!textbox && !pausePtr->isVisible()) {
-
-				//		if (!test_events.finishedEvents())
-				//			eventIsRunning = test_events.startEvent();
-				//	}
-				//}
-				// *************** End Audrey Edit *************** //
-				//else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-				//	if (!testEnemySprite.takeDamage(&testBattleSprite)) {
-				//		std::cout << "Enemy is defeated!!!" << std::endl;
-				//		testEnemySprite.respawn();
-				//	}
-				//}
 			}
 		}
 
@@ -446,18 +442,36 @@ int main() {
 					music.play();
 			}
 		}
-		else if (!textbox && sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
-			std::string new_map = onEventTile(player, event_tiles);
+		else if (!textbox && ui_kb[sf::Keyboard::Return]) {
+			std::string new_map = onEventTile(player, event_tiles, "map");
 			if (new_map != "") {
 				map_name = new_map;
 				initial_load_map = true;
 			}
 		}
 #pragma endregion
-
+		if (!eventIsRunning) {
+			std::string possibleEvent = onEventTile(player, event_tiles, "trigger");
+			if (!stopLooking && possibleEvent != "") {
+				currentEvent = possibleEvent;
+				eventIsRunning = events[currentEvent].startEvent();
+				stopLooking = true;
+			}
+			else if (stopLooking && possibleEvent == "") {
+				stopLooking = false;
+			}
+		}
 		elapsedTime = gameClock.restart().asMilliseconds();
 		if (inBattle) {
-			
+			if (!(fade_in || fade_out)) {
+				if (music.getStatus() == sf::Music::Stopped)
+					music.play();
+				test.handleInput(event, ui_kb, elapsedTime);
+			}
+		}
+		else if (endBattle && fade_in) {
+			endBattle = false;
+			music.openFromFile("resources/audio/" + musicName);
 		}
 		else {
 			if (current_map != map_name && initial_load_map)
@@ -468,7 +482,7 @@ int main() {
 				}
 				else if (fade_in) {
 					previousMusicName = musicName;
-					load_map(ml, map_name, player, actors, textureMap, event_tiles, test_events, textbox, message, musicName, previous_maps);
+					load_map(ml, map_name, player, actors, textureMap, event_tiles, events, textbox, message, musicName, previous_maps, test);
 					entities.clear();
 					for (int i = actors.size(); i != 0; i--) {
 						entities.push_back(actors[i - 1]);
@@ -493,14 +507,23 @@ int main() {
 				if (!textbox) {
 					// Audrey Edit: Adding Event class functionalities //
 					if (eventIsRunning) {
-						test_events.runEvent(elapsedTime);
-						eventIsRunning = test_events.eventIsRunning();
-						if ((test_events.getEventType()).substr(0, 6) == "Speech" && !textbox) {
-							test_events.runEvent(elapsedTime);
-							textbox = eventIsRunning;
+						events[currentEvent].runEvent(elapsedTime);
+						eventIsRunning = events[currentEvent].eventIsRunning();
+						if ((events[currentEvent].getEventType()).substr(0, 6) == "Speech") {
+							if (!textbox) {
+								events[currentEvent].runEvent(elapsedTime);
+								textbox = eventIsRunning;
+							}
+							else {
+								textbox = eventIsRunning;
+							}
 						}
-						else if (textbox) {
-							textbox = eventIsRunning;
+						else  if ((events[currentEvent].getEventType()).substr(0, 6) == "Battle") {
+							if (test.getStartBattle()) {
+								test.loadBattle(inBattle, sysFont, battleMenuTexture, cursorTexture, sfx_blip1);
+								fade_out = true;
+								sysFader.resetFader();
+							}
 						}
 					}
 					else {
@@ -531,48 +554,62 @@ int main() {
 		window.clear();
 		window.setView(playerView);
 
-		if (inBattle) {
+		if (inBattle && !fade_out) {
 			test.update(playerView.getCenter(), elapsedTime);
 			window.draw(test);
-		}
-		else {
-			if (!titlePtr->isVisible()) {
-
-				animateMap(ml, window, worldAnimationArr);
-				drawEntities(window, entities);
-				ml.Draw(window, Layer::Overlay);
-
-				if (textbox && !UI_visible(sysWindows)) {
-					textbox = _Textbox->display_message(message, player, elapsedTime);
-				}
-
-			}
-
-			if (fade_out && !fade_in && !sysFader.isComplete()) {
-				sysFader.setPosition(playerView.getCenter());
-				sysFader.performFade(Fade::Out, Speed::Fast);
-				window.draw(sysFader);
-			}
-			else if (fade_out && !fade_in && sysFader.isComplete()) {
-				fade_out = false;
-				fade_in = true;
-				if (start) {
-					start = false;
-					titlePtr->setVisible(false);
-				}
-				sysFader.resetFader();
-				window.draw(sysFader.blackScreen());
-			}
-			else if (fade_in && !fade_out && !sysFader.isComplete()) {
-				sysFader.setPosition(playerView.getCenter());
-				sysFader.performFade(Fade::In, Speed::Fast);
-				window.draw(sysFader);
-			}
-			else if (fade_in && !fade_out && sysFader.isComplete()) {
-				fade_in = false;
-				canPoll = true;
+			inBattle = test.getBattleState();
+			if (!inBattle) {
+				endBattle = true;
+				fade_out = true;
 			}
 		}
+		else if (!titlePtr->isVisible()) {
+
+			animateMap(ml, window, worldAnimationArr);
+			if (map_name == "title.tmx") {
+				entities[1]->spriteAnimate(elapsedTime);
+			}
+			drawEntities(window, entities);
+			ml.Draw(window, Layer::Overlay);
+
+			if (textbox && !UI_visible(sysWindows)) {
+				textbox = _Textbox->display_message(message, player, elapsedTime, ui_kb[sf::Keyboard::Return]);
+			}
+
+		}
+		if (fade_out && !fade_in && !sysFader.isComplete()) {
+			sysFader.setPosition(playerView.getCenter());
+			sysFader.performFade(Fade::Out, Speed::Fast);
+			window.draw(sysFader);
+			std::cout << "Decreasing: Volume is " << music.getVolume() << std::endl;
+			music.setVolume(music.getVolume() - 3);
+		}
+		else if (fade_out && !fade_in && sysFader.isComplete()) {
+			fade_out = false;
+			fade_in = true;
+			if (start) {
+				start = false;
+				titlePtr->setVisible(false);
+			}
+			else if (inBattle) {
+				music.openFromFile("resources/audio/LL_Battle.wav");
+				music.play();
+			}
+			sysFader.resetFader();
+			window.draw(sysFader.blackScreen());
+		}
+		else if (fade_in && !fade_out && !sysFader.isComplete()) {
+			sysFader.setPosition(playerView.getCenter());
+			sysFader.performFade(Fade::In, Speed::Fast);
+			window.draw(sysFader);
+			std::cout << "Increasing: Volume is " << music.getVolume() << std::endl;
+			music.setVolume(music.getVolume() + 3);
+		}
+		else if (fade_in && !fade_out && sysFader.isComplete()) {
+			fade_in = false;
+			canPoll = true;
+		}
+
 		if (ui_kb.find(event.key.code) != ui_kb.end())
 			ui_kb[event.key.code] = false;
 
@@ -589,7 +626,7 @@ int main() {
 }
 
 /*********************************************************************
-/brief Performs the collision between actors.
+brief Performs the collision between actors.
 *********************************************************************/
 void actorCollision(std::vector<Actor*>& actors)
 {
@@ -637,6 +674,7 @@ sf::Vector2f tile(int tile_row, int tile_column) {
 	//return sf::Vector2f(System::Tilesize*tile_row + System::Tilesize*.5, System::Tilesize*tile_column + System::Tilesize*.5);
 }
 
+
 /*********************************************************************
 \brief Checks if any of the UI is visible.
 *********************************************************************/
@@ -649,12 +687,17 @@ bool UI_visible(std::vector<UI*>& sysWindows) {
 	return false;
 }
 
-std::string onEventTile(Character player, std::vector<EventTile> event_tiles)
+std::string onEventTile(Character player, std::vector<EventTile> event_tiles, std::string lookingFor)
 {
 	sf::Vector2f playerpos = player.getPosition();
 	for (int i = 0; i < event_tiles.size(); i++) {
 		if (playerpos.x >= event_tiles[i].corner.x && playerpos.x <= event_tiles[i].corner.x + 64 && playerpos.y >= event_tiles[i].corner.y && playerpos.y <= event_tiles[i].corner.y + 64) {
-			return event_tiles[i].new_map;
+			if (event_tiles[i].type == lookingFor) {
+				return event_tiles[i].info;
+			}
+			else {
+				return "";
+			}
 		}
 	}
 	return "";
@@ -686,12 +729,12 @@ int  _directionOfActor(std::string dir) {
 \brief Loads the specified map and instantiates all actors and pawns.
 	   The player is set at the start position specified by the map.
 *********************************************************************/
-void load_map(tmx::MapLoader& ml, std::string& map_name, Character& player, std::vector<Actor*>& actors, std::map<std::string, sf::Texture*> textureMap, std::vector<EventTile>& event_tiles, Event& events, bool& textbox, string messages[], std::string &music_name, std::vector<std::string> previous_maps) {
+void load_map(tmx::MapLoader& ml, std::string& map_name, Character& player, std::vector<Actor*>& actors, std::map<std::string, sf::Texture*> textureMap, std::vector<EventTile>& event_tiles, std::map<std::string, Event>& events, bool& textbox, string messages[], std::string &music_name, std::vector<std::string> previous_maps, BattleScene &battleScene) {
 	int place = -1;
 	for (int i = 0; i < previous_maps.size(); i++) { if (previous_maps[i] == map_name) { place = i; break; } }
 
 	ml.Load(map_name);
-	events.clearEvents();
+	events.clear();
 	for (int i = 1; i < actors.size(); i++) {
 		delete actors[i];
 	}
@@ -703,13 +746,22 @@ void load_map(tmx::MapLoader& ml, std::string& map_name, Character& player, std:
 		actors.push_back(&player);
 	}
 	event_tiles.clear();
-	std::vector<std::pair<Step*, Actor*>> steps;
+	std::map<std::string, std::vector<std::pair<Step*, Actor*>>> steps;
 
 	for (auto layer = ml.GetLayers().begin(); layer != ml.GetLayers().end(); ++layer)
 	{
 		if (layer->name == "Events") {
 			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++) {
-				event_tiles.push_back({ object->GetPosition(), object->GetPropertyString("Event") });
+				if (object->GetPropertyString("Event") == "trigger") {
+					event_tiles.push_back({ object->GetPosition(), "trigger", object->GetPropertyString("EventType") });
+					if (object->GetPropertyString("numTrigger") != std::string()) {
+						for (int i = 0; i < std::stoi(object->GetPropertyString("numTrigger")); i++)
+							steps[object->GetPropertyString("EventType")].push_back({ nullptr, nullptr });
+					}
+				}
+				else {
+					event_tiles.push_back({ object->GetPosition(), "map", object->GetPropertyString("Event") });
+				}
 			}
 		}
 		if (layer->name == "Setup")
@@ -722,10 +774,12 @@ void load_map(tmx::MapLoader& ml, std::string& map_name, Character& player, std:
 			}
 			music_name = layer->properties["music"];
 			if (place == -1) {
-				if (layer->properties["hasPriority"] == "Yes") { events.setPriority(true); }
-				else { events.setPriority(false); }
-				for (int i = 0; i < std::stoi(layer->properties["numEvents"]); i++) {
-					steps.push_back({ nullptr, nullptr });
+				if (layer->properties["hasPriority"] == "Yes") { events["Story"].setPriority(true); }
+				else { events["Story"].setPriority(false); }
+				if (layer->properties.find("numEvents") != layer->properties.end()) {
+					for (int i = 0; i < std::stoi(layer->properties["numEvents"]); i++) {
+						steps["Story"].push_back({ nullptr, nullptr });
+					}
 				}
 			}
 			for (auto object = layer->objects.begin(); object != layer->objects.end(); object++)
@@ -737,6 +791,9 @@ void load_map(tmx::MapLoader& ml, std::string& map_name, Character& player, std:
 					}
 					else {
 						player.changeSprite(*textureMap["Warren"]);
+					}
+					if (object->GetPropertyString("Direction") != std::string()) {
+						player.setDirection(_directionOfActor(object->GetPropertyString("Direction")));
 					}
 				}
 				else if (object->GetName() == "ACTOR")
@@ -751,49 +808,78 @@ void load_map(tmx::MapLoader& ml, std::string& map_name, Character& player, std:
 				}
 				// Adding
 				if (place == -1) {
-					std::string order = object->GetPropertyString("Event Order");
-					if (order != "") {
-						for (int i = 0; i < order.size(); i++)
-						{
-							std::string e = object->GetPropertyString(std::string(1, order[i]));
-
-							Actor* moving_actor = (object->GetName() == "START") ? actors[0] : actors[actors.size() - 1];
-							Step* step = nullptr;
-							switch (e[0] - '0') {
-							case 0: // Move Step
-								step = new MoveStep(std::vector<sf::Vector2f>({ tile(std::stoi(e.substr(1, 2)), std::stoi(e.substr(4, 2))) }));
-								break;
-							case 1: // Together Step
-								if (steps[order[i] - '0' - 1].first == nullptr) {
-									step = new TogetherStep(std::vector<sf::Vector2f>({ tile(std::stoi(e.substr(1, 2)), std::stoi(e.substr(4, 2))) }), std::vector<Actor*>({ moving_actor }));
+					std::string order[2] = { object->GetPropertyString("Event Order"), object->GetPropertyString("TriggerEventOrder") };
+					for (int j = 0; j < 2; j++) {
+						if (order[j] != "") {
+							std::string eventType = (j == 0) ? "Story" : "A";
+							for (int i = 0; i < order[j].size(); i++)
+							{
+								if (order[j][i] == ';') {
+									continue;
+								}
+								std::string key = std::string(1,order[j][i]);
+								std::string e;
+								if (j == 1) {
+									if (steps.find(key) != steps.end()) {
+										eventType = key;
+										e = object->GetPropertyString(key + "Trigger" + order[j][++i]);
+									}
+									else {
+										key = eventType;
+										e = object->GetPropertyString(key + "Trigger" + order[j][i]);
+									}
+									if ((unsigned int)order[j][i] >= 97) {
+										std::cout << "Key is " << ((int)order[j][i]) << " or " << (order[j][i]) << std::endl;
+										order[j][i] -= '\'';
+									}
 								}
 								else {
-									steps[order[i] - '0' - 1].first->addToStep(sf::Vector2f({ tile(std::stoi(e.substr(1, 2)), std::stoi(e.substr(4, 2))) }), moving_actor);
+									e = object->GetPropertyString(key);
 								}
-								break;
-							case 2: // Direction Step
-								step = new DirectionStep(Direction(e[1] - '0'));
-								break;
-							case 3: // Speech Step
-								step = new SpeechStep(messages, textbox);
-								moving_actor->addEventDialogue(e.substr(1));
-								break;
-							case 4:
-								step = new MapStep(map_name, e.substr(1));
-								break;
-							}
-							if (step != nullptr) {
-								steps[order[i] - '0' - 1] = (std::pair<Step*, Actor*>(step, moving_actor));
-							}
-						}
 
+								Actor* moving_actor = (object->GetName() == "START") ? actors[0] : actors[actors.size() - 1];
+								Step* step = nullptr;
+								switch (e[0] - '0') {
+								case 0: // Move Step
+									step = new MoveStep(std::vector<sf::Vector2f>({ tile(std::stoi(e.substr(1, 2)), std::stoi(e.substr(4, 2))) }));
+									break;
+								case 1: // Together Step
+									if (steps[eventType][order[j][i] - '0' - 1].first == nullptr) {
+										step = new TogetherStep(std::vector<sf::Vector2f>({ tile(std::stoi(e.substr(1, 2)), std::stoi(e.substr(4, 2))) }), std::vector<Actor*>({ moving_actor }));
+									}
+									else {
+										steps[eventType][order[j][i] - '0' - 1].first->addToStep(sf::Vector2f({ tile(std::stoi(e.substr(1, 2)), std::stoi(e.substr(4, 2))) }), moving_actor);
+									}
+									break;
+								case 2: // Direction Step
+									step = new DirectionStep(Direction(e[1] - '0'));
+									break;
+								case 3: // Speech Step
+									step = new SpeechStep(messages, textbox);
+									moving_actor->addEventDialogue(e.substr(1));
+									break;
+								case 4:
+									step = new MapStep(map_name, e.substr(1));
+									break;
+								case 5:
+									step = new BattleStep(&battleScene, e.substr(1));
+								}
+								if (step != nullptr) {
+									int index = order[j][i] - '0' - 1;
+									steps[eventType][order[j][i] - '0' - 1] = (std::pair<Step*, Actor*>(step, moving_actor));
+								}
+							}
+
+						}
 					}
 				}
 			}
 		}
 	}
 	for (auto step : steps) {
-		events.addEvents(step.first, step.second);
+		for (auto e : step.second) {
+			events[step.first].addEvents(e.first, e.second);
+		}
 	}
 }
 

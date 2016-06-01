@@ -74,6 +74,9 @@
 	{
 		if (!processingText && !end_message) {
 			end_length = to_display.length();
+			if (name.substr(0, 3) == "NPC") {
+				name = name.substr(3);
+			}
 			actorName.setString((name == "System")? " " : name);
 			processingText = true;
 		}
@@ -131,8 +134,8 @@
 	/*********************************************************************
 	\brief temp
 	*********************************************************************/
-	bool Textbox::if_endMessage() {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+	bool Textbox::if_endMessage(bool& ENTER_KEY) {
+		if (ENTER_KEY) {
 			return end_message;
 		}
 		return false;
@@ -165,13 +168,13 @@
 	/*********************************************************************
 	\brief temp
 	*********************************************************************/
-	bool Textbox::display_message(std::string scene_arr[], Character& player, float elapsedTime) {
+	bool Textbox::display_message(std::string scene_arr[], Character& player, float elapsedTime, bool& ENTER_KEY) {
 		setPosition(player.getViewArm());
 		if (reader == nullptr) {
 			reader = new SceneReader(scene_arr[0], scene_arr[1]);
 		}
-		if (!if_endMessage())
-			message(reader->currentMessage().second, reader->currentMessage().first, elapsedTime);
+		if (!if_endMessage(ENTER_KEY))
+			ProcessMessage(reader->currentMessage().second, reader->currentMessage().first, elapsedTime, ENTER_KEY);
 		else
 		{
 			reset();
@@ -184,4 +187,15 @@
 			}
 		}
 		return true;
+	}
+
+	void Textbox::ProcessMessage(std::string to_display, std::string name, float elapsedTime, bool& ENTER_KEY) {
+
+		if (ENTER_KEY) {
+			while (!end_message) {
+				message(to_display, name, elapsedTime);
+			}
+		}
+		else
+			message(to_display, name, elapsedTime);
 	}

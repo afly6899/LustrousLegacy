@@ -21,6 +21,7 @@ public:
 
 	bool isAlive() { return alive; }
 	std::string getHealthInfo() { return base.name + ": " + std::to_string(remainingHealth) + " / " + std::to_string(base.health); }
+	bool isFaster(FightingPawn *enemy);
 
 private:
 	bool alive;

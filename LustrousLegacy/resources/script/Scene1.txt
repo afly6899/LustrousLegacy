@@ -3,67 +3,94 @@ Resdin:Hey! Warren!
 
 
 ResdinWalksUpAndHandsALetter
-Resdin:You’ve got one letter Warren.
-Resdin:Are you excited!? Today is your initiation isn’t it?
-Warren:Yeah, by the end of today I’m officially Captain of the Guard.
-Resdin:You’ll be awesome! I mean, you’ve been in training for like a year.
+Resdin:You've got a letter Warren.
+Resdin:I'm so excited! Today's your initiation isn't it?
+Warren:Yeah. By the end of today, I'll officially be the Captain of the Guard.
 Resdin:Are you nervous?
-Warren:Luke is a great Captain. After all of his teachings I should be ready for anything.
-Resdin:Hey… Do… Do you think you could train me one day? I’ve always wanted to be a guard.
-Warren:Sure, when you get older I’m sure you’ll make a great officer. I remember when I dreamed of just being in the guard, I never thought I would get to be Captain!
-Warren:But here I am, you’ll get there Resdin just stay strong.
+Warren:A little, but Luke is a great Captain. After all of his teachings, I should be ready for anything.
+Resdin:You'll be awesome! I mean, you've been in training for like a year!
+Resdin:Hey... Do... Do you think you could train me one day? I've always wanted to be part of the guard.
+Warren:Sure. I'm sure you'll make a great officer when you get older. I remember when I dreamed of just being in the guard... I never thought I would get to be Captain!
+Warren:But here I am! You'll get there, Resdin, just stay strong.
 Resdin:Really!?
-Warren:If I can do it you can too, no problem!
+Warren:If I can do it, you can too, no problem!
 Resdin:Thanks Warren, you always have faith in me. Good luck today!
 
-
+ResdinDialogue
+Resdin:Good luck, Mr. Captain-to-be!
 
 Misc
 NPCHarris:I still remember your first week, you were so happy to start the job. Now here you are!
 NPCMira:Hello sweetie, big day for you no doubt. Congratulations!
-NPCMitch:Luke and I go way back. He’s told me all about you… 
+NPCMitch:Luke and I go way back. He's told me all about you... 
 NPCMitch:All good things, no need to worry
-NPCKris:As a younger Captain hopefully you won’t sleep on the job as much as Luke.
+NPCKris:As a younger Captain hopefully you won't sleep on the job as much as Luke.
 NPCSiel:Now that Luke is retiring he better start helping out around the house.
-NPCSiel:Oh who am I kidding, he isn’t going to wanna get out of bed.
+NPCSiel:Oh who am I kidding, he isn't going to wanna get out of bed.
 NPCMarin:Way to go Warren, First day of the rest of your career!
 NPCMarin:I hear the pay is good, you got a lucky draw kid.
-NPCFrancis:Looks like you’re the new guy in charge huh.
-NPCFrancis:You were always a good kid. You’ll be perfect for the job, go get ‘em!
+NPCFrancis:Looks like you're the new guy in charge huh.
+NPCFrancis:You were always a good kid. You'll be perfect for the job, go get ‘em!
 NPCAngelica:What are you so happy about?
-NPCMay:I suppose this makes you one of the youngest Captains we’ve had. Bravo Warren.
-NPCMica:My My, you’ve grown up quite fast. Now you’re head honcho around here huh?
+NPCMay:I suppose this makes you one of the youngest Captains we've had. Bravo Warren.
+NPCMica:My My, you've grown up quite fast. Now you're head honcho around here huh?
 NPCMica:Careful swinging that old blade around, I hear its quite heavy.
 
 
 TalkingToLuke
-Luke:Well, You seem quite chipper today.
-Luke:I was too on my last day on the ropes. Hell, now I’ve reached my last day in the field .
+Warren:Good morning, sir.
+Luke:Well, you seem quite chipper today.
+Luke:I remember when I, too, was on my last day on the ropes. Hell, now I've reached my last day in the field.
 Luke:But hey, this is your day, how are you feeling?
-Warren:Honestly sir I’m a little nervous.
-Luke:Don’t be kid, my roughest day was fighting off a few dogs from a herd of sheep. Oh they were causing quite a racket.
-Luke:Had to spend the whole day making sure all the sheep were back before nightfall, quite a hassle, but certainly nothing to be nervous about... Annoyed if anything
-Luke:Anyway, lets get on with your last training session.
+Warren:Honestly, sir, I'm a little nervous.
+Luke:Don't be, kid. My roughest day was fighting off a few dogs from a herd of sheep. Oh, they were causing quite a racket.
+Luke:And I had to spend the whole day making sure all the sheep were back before nightfall. It was quite a hassle, but certainly nothing to be nervous about... Annoying, if anything.
+Luke:Anyway, let's get on with your last training session.
 
 
 AfterThePracticeBattle
-Luke:Good job son! I leave my post in your very capable hands, one last thing.
+Luke:Good job son! I leave my post in your very capable hands.
+Luke:Oh yes, one last thing to make it official.
 Warren:What is it? Another test?
-Luke:Oh no no, nothing like that.
-Luke:Just an old guard tradition. You have to repeat the oath given to us by the Sage as I give you the Captain’s sword.
+Luke:Oh no, no. Nothing like that.
+Luke:Just an old guard tradition. You have to repeat the oath given to us by the Sage as I give you the Captain's sword.
 Warren:The Sage himself!? How old is this oath!?
-Luke:Some two thousand years ago or so… I forget. So to answer your question, very old. HaHaHa
-Luke:Here goes…
-Luke:With this sword…
-Warren:With this sword…
-Luke:…I will do all I must…
-Warren:…I will do all I must…
-Luke:…to protect this land and its people…
-Warren:…to protect this land and its people…
-Luke:…from all peril…
-Warren:…from all peril…
-Luke:…until the mantle is passed anew.
-Warren:…until the mantle is passed anew.
-Luke:…
-Warren:…
+Luke:Some two thousand years ago or so... I forget. So to answer your question, very old. HaHaHa.
+Luke:Now repeat after me:
+Luke:With this sword...
+Warren:With this sword...
+Luke:...I will do all I must...
+Warren:...I will do all I must...
+Luke:...to protect this land and its people...
+Warren:...to protect this land and its people...
+Luke:...from all peril...
+Warren:...from all peril...
+Luke:...until the mantle is passed anew.
+Warren:...until the mantle is passed anew.
+Luke:...
+Warren:...
 Luke:Congratulations! You are now the Captain of the Guard here in the City of Light.
+
+LukeDialogue
+Luke:As Captain of the Guard, it is your duty to protect the people.
+Luke: But don't worry. The worst thing you'll have to do is fight off those overgrown spiders from the forest if they get too close to the town.
+
+BlockWayToCastle
+Warren:It would be nice if I could visit the castle, but I need to return to my duties.
+
+BlockWayToField
+System:Congrats on your promotion to Captain of the Guard! You should probably go see Sir Luke at the Castle Courtyard.
+
+PostGameDialogue1
+System:Congratulations on becoming Captain, Warren!
+
+PostGameDialogue2
+Warren:Huh? Who is that?!
+System:I am the voice of your creators, here to thank the player for taking the time to view our world.
+System:Please feel free to send Warren into the field to battle the monsters we created for the game. Thanks for playing! Ciao!
+Warren:Hey! Wait! What do you mean player and sending me into a field?! Since when did monsters exist here?!
+
+PostGameDialogue3
+Warren:...
+Warren:Well, that was weird.
+

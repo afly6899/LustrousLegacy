@@ -20,16 +20,22 @@ public:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	void setPosition(sf::Vector2f pos);
+	void handleInput(sf::Event event, std::map<int, bool> ui_kb, float elapsedTime);
+
+	void setBattle(std::string filename) { battleName = filename; }
+	void prepareBattle() { battleReady = true; }
+	bool getStartBattle() { return battleReady; }
 
 private:
-	int battleNum;
-	int numBattles;
-	std::string battleName;
+	sf::Text status;
+	std::string battleName = "battle1.txt";
+	bool battleReady = false;
 	bool inBattle = false;
 	FightingPawn fighterPlayer;
 	sf::Sprite battleBackground;
-
 	BattleSystem *currentBattle;
 
-	sf::Text status;
+	int currentAnimation;
+	int animationCounter;
+	int animationDuration;
 };

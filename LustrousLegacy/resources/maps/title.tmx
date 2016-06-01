@@ -105,7 +105,7 @@
    <tile gid="3"/>
    <tile gid="3"/>
    <tile gid="3"/>
-   <tile gid="147"/>
+   <tile gid="149"/>
    <tile gid="3"/>
    <tile gid="3"/>
    <tile gid="3"/>
@@ -334,7 +334,7 @@
    <tile gid="3"/>
    <tile gid="3"/>
    <tile gid="3"/>
-   <tile gid="145"/>
+   <tile gid="149"/>
    <tile gid="3"/>
    <tile gid="3"/>
    <tile gid="3"/>
@@ -1165,6 +1165,7 @@
    <property name="hasPriority" value="Yes"/>
    <property name="music" value="LL_Title.wav"/>
    <property name="numEvents" value="2"/>
+   <property name="script" value="Intro.txt"/>
   </properties>
   <object id="3" name="START" x="448" y="512" width="64" height="64">
    <properties>
@@ -1174,11 +1175,11 @@
   <object id="4" name="ACTOR" x="448" y="384" width="64" height="64">
    <properties>
     <property name="1" value="3Intro"/>
-    <property name="2" value="4start.tmx"/>
+    <property name="2" value="4town.tmx"/>
     <property name="Direction" value="South"/>
     <property name="Event Order" value="12"/>
     <property name="Scene" value="Intro"/>
-    <property name="Texture" value="Empty"/>
+    <property name="Texture" value="Book"/>
    </properties>
   </object>
  </objectgroup>

@@ -47,3 +47,8 @@ void FightingPawn::respawn()
 	alive = true;
 	criticalRate = (base.speed * RNG()) % 20;
 }
+
+bool FightingPawn::isFaster(FightingPawn *enemy)
+{
+	return this->base.speed >= enemy->base.speed;
+}

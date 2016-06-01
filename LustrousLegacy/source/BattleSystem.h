@@ -44,7 +44,6 @@ private:
 	bool player_turn = true;
 	std::map<int, sf::Text> battle_options;
 	sf::Sprite background;
-	//std::vector<FightingPawn> enemyPawns;
 	FightingPawn enemyPawns;
 	std::vector<sf::Texture*> spriteTextures;
 };

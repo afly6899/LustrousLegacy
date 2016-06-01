@@ -21,3 +21,14 @@ Luke:Sup bro. Get out of here.
 Warren:That's a little mean. Couldn't you say that in a nicer way?
 Luke:...
 Luke:Get out of here, please?
+
+VillagerDialogue
+System:This world's kind of boring because it's not finished yet, but don't worry. You'll be able to do battles soon.
+
+
+
+
+
+
+
+
