@@ -11,5 +11,5 @@ bool BattleStep::run(float elapsedTime, Actor & actor)
 		battle->prepareForBattle();
 		battleStarted = true;
 	}
-	return (battle->isInBattle() || battle->isStarting());
+	return battle->isStarting();
 }

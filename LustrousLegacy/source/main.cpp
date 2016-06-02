@@ -373,6 +373,7 @@ int main() {
 	bool inBattle = false;
 	bool endBattle = false;
 	bool stopLooking = false;
+	bool endEventBattle = false;
 
 	
 	BaseStats playerStats = { 250, 20, 6, "Warren" };
@@ -380,7 +381,7 @@ int main() {
 
 	BattleSystem test(inBattle, sysFont, battleTexture, enemyTexture, cursorTexture, trainingBattleBG, battleMenuTexture, playerStats, enemyStats, sfx_blip1, fanfare);
 
-	float restPeriod = 0;
+	float restPeriod = 200;
 
 	std::random_device RNG;
 	int prob;
@@ -524,10 +525,11 @@ break;
 							}
 						}
 						else  if ((events[currentEvent].getEventType()).substr(0, 6) == "Battle") {
-							if (test.isStarting()) {
+							if (test.isStarting() && !endEventBattle) {
 								test.startBattle();
 								fade_out = true;
 								sysFader.resetFader();
+								endEventBattle = true;
 							}
 						}
 					}

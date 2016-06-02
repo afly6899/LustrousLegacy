@@ -255,7 +255,7 @@ void BattleSystem::statusMessage(Battle option, int status)
 void BattleSystem::stopBattle()
 {
 	inBattle = false;
-	inEvent = true;
+	inEvent = false;
 	counter = 0;
 	statusMessage(Battle::Defend, 2);
 	wholeTurnDone = false;
