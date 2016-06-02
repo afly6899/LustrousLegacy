@@ -19,7 +19,7 @@ public:
 
 	Actor(const sf::Texture& playerTexture);
 	virtual ~Actor();
-	virtual void move(float elapsedTime, int direction);
+	virtual bool move(float elapsedTime, int direction);
 	virtual void move(float elapsedTime, sf::Vector2f pos);
 	void setSpeed(int speed);
 	void setStopCounter(int new_counter);

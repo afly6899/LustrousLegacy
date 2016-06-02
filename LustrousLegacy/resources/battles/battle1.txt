@@ -1,1 +1,1 @@
-monster.png 70 20 7 Spider
+battleSprite_golem.png 100 25 3 Golem

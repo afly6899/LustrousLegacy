@@ -23,6 +23,7 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 //// Include libraries
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <random>
 #include <map>
 #include <math.h>
 #include "tmx/MapLoader.h"
@@ -51,7 +52,7 @@ http://trederia.blogspot.com/2013/05/tiled-map-loader-for-sfml.html
 
 // Audrey Edit: Adding Battle Functionalities
 #include "FightingPawn.h"
-#include "BattleScene.h"
+#include "BattleSystem.h"
 // ++++++++++++++++++ End Audrey Edit
 
 struct EventTile
@@ -70,13 +71,14 @@ void actorCollision(std::vector<Actor*>&);
 bool UI_visible(std::vector<UI*>& sysWindows);
 std::string onEventTile(Character player, std::vector<EventTile> event_tiles, std::string lookingFor);
 bool UI_visible_excluding(UI* sysWindow, std::vector<UI*> sysWindows);
-void load_map(tmx::MapLoader& ml, std::string &map_name, Character& player, std::vector<Actor*>& actors, std::map<std::string, sf::Texture*> texMap, std::vector<EventTile>& event_tiles, std::map<std::string, Event>& events, bool& textbox, string messages[], std::string &music_name, std::vector<std::string> previous_maps, BattleScene &battleScene);
+void load_map(tmx::MapLoader& ml, std::string &map_name, Character& player, std::vector<Actor*>& actors, std::map<std::string, sf::Texture*> texMap, std::vector<EventTile>& event_tiles, std::map<std::string, Event>& events, bool& textbox, string messages[], std::string &music_name, std::vector<std::string> previous_maps, BattleSystem &battleScene, bool &forceBattle, sf::Texture &battleBackground);
 void animateMap(tmx::MapLoader& ml, sf::RenderWindow& window, float(&worldAnimationArr)[3]);
 void drawTextbox(sf::RenderWindow& window, Textbox* textbox, bool flag);
 void drawEntities(sf::RenderWindow& window, std::vector<Pawn*>& entities);
 void drawUI(sf::RenderWindow& window, sf::View playerView, std::vector<UI*>& sysWindows, float elapsedTime);
 sf::Vector2f Vector2iTo2f(sf::Vector2i pos);
 sf::Vector2f tile(int tile_row, int tile_column);
+BaseStats readInStats(std::string filename, sf::Texture &texture);
 
 // TEMP -> DEPTH SORT CLASS
 class byDepth
@@ -140,12 +142,12 @@ int main() {
 	TEXTURES
 	*********************************************************************/
 #pragma region BattleBackgrounds
-	sf::Image forestBattleBG;
+	sf::Texture forestBattleBG;
 	if (!forestBattleBG.loadFromFile("resources/textures/bg_forest.png")) {
 		cerr << "Image Error: bg_forest.png" << endl;
 	}
 
-	sf::Image trainingBattleBG;
+	sf::Texture trainingBattleBG;
 	if (!trainingBattleBG.loadFromFile("resources/textures/bg_training.png")) {
 		cerr << "Image Error: bg_training.png" << endl;
 	}
@@ -264,6 +266,7 @@ int main() {
 
 	sf::Sound sfx_blip1;
 	sf::Sound sfx_blip2;
+	sf::Sound fanfare;
 
 	sf::SoundBuffer bleep1;
 	if (!bleep1.loadFromFile("resources/audio/text_blip.wav"))
@@ -273,8 +276,12 @@ int main() {
 	if (!bleep2.loadFromFile("resources/audio/text_blip2.wav"))
 		return -1; // error
 
+	sf::SoundBuffer fare;
+	if (!fare.loadFromFile("resources/audio/Fanfare.wav"))
+		return -1; // error
 	sfx_blip1.setBuffer(bleep1);
 	sfx_blip2.setBuffer(bleep2);
+	fanfare.setBuffer(fare);
 
 #pragma endregion
 
@@ -355,24 +362,28 @@ int main() {
 		cerr << "Texture Error" << endl;
 	}
 
-	sf::Texture battleBackground;
-	if (!battleBackground.loadFromFile("resources/textures/bg_training.png")) {
-		cerr << "Texture Error: bg_traning" << endl;
-	}
-
 	sf::Texture battleMenuTexture;
 	if (!battleMenuTexture.loadFromFile("resources/textures/battleMenuBG.png")) {
 		cerr << "Texture Error: battleMenuBG" << endl;
 	}
 
-	StatPawn playerStats = { 250, 15, 5, "Warren" };
-
-	BattleScene test(battleBackground, battleTexture, playerStats);
+	sf::Texture enemyTexture;
 
 	bool forceBattle = false;
 	bool inBattle = false;
 	bool endBattle = false;
 	bool stopLooking = false;
+
+	
+	BaseStats playerStats = { 250, 20, 6, "Warren" };
+	BaseStats enemyStats = readInStats("battle1.txt", enemyTexture);
+
+	BattleSystem test(inBattle, sysFont, battleTexture, enemyTexture, cursorTexture, trainingBattleBG, battleMenuTexture, playerStats, enemyStats, sfx_blip1, fanfare);
+
+	float restPeriod = 0;
+
+	std::random_device RNG;
+	int prob;
 
 	// *************** End Audrey Edit *************** //
 #pragma endregion
@@ -400,12 +411,6 @@ int main() {
 			case (sf::Event::KeyReleased) :
 				ui_kb[event.key.code] = true;
 				break;
-			case (sf::Event::KeyPressed) :
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y) && !inBattle) {
-					test.loadBattle(inBattle, sysFont, battleMenuTexture, cursorTexture, sfx_blip1);
-					fade_out = true;
-					sysFader.resetFader();
-				}
 			}
 		}
 
@@ -429,7 +434,7 @@ int main() {
 					break;
 				case(Selection::Settings) :
 					std::cout << "There is no implementation of this option yet." << std::endl;
-					break;
+break;
 				}
 			}
 		}
@@ -482,7 +487,7 @@ int main() {
 				}
 				else if (fade_in) {
 					previousMusicName = musicName;
-					load_map(ml, map_name, player, actors, textureMap, event_tiles, events, textbox, message, musicName, previous_maps, test);
+					load_map(ml, map_name, player, actors, textureMap, event_tiles, events, textbox, message, musicName, previous_maps, test, forceBattle, trainingBattleBG);
 					entities.clear();
 					for (int i = actors.size(); i != 0; i--) {
 						entities.push_back(actors[i - 1]);
@@ -519,8 +524,8 @@ int main() {
 							}
 						}
 						else  if ((events[currentEvent].getEventType()).substr(0, 6) == "Battle") {
-							if (test.getStartBattle()) {
-								test.loadBattle(inBattle, sysFont, battleMenuTexture, cursorTexture, sfx_blip1);
+							if (test.isStarting()) {
+								test.startBattle();
 								fade_out = true;
 								sysFader.resetFader();
 							}
@@ -528,7 +533,18 @@ int main() {
 					}
 					else {
 						// *************** End Audrey Edit *************** //
-						player.move(elapsedTime, player.controller.get_input());
+						if (player.move(elapsedTime, player.controller.get_input())) {
+							restPeriod += elapsedTime;
+							if (forceBattle && restPeriod > 0 && !(fade_in || fade_out || eventIsRunning || inBattle)) {
+								prob = (RNG() % 50);
+								if (prob > 48) {
+									test.startBattle();
+									fade_out = true;
+									sysFader.resetFader();
+								}
+								restPeriod = 0;
+							}
+						}
 						sysCollision(actors, ml);
 
 						// TEST INTERACTION BETWEEN PLAYER AND OTHER ACTORS
@@ -554,11 +570,10 @@ int main() {
 		window.clear();
 		window.setView(playerView);
 
-		if (inBattle && !fade_out) {
+		if ((inBattle && !fade_out) || !test.finallyEnd()) {
 			test.update(playerView.getCenter(), elapsedTime);
 			window.draw(test);
-			inBattle = test.getBattleState();
-			if (!inBattle) {
+			if (!inBattle && test.finallyEnd()) {
 				endBattle = true;
 				fade_out = true;
 			}
@@ -581,7 +596,6 @@ int main() {
 			sysFader.setPosition(playerView.getCenter());
 			sysFader.performFade(Fade::Out, Speed::Fast);
 			window.draw(sysFader);
-			std::cout << "Decreasing: Volume is " << music.getVolume() << std::endl;
 			music.setVolume(music.getVolume() - 3);
 		}
 		else if (fade_out && !fade_in && sysFader.isComplete()) {
@@ -602,7 +616,6 @@ int main() {
 			sysFader.setPosition(playerView.getCenter());
 			sysFader.performFade(Fade::In, Speed::Fast);
 			window.draw(sysFader);
-			std::cout << "Increasing: Volume is " << music.getVolume() << std::endl;
 			music.setVolume(music.getVolume() + 3);
 		}
 		else if (fade_in && !fade_out && sysFader.isComplete()) {
@@ -674,6 +687,17 @@ sf::Vector2f tile(int tile_row, int tile_column) {
 	//return sf::Vector2f(System::Tilesize*tile_row + System::Tilesize*.5, System::Tilesize*tile_column + System::Tilesize*.5);
 }
 
+BaseStats readInStats(std::string filename, sf::Texture &texture)
+{
+	ifstream file;
+	file.open("resources/battles/" + filename);
+	int health, attack, speed;
+	std::string texturefile, name;
+	file >> texturefile >> health >> attack >> speed >> name;
+	texture.loadFromFile("resources/textures/" + texturefile);
+	return BaseStats({health, attack, speed, name});
+}
+
 
 /*********************************************************************
 \brief Checks if any of the UI is visible.
@@ -729,7 +753,7 @@ int  _directionOfActor(std::string dir) {
 \brief Loads the specified map and instantiates all actors and pawns.
 	   The player is set at the start position specified by the map.
 *********************************************************************/
-void load_map(tmx::MapLoader& ml, std::string& map_name, Character& player, std::vector<Actor*>& actors, std::map<std::string, sf::Texture*> textureMap, std::vector<EventTile>& event_tiles, std::map<std::string, Event>& events, bool& textbox, string messages[], std::string &music_name, std::vector<std::string> previous_maps, BattleScene &battleScene) {
+void load_map(tmx::MapLoader& ml, std::string& map_name, Character& player, std::vector<Actor*>& actors, std::map<std::string, sf::Texture*> textureMap, std::vector<EventTile>& event_tiles, std::map<std::string, Event>& events, bool& textbox, string messages[], std::string &music_name, std::vector<std::string> previous_maps, BattleSystem &battleScene, bool &forceBattle, sf::Texture &battleBackground) {
 	int place = -1;
 	for (int i = 0; i < previous_maps.size(); i++) { if (previous_maps[i] == map_name) { place = i; break; } }
 
@@ -766,6 +790,14 @@ void load_map(tmx::MapLoader& ml, std::string& map_name, Character& player, std:
 		}
 		if (layer->name == "Setup")
 		{
+			if (layer->properties["Battle"] == "Yes") {
+				forceBattle = true;
+				battleBackground.loadFromFile("resources/textures/" + layer->properties["BattleBackground"]);
+				battleScene.setBattleBackground(battleBackground);
+			}
+			else {
+				forceBattle = false;
+			}
 			if (layer->properties.find("script") != layer->properties.end()) {
 				messages[0] = "resources/script/" + layer->properties["script"];
 			}
@@ -829,7 +861,6 @@ void load_map(tmx::MapLoader& ml, std::string& map_name, Character& player, std:
 										e = object->GetPropertyString(key + "Trigger" + order[j][i]);
 									}
 									if ((unsigned int)order[j][i] >= 97) {
-										std::cout << "Key is " << ((int)order[j][i]) << " or " << (order[j][i]) << std::endl;
 										order[j][i] -= '\'';
 									}
 								}

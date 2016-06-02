@@ -42,10 +42,11 @@ enum Selection {
 };
 
 enum Battle {
-	Fight = 1,
-	Items = 2,
-	Status = 3,
-	Escape = 4,
+	Attack = 0,
+	Potion = 1,
+	Status = 2,
+	Escape = 3,
+	Defend = 4
 };
 
 enum Cursor_Direction {
@@ -73,6 +74,12 @@ enum Map {
 	Counter = 0,
 	FrameDuration = 1,
 	Layer = 2
+};
+
+enum DisplayM {
+	Failed = 0,
+	Success = 1,
+	Neutral = 2
 };
 
 // *~~*~~*~~*~~*~~*~~*~~* Audrey Menu Edits *~~*~~*~~*~~*~~*~~*~~*

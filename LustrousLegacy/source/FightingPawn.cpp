@@ -2,53 +2,118 @@
 
 #include <iostream>
 
-FightingPawn::FightingPawn(const sf::Texture & playerTexture, StatPawn statBase)
-: Pawn(playerTexture, 2), base(statBase){
-	remainingHealth = base.health;
+FightingPawn::FightingPawn(sf::Texture & skin, BaseStats stats, int dlimit, int numPotions)
+: Pawn(skin, 2), base(stats), damlimit(dlimit), currentHP(stats.health), counter(0), numPotions(numPotions) {
+	showlimit = damlimit / 5;
+	canshow = damaged = false;
+
 	criticalRate = (base.speed * RNG()) % 20;
-	if (criticalRate <= 5) {
-		criticalRate += 4;
+	if (criticalRate <= 5) { criticalRate += 4; }
+
+	front = base.name + ": ";
+	end = " / " + std::to_string(base.health);
+}
+
+void FightingPawn::update(float time) {
+	if (damaged) {
+		counter++;
+		if ((counter % (showlimit + 1) == showlimit)) {
+			// for doing the black/texture damage animation
+			if (!canshow) {
+				pawnSprite.setColor(sf::Color::Black);
+			}
+			else {
+				pawnSprite.setColor(sf::Color::White);
+			}
+			canshow = !canshow;
+		}
+		if (counter % (damlimit + 1) == damlimit) {
+			// for telling how much time the damage animation runs
+			damaged = !damaged;
+			counter = 0;
+		}
 	}
-	alive = true;
-	std::cout << "Created Fighting Pawn with HP: " << base.health << ", Attack: " << base.attack << "Speed: " << base.speed << ", and Crit: " << ((float)criticalRate / 100.0) << std::endl;
 }
 
-
-FightingPawn::~FightingPawn()
-{
-}
-
-int FightingPawn::attack()
+int FightingPawn::getSpeed()
 {
 	int chance = RNG() % 100;
-	std::cout << "Chance of Critical: " << ((float)chance / 100.0) << ", Dealing Damage: " << ((chance <= criticalRate)? ceil(base.attack * 1.5) : base.attack) << std::endl;
-	if (chance <= criticalRate) {
-		return ceil(base.attack * 1.5);
-	} 
-	return base.attack;
+	if (chance <= criticalRate) { return ceil(base.speed * 1.2); }
+	return base.speed;
 }
 
-bool FightingPawn::takeDamage(FightingPawn *enemy)
+int FightingPawn::getAttack()
 {
-	if (enemy->base.attack > remainingHealth) {
-		alive = false;
-	}
-	else {
-		remainingHealth -= enemy->attack();
-		alive = (remainingHealth > 0);
-	}
-	std::cout << "After Enemy attack, have " << remainingHealth << " HP remaining (is alive? " << alive << ")" << std::endl;
-	return alive;
+	int chance = RNG() % 100;
+	prevAttack = (chance <= criticalRate)?  ceil(base.attack * 1.5) :  base.attack;
+	return prevAttack;
 }
 
-void FightingPawn::respawn()
+bool FightingPawn::usePotion()
 {
-	remainingHealth = base.health;
-	alive = true;
+	if (numPotions == 0) { return false; }
+	restoreHP(50); // 50 is the amount of HP a potion restores?
+	numPotions--;
+	return true;
+}
+
+std::string FightingPawn::getName()
+{
+	return base.name;
+}
+
+int FightingPawn::getHealth()
+{
+	return currentHP;
+}
+
+int FightingPawn::getNumPotions()
+{
+	return numPotions;
+}
+
+int FightingPawn::getPrevAttack()
+{
+	return prevAttack;
+}
+
+void FightingPawn::restoreHP(int hp) {
+	currentHP = std::min(base.health, currentHP + hp);
+}
+
+
+bool FightingPawn::takeDamage(FightingPawn & enemy)
+{
+	damaged = true;
+	counter = 0;
+	if (enemy.base.attack > currentHP) { currentHP = 0;  return false; }
+	currentHP -= enemy.getAttack();
+	return (currentHP > 0);
+}
+
+
+bool FightingPawn::isFaster(FightingPawn &enemy)
+{
+	return getSpeed() >= enemy.getSpeed();
+}
+
+std::string FightingPawn::getClass()
+{
+	return "FightingPawn";
+}
+
+std::string FightingPawn::getStatus()
+{
+	return front + std::to_string(currentHP) + end;
+}
+
+void FightingPawn::respawn(BaseStats stats)
+{
+	currentHP = stats.health;
 	criticalRate = (base.speed * RNG()) % 20;
+	if (criticalRate <= 5) { criticalRate += 4; }
+
+	front = base.name + ": ";
+	end = " / " + std::to_string(base.health);
 }
 
-bool FightingPawn::isFaster(FightingPawn *enemy)
-{
-	return this->base.speed >= enemy->base.speed;
-}

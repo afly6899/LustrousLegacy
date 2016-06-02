@@ -1,5 +1,4 @@
-#ifndef BATTLESYSTEM_H
-#define BATTLESYSTEM_H
+#pragma once
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
@@ -8,44 +7,65 @@
 #include "UI.h"
 #include <map>
 #include <vector>
-#include <random>
 
-// Forward Declaration
-namespace sf {
-
-	class Texture;
-	class Font;
-	class Text;
-}
+typedef sf::Texture T;
+typedef std::map<Battle, std::string[3]> Messages;
+typedef std::map<std::string, std::string> Description;
 
 class BattleSystem : public UI {
 public:
 
-	BattleSystem(const sf::Font& font, const sf::Texture &menubg, sf::Texture &cursorTexture, std::vector<sf::Texture*> textures, std::vector<StatPawn> stats, sf::Sound& sfx);
-	virtual ~BattleSystem();
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	BattleSystem(bool &inBattle, sf::Font& font, T &p, T &e, T &c, T &bg, T &bgm, BaseStats ps, BaseStats es, sf::Sound& sfx, sf::Sound& fanfare);
+	~BattleSystem();
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	void change_selection(int up_or_down);
-	int getSelection();
-	virtual void setPosition(sf::Vector2f pos);
-	virtual void update(sf::Vector2f pos, float elapsedTime);
-	void battle(bool ENTER_KEY, float elapsedTime, FightingPawn &player);
-	std::string BattleSystem::getClass();
+	void setPosition(sf::Vector2f pos);
+	void update(sf::Vector2f pos, float elapsedTime);
+	void battle(float elapsedTime);
 
-	bool battleIsHappening() { return inBattle; }
+	void handleInput(sf::Event event, std::map<int, bool> ui_kb, float elapsedTime);
+	void statusMessage(Battle option, int status);
+
+	void stopBattle();
+	Battle getSelection();
+	std::string BattleSystem::getClass();
+	void setBattleBackground(const sf::Texture &background);
+
+	void startBattle();
+
+	void prepareForBattle() { inEvent = true; }
+	bool isInBattle() { return inBattle; }
+	bool isStarting() { return inEvent; }
+	bool finallyEnd() { return counter >= waitlimit; }
 
 private:
-	bool inBattle;
-	sf::Sound& cursorBleep;
+	bool &inBattle;
+	bool inEvent = false;
+
+	int counter;
+	int waitlimit;
+	bool playerTurn;
+	bool didOtherMove;
+	bool halfTurnDone;
+	bool wholeTurnDone;
+
+	int separation;
 	sf::Vector2f originalPos;
-	Cursor battleCursor;
-	int num_of_selections;
-	int selection = Battle::Fight;
-	int separation = 20;
-	bool player_turn = true;
-	std::map<int, sf::Text> battle_options;
+
+	sf::Text status;
+	sf::Text message;
+	Messages toDisplay;
+	Description toFill;
+
+	FightingPawn enemy;
+	FightingPawn player;
+
+	int selection;
+	Cursor cursor;
+	sf::Sound& bleep;
+	sf::Sound& fanfare;
+	sf::Sprite topMenu;
+	sf::Sprite bottomMenu;
 	sf::Sprite background;
-	FightingPawn enemyPawns;
-	std::vector<sf::Texture*> spriteTextures;
+	std::vector<sf::Text> battle_options;
 };
-#endif
-#pragma once

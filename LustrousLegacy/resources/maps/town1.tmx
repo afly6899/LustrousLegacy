@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="74" height="33" tilewidth="64" tileheight="64" nextobjectid="109">
+ <tileset firstgid="1" name="64_town_tileset" tilewidth="64" tileheight="64" tilecount="320" columns="8">
+  <image source="64_town_tileset.png" width="512" height="2600"/>
+ </tileset>
+ <tileset firstgid="321" name="64_forest_tileset" tilewidth="64" tileheight="64" tilecount="144" columns="16">
+  <image source="64_forest_tileset.png" width="1024" height="576"/>
+ </tileset>
+ <tileset firstgid="465" name="64_castle_tileset" tilewidth="64" tileheight="64" tilecount="1632" columns="8">
+  <image source="64_castle_tileset.png" width="512" height="13072"/>
+ </tileset>
+ <layer name="Background_2" width="74" height="33">
+  <data encoding="base64" compression="zlib">
+   eJzt1LENACAMA0FYjc3ZjJaGljjSFd9HJzl7jrFDWlfVtyTHiRMnTqlx4sSJU2qcOHHilBqn/k5L0veqd9/lPyXFiRMnTqlx4sSJ0+s2SX+q3n2X/5QUp/5OB1NINnw=
+  </data>
+ </layer>
+ <layer name="Background_1" width="74" height="33">
+  <data encoding="base64" compression="zlib">
+   eJzt1LENACAMA0FYjc3ZjJaGljjSFd9HJzl7jrFDWlfVtyTHiRMnTqlx4sSJU2qcOHHilBqn/k5L0veqd9/lPyXFiRMnTqlx4sSJ0+s2SX+q3n2X/5QUp/5OB1NINnw=
+  </data>
+ </layer>
+ <layer name="Field" width="74" height="33">
+  <data encoding="base64" compression="zlib">
+   eJzt2KENACAUQ0FYDSZnMywGC/3Jieebk529tRnSOPq9JTlOnDhxSo0TJ06cUuPEiROn1DjVdxqSnreCSt2VFidOnDilxokTJ063bZLe9PvXqfI/JcWpvtMGGkXBSw==
+  </data>
+ </layer>
+ <layer name="Collision_Objects" width="74" height="33">
+  <data encoding="base64" compression="zlib">
+   eJztmE1KA0EQhXs2uYM/UaKJopkomInewqXnmWXO4w/RrILiwtO4M1urSQ88a3qGQu2klPrg0TT9GIo3PZAX53TQz5y7J92RZtlqb9TJKZfbkM1DttobdQqWU2E5NYI5GXHsPsmx+yTDcpJhOcmwnGRgTtedzc7SxBZpm7RD2iV1w1rt90j74OPnuOfe2PO64KvAnG46euZCeqQD0iGpTxqEtdofkY7Bx89xz72x5w3AF8tJ01zICemUNCTlYUWdkc6Zbwj+EYh7R0w587XlpGEuzgVpTCrCirokXTHfGPwTEPdOmIqIr2Q5lUrmauND4PG8k5bBvwx7CbHnT93XnKY/mCuFv/ovQ4OeQ04vCmZBzaBTGc34+z0nPSnRW3hnrwpmQdE3t9joi2LY73EZlpMMy0nGX8gp1qOw56Q+98Ry0jAX0nP1HoU9J/V5U04a5kJ4j+I9J/V5U04a5uJgj8Ke85j43FM6Wb9b91xt8J6zSHzu+U6/W8dcFdbvrN/9FtbvrN/9ZywnGXOl99zzCRPpZUw=
+  </data>
+ </layer>
+ <objectgroup name="Collision">
+  <object id="2" x="2160" y="192" width="96" height="160"/>
+  <object id="3" x="2432" y="192" width="64" height="144"/>
+  <object id="8" x="2160" y="896" width="96" height="80"/>
+  <object id="9" x="2432" y="896" width="64" height="64"/>
+  <object id="10" x="2176" y="1664" width="64" height="64"/>
+  <object id="11" x="2432" y="1664" width="64" height="64"/>
+  <object id="12" x="1600" y="1600" width="64" height="128"/>
+  <object id="14" x="1088" y="1600" width="64" height="128"/>
+  <object id="15" x="576" y="1600" width="64" height="128"/>
+  <object id="16" x="3008" y="1600" width="64" height="128"/>
+  <object id="17" x="3520" y="1600" width="64" height="128"/>
+  <object id="18" x="4032" y="1600" width="64" height="128"/>
+  <object id="19" x="1728" y="1408" width="320" height="256"/>
+  <object id="23" x="1216" y="1408" width="320" height="256"/>
+  <object id="25" x="704" y="1408" width="320" height="256"/>
+  <object id="26" x="192" y="1408" width="320" height="256"/>
+  <object id="27" x="2624" y="1408" width="320" height="256"/>
+  <object id="28" x="3136" y="1408" width="320" height="256"/>
+  <object id="31" x="3648" y="1408" width="320" height="256"/>
+  <object id="32" x="4160" y="1408" width="320" height="256"/>
+  <object id="33" x="2624" y="640" width="512" height="256"/>
+  <object id="34" x="3264" y="640" width="576" height="256"/>
+  <object id="35" x="3968" y="640" width="512" height="256"/>
+  <object id="36" x="192" y="640" width="512" height="256"/>
+  <object id="37" x="1520" y="640" width="544" height="272"/>
+  <object id="38" x="800" y="640" width="640" height="272"/>
+  <object id="74" x="16" y="128" width="4736" height="208"/>
+  <object id="77" x="448" y="144" width="128" height="1968"/>
+  <object id="79" x="0" y="1952" width="4736" height="224"/>
+  <object id="80" x="3936" y="64" width="128" height="1968"/>
+  <object id="93" x="2432" y="608" width="64" height="80">
+   <properties>
+    <property name="Scene" value="Sign"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="Events">
+  <object id="43" name="toCastle" x="2240" y="304" width="64" height="64">
+   <properties>
+    <property name="Event" value="castle.tmx"/>
+   </properties>
+  </object>
+  <object id="46" name="toWorld" x="2240" y="1904" width="64" height="64">
+   <properties>
+    <property name="Event" value="field.tmx"/>
+   </properties>
+  </object>
+  <object id="54" name="toCastle" x="2304" y="304" width="64" height="64">
+   <properties>
+    <property name="Event" value="castle.tmx"/>
+   </properties>
+  </object>
+  <object id="55" name="toCastle" x="2368" y="304" width="64" height="64">
+   <properties>
+    <property name="Event" value="castle.tmx"/>
+   </properties>
+  </object>
+  <object id="56" name="toCastle" x="2240" y="368" width="64" height="64">
+   <properties>
+    <property name="Event" value="castle.tmx"/>
+   </properties>
+  </object>
+  <object id="57" name="toCastle" x="2368" y="368" width="64" height="64">
+   <properties>
+    <property name="Event" value="castle.tmx"/>
+   </properties>
+  </object>
+  <object id="58" name="toCastle" x="2304" y="368" width="64" height="64">
+   <properties>
+    <property name="Event" value="castle.tmx"/>
+   </properties>
+  </object>
+  <object id="59" name="toWorld" x="2368" y="1904" width="64" height="64">
+   <properties>
+    <property name="Event" value="field.tmx"/>
+   </properties>
+  </object>
+  <object id="60" name="toWorld" x="2304" y="1904" width="64" height="64">
+   <properties>
+    <property name="Event" value="field.tmx"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="Overlay" width="74" height="33">
+  <data encoding="base64" compression="zlib">
+   eJzt18EKgkAQxnHNTMpMyswX6NgD9lg9YiN5GIbVBWFltf8PvsMwcxj2sDBJAmzPM52u8fNKp2sA/6v/DnaSTLKX5KY+SAo1Z/v5MJM5Zm1f18XK9jpKTpJScpZUpr5IajVn+9UwUzpmbV/XteedYtvrKrlJGsld0pr6IenUnO23w0zjmLV9XXeed4p1L2AL3p4aAAAsx3VH6TsndH8te7nuKH3nhO6PiW0v1x2l75zQ/TGx7gWE9gnc782575bYCwAAAPN8AfDmFz0=
+  </data>
+ </layer>
+ <objectgroup name="Setup">
+  <properties>
+   <property name="music" value="town.wav"/>
+   <property name="script" value="Scene1.txt"/>
+  </properties>
+  <object id="61" name="ACTOR" type="Cycle" x="1856" y="896" width="64" height="64">
+   <properties>
+    <property name="Direction" value="South"/>
+    <property name="Scene" value="ResdinDialogue"/>
+    <property name="Texture" value="Resdin"/>
+   </properties>
+  </object>
+  <object id="62" name="START" x="2304" y="448" width="64" height="64">
+   <properties>
+    <property name="Direction" value="South"/>
+   </properties>
+  </object>
+  <object id="65" name="ACTOR" type="Cycle" x="2048" y="1728" width="64" height="64">
+   <properties>
+    <property name="Direction" value="West"/>
+    <property name="Scene" value="Bob"/>
+    <property name="Texture" value="Villager"/>
+   </properties>
+  </object>
+  <object id="94" x="2432" y="640" width="64" height="64">
+   <properties>
+    <property name="Direction" value="South"/>
+    <property name="Scene" value="Sign"/>
+    <property name="Texture" value="Empty"/>
+   </properties>
+  </object>
+  <object id="96" name="ACTOR" type="Cycle" x="3520" y="960" width="64" height="64">
+   <properties>
+    <property name="Direction" value="West"/>
+    <property name="Scene" value="Mitch"/>
+    <property name="Texture" value="Villager"/>
+   </properties>
+  </object>
+  <object id="97" name="ACTOR" type="Cycle" x="3520" y="896" width="64" height="64">
+   <properties>
+    <property name="Direction" value="West"/>
+    <property name="Scene" value="Mira"/>
+    <property name="Texture" value="Villager"/>
+   </properties>
+  </object>
+  <object id="98" name="ACTOR" type="Cycle" x="3392" y="896" width="64" height="64">
+   <properties>
+    <property name="Direction" value="East"/>
+    <property name="Scene" value="Harris"/>
+    <property name="Texture" value="Villager"/>
+   </properties>
+  </object>
+  <object id="99" name="ACTOR" type="Cycle" x="2944" y="1792" width="64" height="64">
+   <properties>
+    <property name="Direction" value="West"/>
+    <property name="Scene" value="Tina"/>
+    <property name="Texture" value="Villager"/>
+   </properties>
+  </object>
+  <object id="103" name="ACTOR" type="Cycle" x="960" y="1664" width="64" height="64">
+   <properties>
+    <property name="Direction" value="West"/>
+    <property name="Scene" value="Francis"/>
+    <property name="Texture" value="Villager"/>
+   </properties>
+  </object>
+  <object id="104" name="ACTOR" type="Cycle" x="1024" y="1664" width="64" height="64">
+   <properties>
+    <property name="Direction" value="West"/>
+    <property name="Scene" value="Angelica"/>
+    <property name="Texture" value="Villager"/>
+   </properties>
+  </object>
+  <object id="105" name="ACTOR" type="Cycle" x="896" y="1728" width="64" height="64">
+   <properties>
+    <property name="Direction" value="West"/>
+    <property name="Scene" value="May"/>
+    <property name="Texture" value="Villager"/>
+   </properties>
+  </object>
+  <object id="106" name="ACTOR" type="Cycle" x="896" y="896" width="64" height="64">
+   <properties>
+    <property name="Direction" value="South"/>
+    <property name="Scene" value="Siel"/>
+    <property name="Texture" value="Villager"/>
+   </properties>
+  </object>
+  <object id="107" name="ACTOR" type="Cycle" x="832" y="1024" width="64" height="64">
+   <properties>
+    <property name="Direction" value="North"/>
+    <property name="Scene" value="Kris"/>
+    <property name="Texture" value="Villager"/>
+   </properties>
+  </object>
+  <object id="108" name="ACTOR" type="Cycle" x="960" y="960" width="64" height="64">
+   <properties>
+    <property name="Direction" value="West"/>
+    <property name="Scene" value="Marin"/>
+    <property name="Texture" value="Villager"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

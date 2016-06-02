@@ -925,11 +925,6 @@
  <objectgroup name="Collision"/>
  <objectgroup name="Events">
   <object id="1" x="1024" y="768"/>
-  <object id="2" x="448" y="512" width="64" height="64">
-   <properties>
-    <property name="Event" value="start.tmx"/>
-   </properties>
-  </object>
  </objectgroup>
  <layer name="Overlay" width="15" height="15">
   <data>

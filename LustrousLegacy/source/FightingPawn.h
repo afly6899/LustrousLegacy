@@ -2,7 +2,7 @@
 #include <random>
 #include "Pawn.h"
 
-struct StatPawn {
+struct BaseStats {
 	int health;
 	int attack;
 	int speed;
@@ -11,22 +11,40 @@ struct StatPawn {
 
 class FightingPawn : public Pawn {
 public:
-	FightingPawn(const sf::Texture& playerTexture, StatPawn statBase);
-	~FightingPawn();
-	std::string getClass() { return "FightingPawn"; }
 
-	int attack();
-	bool takeDamage(FightingPawn *enemy);
-	void respawn();
+	FightingPawn(sf::Texture &skin, BaseStats stats, int slimit, int numPotions);
 
-	bool isAlive() { return alive; }
-	std::string getHealthInfo() { return base.name + ": " + std::to_string(remainingHealth) + " / " + std::to_string(base.health); }
-	bool isFaster(FightingPawn *enemy);
+	void update(float time);
+
+	int getSpeed();
+	int getAttack();
+	bool usePotion();
+	void restoreHP(int hp);
+	bool takeDamage(FightingPawn &enemy);
+	bool isFaster(FightingPawn &enemy);
+
+	std::string getClass();
+	std::string getStatus();
+
+	int getHealth();
+	int getNumPotions();
+	int getPrevAttack();
+	std::string getName();
+
+	void respawn(BaseStats stats);
 
 private:
-	bool alive;
-	StatPawn base;
+	int counter;
+	int damlimit, showlimit;
+	bool damaged, canshow;
+
+	int currentHP;
+	int prevAttack;
+	BaseStats base;
 	int criticalRate;
-	int remainingHealth;
 	std::random_device RNG;
+
+	std::string front, end;
+
+	int numPotions;
 };

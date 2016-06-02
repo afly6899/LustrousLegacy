@@ -1,15 +1,15 @@
 #include "Step.h"
-#include "BattleScene.h"
+#include "BattleSystem.h"
 
 class BattleStep : public Step {
 public:
-	BattleStep(BattleScene * battleScene, std::string battle);
+	BattleStep(BattleSystem * battleScene, std::string battle);
 	virtual bool run(float elapsedTime, Actor& actor);
 
 	// for debugging
 	virtual std::string getType() { return type; }
 private:
-	BattleScene *battle;
+	BattleSystem *battle;
 	std::string battleName;
 	bool battleStarted;
 

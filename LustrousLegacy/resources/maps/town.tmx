@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="74" height="33" tilewidth="64" tileheight="64" nextobjectid="81">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="74" height="33" tilewidth="64" tileheight="64" nextobjectid="84">
  <tileset firstgid="1" name="64_town_tileset" tilewidth="64" tileheight="64" tilecount="320" columns="8">
   <image source="64_town_tileset.png" width="512" height="2600"/>
  </tileset>
@@ -11,7 +11,7 @@
  </tileset>
  <layer name="Background_2" width="74" height="33">
   <data encoding="base64" compression="zlib">
-   eJzt1LENACAMA0FYjc3ZjJaGljjSFd9HJzl7jrFDWlfVtyTHiRMnTqlx4sSJU2qcOHHilBqn/k5L0veqd9/lPyXFiRMnTqlx4sSJ0+s2SX+q3n2X/5QUp/5OB1NINnw=
+   eJzt1LENgDAQBEGTUJgLIKRfd0bqBInIfxYTbH4a6X8crY2Q+lT1luQ4ceLEKTVOnDhxSm12us76PanNTjenT07VW5LjxOkvTl3S8qrvfpf/lBQnTpw4pcaJEydOb9skran67nf5T0lx2t/pAUrENag=
   </data>
  </layer>
  <layer name="Background_1" width="74" height="33">
@@ -26,12 +26,12 @@
  </layer>
  <layer name="Collision_Objects" width="74" height="33">
   <data encoding="base64" compression="zlib">
-   eJztmN1Kw0AQhTeP4U+VaqtoUwWb6uvlss/jD9VeFcULn8Y7e+ss3cBxsgmDunEi88FhGfYQhpMWeuqcDkaZc/ekO9Iy285GnZxyuQ3ZPGTb2ahTsJwKy6kRzMloxnKSYTnJsJxkWE4yLCcZfchph7RL2iPtkwbhrOYD0iH4+D3O3Bt73gB8FbGcNOyFDElHpGPSiDQOZzWfkE7Bx+9x5t7Y88bga8tJw17IGemcNCHl4URdkC6ZbwL+KYh7p0w587XlpGEvzhVpRirCibom3TDfDPxzEPfOmYqIr2Q5lUr2auND4PG8kzbBvwmzhNjzF+5rTosf7JXCX/2XoUHPIacXBbugltDRjWb853tFelKit/DOXhXsgqLv3PpPXxSjD78zNWA5ybCcZPQhp1iPwp6T+t4j7Xdd74UMXb1HYc9Jfd+Uk4a9EN6jeM9Jfd+Uk4a9ONijsOc8Jr73lE7W77reqw3ec9aJ7z3f6Xdd7FVh/c763W9h/c763X/GcpKxUvo593wCKkdkMg==
+   eJztmE1KA0EQhXs2uYM/UaKJopkomInewqXnmWXO4w/RrILiwtO4M1urSQ88a3qGQu2klPrg0TT9GIo3PZAX53TQz5y7J92RZtlqb9TJKZfbkM1DttobdQqWU2E5NYI5GXHsPsmx+yTDcpJhOcmwnGRgTtedzc7SxBZpm7RD2iV1w1rt90j74OPnuOfe2PO64KvAnG46euZCeqQD0iGpTxqEtdofkY7Bx89xz72x5w3AF8tJ01zICemUNCTlYUWdkc6Zbwj+EYh7R0w587XlpGEuzgVpTCrCirokXTHfGPwTEPdOmIqIr2Q5lUrmauND4PG8k5bBvwx7CbHnT93XnKY/mCuFv/ovQ4OeQ04vCmZBzaBTGc34+z0nPSnRW3hnrwpmQdE3t9joi2LY73EZlpMMy0nGX8gp1qOw56Q+98Ry0jAX0nP1HoU9J/V5U04a5kJ4j+I9J/V5U04a5uJgj8Ke85j43FM6Wb9b91xt8J6zSHzu+U6/W8dcFdbvrN/9FtbvrN/9ZywnGXOl99zzCRPpZUw=
   </data>
  </layer>
- <objectgroup name="Collisions">
-  <object id="2" x="2160" y="48" width="96" height="160"/>
-  <object id="3" x="2432" y="48" width="64" height="144"/>
+ <objectgroup name="Collision">
+  <object id="2" x="2160" y="192" width="96" height="160"/>
+  <object id="3" x="2432" y="192" width="64" height="144"/>
   <object id="8" x="2160" y="896" width="96" height="80"/>
   <object id="9" x="2432" y="896" width="64" height="64"/>
   <object id="10" x="2176" y="1664" width="64" height="64"/>
@@ -56,72 +56,58 @@
   <object id="36" x="192" y="640" width="512" height="256"/>
   <object id="37" x="1520" y="640" width="544" height="272"/>
   <object id="38" x="800" y="640" width="640" height="272"/>
-  <object id="74" x="0" y="0" width="4736" height="208"/>
+  <object id="74" x="0" y="128" width="4736" height="208"/>
   <object id="77" x="448" y="144" width="128" height="1968"/>
   <object id="79" x="0" y="1952" width="4736" height="224"/>
   <object id="80" x="3936" y="64" width="128" height="1968"/>
+  <object id="82" x="2432" y="608" width="64" height="80"/>
  </objectgroup>
  <objectgroup name="Events">
-  <object id="43" name="toCastle" x="2240" y="176" width="64" height="64">
+  <object id="43" name="toCastle" x="2240" y="304" width="64" height="64">
    <properties>
     <property name="Event" value="castle.tmx"/>
    </properties>
   </object>
-  <object id="46" name="toWorld" x="2240" y="1904" width="64" height="64">
-   <properties>
-    <property name="Event" value="next.tmx"/>
-   </properties>
-  </object>
-  <object id="54" name="toCastle" x="2304" y="176" width="64" height="64">
+  <object id="54" name="toCastle" x="2304" y="304" width="64" height="64">
    <properties>
     <property name="Event" value="castle.tmx"/>
    </properties>
   </object>
-  <object id="55" name="toCastle" x="2368" y="176" width="64" height="64">
+  <object id="55" name="toCastle" x="2368" y="304" width="64" height="64">
    <properties>
     <property name="Event" value="castle.tmx"/>
    </properties>
   </object>
-  <object id="56" name="toCastle" x="2240" y="240" width="64" height="64">
+  <object id="56" name="toCastle" x="2240" y="368" width="64" height="64">
    <properties>
     <property name="Event" value="castle.tmx"/>
    </properties>
   </object>
-  <object id="57" name="toCastle" x="2368" y="240" width="64" height="64">
+  <object id="57" name="toCastle" x="2368" y="368" width="64" height="64">
    <properties>
     <property name="Event" value="castle.tmx"/>
    </properties>
   </object>
-  <object id="58" name="toCastle" x="2304" y="240" width="64" height="64">
+  <object id="58" name="toCastle" x="2304" y="368" width="64" height="64">
    <properties>
     <property name="Event" value="castle.tmx"/>
    </properties>
   </object>
-  <object id="59" name="toWorld" x="2368" y="1904" width="64" height="64">
-   <properties>
-    <property name="Event" value="next.tmx"/>
-   </properties>
-  </object>
-  <object id="60" name="toWorld" x="2304" y="1904" width="64" height="64">
-   <properties>
-    <property name="Event" value="next.tmx"/>
-   </properties>
-  </object>
-  <object id="68" x="2240" y="1840" width="64" height="64">
+  <object id="68" x="2240" y="1920" width="64" height="64">
    <properties>
     <property name="Event" value="trigger"/>
     <property name="EventType" value="A"/>
     <property name="Trigger" value="3"/>
    </properties>
   </object>
-  <object id="72" x="2368" y="1840" width="64" height="64">
+  <object id="72" x="2368" y="1920" width="64" height="64">
    <properties>
     <property name="Event" value="trigger"/>
     <property name="EventType" value="A"/>
     <property name="Trigger" value="3"/>
    </properties>
   </object>
-  <object id="73" x="2304" y="1840" width="64" height="64">
+  <object id="73" x="2304" y="1920" width="64" height="64">
    <properties>
     <property name="Event" value="trigger"/>
     <property name="EventType" value="A"/>
@@ -132,7 +118,7 @@
  </objectgroup>
  <layer name="Overlay" width="74" height="33">
   <data encoding="base64" compression="zlib">
-   eJzt19EKgkAQhWHLTMpMysxX7bF6xE7gxTSsLAgra/wfnIvlzMWwd1MUAAAAv3bKXimVg1K591GpzZzvq2mmDMz63r7rje11Us5Ko1yU1r2vSmfmfN9OM01g1vf23UX+Kbe9bspd6ZWHMrj3UxnNnO+HaaYPzPrevsfIP+W6F/APXpE3AABYT+iOsndO6n4re4XuKHvnpO7n5LZX6I6yd07qfk6uewGpvRP3X0vuuzX2AgAAwDIfvZAWmQ==
+   eJzt18EKgkAQxnHNTMpMyswX6NgD9lg9YiN5GIbVBWFltf8PvsMwcxj2sDBJAmzPM52u8fNKp2sA/6v/DnaSTLKX5KY+SAo1Z/v5MJM5Zm1f18XK9jpKTpJScpZUpr5IajVn+9UwUzpmbV/XteedYtvrKrlJGsld0pr6IenUnO23w0zjmLV9XXeed4p1L2AL3p4aAAAsx3VH6TsndH8te7nuKH3nhO6PiW0v1x2l75zQ/TGx7gWE9gnc782575bYCwAAAPN8AfDmFz0=
   </data>
  </layer>
  <objectgroup name="Setup">
@@ -142,7 +128,7 @@
    <property name="numEvents" value="6"/>
    <property name="script" value="Scene1.txt"/>
   </properties>
-  <object id="61" name="ACTOR" type="Cycle" x="1792" y="1024" width="64" height="64">
+  <object id="61" name="ACTOR" type="Cycle" x="1600" y="1024" width="64" height="64">
    <properties>
     <property name="1" value="3AsSoonAsWarrenLeavesHisHome"/>
     <property name="2" value="017,16"/>
@@ -158,20 +144,27 @@
   <object id="62" name="START" x="1088" y="896" width="64" height="64">
    <properties>
     <property name="5" value="20"/>
-    <property name="ATrigger2" value="036,30"/>
+    <property name="ATrigger2" value="036,28"/>
     <property name="ATrigger3" value="23"/>
     <property name="Event Order" value="5"/>
     <property name="ID" value="116"/>
     <property name="TriggerEventOrder" value="A23"/>
    </properties>
   </object>
-  <object id="65" name="ACTOR" type="Cycle" x="2176" y="1840" width="64" height="64">
+  <object id="65" name="ACTOR" type="Cycle" x="2176" y="1856" width="64" height="64">
    <properties>
     <property name="ATrigger1" value="3BlockWayToField"/>
     <property name="Direction" value="East"/>
     <property name="Scene" value="BlockWayToField"/>
     <property name="Texture" value="Villager"/>
     <property name="TriggerEventOrder" value="A1"/>
+   </properties>
+  </object>
+  <object id="83" x="2432" y="640" width="64" height="64">
+   <properties>
+    <property name="Direction" value="South"/>
+    <property name="Scene" value="Sign"/>
+    <property name="Texture" value="Empty"/>
    </properties>
   </object>
  </objectgroup>

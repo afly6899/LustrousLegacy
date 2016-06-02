@@ -35,7 +35,7 @@ void Actor::setStopCounter(int new_counter) {
 /*********************************************************************
 \brief temp
 *********************************************************************/
-void Actor::move(float elapsedTime, int direction) {
+bool Actor::move(float elapsedTime, int direction) {
 	if (!stop || allowMovement(elapsedTime)) {
 		pastPosition = getPosition();
 		pastDirection = getDirection();
@@ -64,11 +64,14 @@ void Actor::move(float elapsedTime, int direction) {
 			break;
 		}
 
-		if (direction != Direction::Null)
+		if (direction != Direction::Null) {
 			spriteAnimate(elapsedTime);
+			return true;
+		}
 		else
 			resetTextureRect();
 	}
+	return false;
 }
 
 /*********************************************************************

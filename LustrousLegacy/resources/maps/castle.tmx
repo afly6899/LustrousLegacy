@@ -40097,27 +40097,27 @@
  <objectgroup name="Events">
   <object id="33" x="1856" y="4864" width="64" height="64">
    <properties>
-    <property name="Event" value="town.tmx"/>
+    <property name="Event" value="town1.tmx"/>
    </properties>
   </object>
   <object id="37" x="1920" y="4864" width="64" height="64">
    <properties>
-    <property name="Event" value="town.tmx"/>
+    <property name="Event" value="town1.tmx"/>
    </properties>
   </object>
   <object id="38" x="2048" y="4864" width="64" height="64">
    <properties>
-    <property name="Event" value="town.tmx"/>
+    <property name="Event" value="town1.tmx"/>
    </properties>
   </object>
   <object id="39" x="1984" y="4864" width="64" height="64">
    <properties>
-    <property name="Event" value="town.tmx"/>
+    <property name="Event" value="town1.tmx"/>
    </properties>
   </object>
   <object id="40" x="2112" y="4864" width="64" height="64">
    <properties>
-    <property name="Event" value="town.tmx"/>
+    <property name="Event" value="town1.tmx"/>
    </properties>
   </object>
   <object id="41" x="2112" y="4800" width="64" height="64">
