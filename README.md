@@ -11,8 +11,8 @@ Lustrous Legacy is a game project being developed for the Video Game and Develop
 - Mark Pareja _(Artist)_
 - Kristina Wong _(Sound Engineer)_
 
-OLD (Video demonstration of Fall Quarter prototype: https://www.youtube.com/watch?v=X5nR9fbxPGw)_
-Battle Systen Test: http://www.haydenmcfarland.me/downloads/LL_sample_build.zip_
+OLD (Video demonstration of Fall Quarter prototype: https://www.youtube.com/watch?v=X5nR9fbxPGw)  
+Battle Systen Test: http://www.haydenmcfarland.me/downloads/LL_sample_build.zip  
 
 Winter Quarter 2016: Project Disbanded
 
