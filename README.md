@@ -16,6 +16,6 @@ Battle Systen Test: http://www.haydenmcfarland.me/downloads/LL_sample_build.zip
 
 Winter Quarter 2016: Project Disbanded
 
-Winter Quarter 2016 Branch ~ Highlights basic systems
-Menu Branch ~ Testing basic battle system
-Executable ~ contains executable for Menu Branch
+Winter Quarter 2016 Branch ~ Highlights basic systems  
+Menu Branch ~ Testing basic battle system  
+Executable ~ contains executable for Menu Branch  
